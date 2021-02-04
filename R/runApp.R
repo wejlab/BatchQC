@@ -21,3 +21,5 @@ BatchQC <- function(dev=FALSE) {
   }
   shiny::runApp(appDir, display.mode="normal")
 }
+
+# I have no idea how to code in R

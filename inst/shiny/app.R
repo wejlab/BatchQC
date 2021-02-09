@@ -4,7 +4,7 @@ library(shinyjs)
 source(file.path("utils", "helpers.R"),  local = TRUE)
 
 ui <- navbarPage(
-  #title = paste("BatchQC v", packageVersion("BatchQC"), sep = ""),
+  # title = paste("BatchQC v", packageVersion("BatchQC"), sep = ""),
   title = "BatchQC",
   id="BatchQC",
   fluid=TRUE,

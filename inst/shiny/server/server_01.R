@@ -7,18 +7,22 @@
 #    http://shiny.rstudio.com/
 #
 
+library(SummarizedExperiment)
+source("../../R/import.R")
+# Define server logic
 
-# Define server logic required to draw a histogram
+
     output$summaryTable <- renderTable({
-        countsData <- input$counts
-        mdData <- input$md
-        se <- ingest_data(countsData$datapath, mdData$datapath)
+        if (!is.null(input$counts) & !is.null(input$counts)){
+            se <- ingest_data(input$counts$datapath, input$md$datapath)
+        }
+        else if (!is.null(input$se)){
+            ### THIS NEEDS TO BE TESTED
+            se <- SummarizedExperiment(input$se$datapath)
+        }
 
-        # generate bins based on input$bins from ui.R
-        # x    <- faithful[, 2]
-        # bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        # hist(x, breaks = bins, col = 'darkgray', border = 'white')
+        # Batch design
+        bd <- batch_design(se, "category")
+        return(bd)
 
     })

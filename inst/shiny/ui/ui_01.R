@@ -34,7 +34,7 @@ tabPanel("Upload Data",
     sidebarLayout(
         sidebarPanel(
         h3("Upload counts and metadata table"),
-        tags$div(p('Metadat file must contain "Sample" and "Batch" columns')),
+        tags$div(p('Metadata file must contain "Sample" and "Batch" columns')),
         fileInput("counts", "Counts table",
                   multiple = FALSE,
                   accept = accepted),

@@ -3,8 +3,8 @@
 #' @return The shiny app will open
 #'
 #' @param dev Run the applicaiton in developer mode
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #' BatchQC()
 #' }
@@ -13,7 +13,7 @@
 BatchQC <- function(dev=FALSE) {
   appDir <- system.file("shiny", package="BatchQC")
   if (appDir == "") {
-    stop("Could not find BatchQC. Try re-installing `BatchQC`.", 
+    stop("Could not find BatchQC. Try re-installing `BatchQC`.",
          call. = FALSE)
   }
   if (dev) {

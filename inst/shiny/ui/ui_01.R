@@ -49,7 +49,7 @@ tabPanel("Upload Data",
 
         # Show a plot of the generated distribution
         mainPanel(
-            #plotOutput("distPlot")
+           # tableOutput("summaryTable")
         )
     )
 )

@@ -6,8 +6,8 @@ ingest_data <- function(counts_path, metadata_path){
   counts <- read.csv(counts_path, row.names=1)
   # Read in metadata
   md <- read.csv(metadata_path)
+  # CHECK that "Sample" and "Batch" columns are in md
   # Ingest into SummarizedExperiment
   ### THIS ISN'T COMPLETE RIGHT!
   se <- SummarizedExperiment(counts, colData=md)
-  #test comment
 }

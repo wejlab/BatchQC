@@ -12,7 +12,7 @@ ingest_data <- function(counts_path, metadata_path){
   ## ^^ Is this something that the SE handles?
 
   # Ingest into SummarizedExperiment
-  se <- SummarizedExperiment(counts, colData=md)
+  se <- SummarizedExperiment(list(counts=counts), colData=md)
   return(se)
 }
 

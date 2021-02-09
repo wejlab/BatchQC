@@ -9,4 +9,5 @@ ingest_data <- function(counts_path, metadata_path){
   # Ingest into SummarizedExperiment
   ### THIS ISN'T COMPLETE RIGHT!
   se <- SummarizedExperiment(counts, colData=md)
+  #test comment
 }

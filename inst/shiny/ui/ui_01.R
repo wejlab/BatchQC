@@ -49,7 +49,8 @@ tabPanel("Upload Data",
 
         # Show a plot of the generated distribution
         mainPanel(
-           tableOutput("summaryTable")
+            selectInput("covariate", "Covariate:", c("Upload data")),
+            tableOutput("summaryTable")
         )
     )
 )

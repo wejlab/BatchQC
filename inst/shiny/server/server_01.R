@@ -9,10 +9,11 @@
 
 library(SummarizedExperiment)
 source("../../R/import.R")
+
 # Define server logic
 
-
     output$summaryTable <- renderTable({
+        ## INGEST USER INPUT
         if (!is.null(input$counts) & !is.null(input$counts)){
             se <- ingest_data(input$counts$datapath, input$md$datapath)
         }
@@ -20,9 +21,16 @@ source("../../R/import.R")
             ### THIS NEEDS TO BE TESTED
             se <- SummarizedExperiment(input$se$datapath)
         }
-
-        # Batch design
-        bd <- batch_design(se, "category")
+        else {
+            se <- NULL
+        }
+        ## Display batch design
+        req(se) ### The following should only run once se is defined
+        # Get covariate names
+        cols = names(colData(se))
+        covs = names[names != 'Batch']
+        updateSelectInput(inputId = "covariate", choices = covs)
+        bd <- batch_design(se, input$covariate)
         return(bd)
 
     })

@@ -12,9 +12,10 @@ source("../../R/import.R")
 
 # Define server logic
 
+
     output$summaryTable <- renderTable({
         ## INGEST USER INPUT
-        if (!is.null(input$counts) & !is.null(input$counts)){
+        if (!is.null(input$counts) & !is.null(input$md)){
             se <- ingest_data(input$counts$datapath, input$md$datapath)
         }
         else if (!is.null(input$se)){
@@ -27,8 +28,8 @@ source("../../R/import.R")
         ## Display batch design
         req(se) ### The following should only run once se is defined
         # Get covariate names
-        cols = names(colData(se))
-        covs = names[names != 'Batch']
+        cols <- names(colData(se))
+        covs <- cols[cols != 'Batch']
         updateSelectInput(inputId = "covariate", choices = covs)
         bd <- batch_design(se, input$covariate)
         return(bd)

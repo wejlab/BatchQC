@@ -4,15 +4,28 @@ library(dplyr)
 library(tidyr)
 
 ingest_data <- function(counts_path, metadata_path){
+
+  # Format for input:
+  ## Counts must be a comma delimited csv file with header and sample name in the first row.
+  ## Metadata is the same.
   # Read in counts (assuming first column is index)
-  counts <- read.csv(counts_path, row.names=1)
+  counts <- read.csv(counts_path, row.names=1,header=T)
   # Read in metadata
-  md <- read.csv(metadata_path, row.names='Sample')
+  md <- read.csv(metadata_path, row.names=1,header=T)
   # CHECK that "Sample" and "Batch" columns are in md
   ## ^^ Is this something that the SE handles?
-
+  
+  # Add in check of integrity: only create se object if all the samples in the metadata are presented in counts and vice versa, return NULL object else and capture the error later.
+  if (all(rownames(md)%in%colnames(counts))&all(colnames(counts)%in%rownames(md))) {
+  # Order the columns of the count data in the order of samples in metadata.
+    counts = counts[,match(rownames(md),colnames(counts))]
+    se <- SummarizedExperiment(list(counts=counts), colData=md)
+  }
+  else {
+	se = NULL
+  }
+  # 
   # Ingest into SummarizedExperiment
-  se <- SummarizedExperiment(list(counts=counts), colData=md)
   return(se)
 }
 

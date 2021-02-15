@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyjs)
+library(shinythemes)
 
 source(file.path("utils", "helpers.R"),  local = TRUE)
 
@@ -8,7 +9,8 @@ ui <- navbarPage(
   title = "BatchQC",
   id="BatchQC",
   fluid=TRUE,
-  theme = "bootstrap.min.css",
+  theme = shinytheme("yeti"),
+  # theme = "bootstrap.min.css",
   source(file.path("ui", "ui_01.R"),  local = TRUE)$value,
   source(file.path("ui", "ui_02.R"),  local = TRUE)$value
 )

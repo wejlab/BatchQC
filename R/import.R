@@ -25,3 +25,13 @@ batch_design <- function(se, covariate){
   }
   return(design)
 }
+
+std_pearson_corr_coef <- function(se, covariate) {
+  # Calculate standardized Pearson correlation coefficient
+
+}
+
+cramers_v <- function(se, covariate) {
+  # Calculate Cramer's V
+
+}

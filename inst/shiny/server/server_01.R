@@ -37,3 +37,12 @@ source("../../R/import.R")
         })
     })
 
+    output$text <- renderText("this is a test")
+
+    observeEvent(input$covariate, {
+        req(se)
+        output$confoundingTable <- renderTable({
+            spcc <<- std_pearson_corr_coef(se, input$covariate)
+            cv <<- cramers_v(se, input$covariate)
+        })
+    })

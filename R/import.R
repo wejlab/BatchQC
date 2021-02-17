@@ -55,19 +55,23 @@ cor_props <- function(bd){
     }
   }
   chi = sum((m - expected)^2/expected)
-  mmin = min(nrow(counts), ncol(counts))
-  return(chi, mmin, tablesum)
+  mmin = min(nrow(m), ncol(m))
+
+  out = list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
+  return(out)
 }
 
 
 std_pearson_corr_coef <- function(bd) {
   #' Calculate standardized Pearson correlation coefficient
-  chi, mmin, tablesum = cor_props(bd)
-  r = sqrt(chi * mmin/((chi + tablesum) * (mmin - 1)))
+  c <- cor_props(bd)
+  r <- sqrt(c$chi * c$mmin/((c$chi + c$tablesum) * (c$mmin - 1)))
+  return(r)
 }
 
 cramers_v <- function(bd) {
   # Calculate Cramer's V
-  chi, mmin, tablesum <- cor_props(bd)
-  v = sqrt(chi/(tablesum * (mmin - 1)))
+  c <- cor_props(bd)
+  v <- sqrt(c$chi/(c$tablesum * (c$mmin - 1)))
+  return(v)
 }

@@ -7,37 +7,58 @@
 #    http://shiny.rstudio.com/
 #
 
-tabPanel("Old Faithful 1",
+accepted = c("text/csv",
+             "text/comma-separated-values",
+             "text/plain",
+             ".csv")
+
+tabPanel("Upload Data",
          useShinyjs(),
          tags$style(appCSS),
          tags$div(
            class = "jumbotron",
            tags$div(
-             class = "container",
-             fluidRow(
-               column(7, h1("BatchQC"))
-             ),
-             p("Batch Effects Quality Control Software"),
-             uiOutput("tab")
+                 class = "container",
+                 fluidRow(
+                   column(7, h1("BatchQC"))
+                 ),
+                 tags$p("Batch Effects Quality Control Software"),
+                 uiOutput("tab")
 
            )
          ),
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("Upload Data"),
 
-    # Sidebar with a slider input for number of bins
+    # Place for uploading data
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+        h3("Upload counts and metadata table"),
+        tags$div(tags$p('Metadata file must contain "Sample" and "Batch" columns')),
+        fileInput("counts", "Counts table",
+                  multiple = FALSE,
+                  accept = accepted),
+        fileInput("md", "Metadata",
+                  multiple = FALSE,
+                  accept = accepted),
+        h3("Or upload a Summarized Experiment"),
+        fileInput("se", "Summarized Experiment",
+                  multiple = FALSE,
+                  accept = accepted)
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("distPlot")
+            tabsetPanel(
+                tabPanel("Input",
+                    selectInput("covariate", "Select Covariate:", choices = ""),
+                    tableOutput("summaryTable"),
+                ),
+                tabPanel("Confounding",
+                    textOutput("text")
+                    # tableOutput("confoundingTable")
+                )
+            )
         )
     )
 )

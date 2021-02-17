@@ -53,8 +53,8 @@ tabPanel("Upload Data",
                     tableOutput("summaryTable"),
                 ),
                 tabPanel("Confounding",
-                         textOutput("text")
-                         # tableOutput("confoundingTable")))
+                         textOutput("text"),
+                         tableOutput("confoundingTable"),
                 )
             )
         )

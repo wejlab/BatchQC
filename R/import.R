@@ -1,4 +1,4 @@
-# Functions for importing data
+# Functions for importing data and summarizing experimental design
 library(SummarizedExperiment)
 library(dplyr)
 library(tidyr)
@@ -30,7 +30,7 @@ ingest_data <- function(counts_path, metadata_path){
 }
 
 batch_design <- function(se, covariate){
-  # Create a batch design table for the provided covariate
+  #' Create a batch design table for the provided covariate
   design <- colData(se) %>% as_tibble %>% group_by(eval(as.symbol(covariate))) %>% count(Batch) %>% pivot_wider(names_from = Batch, values_from = n)
   names(design)[names(design) == "eval(as.symbol(covariate))"] <- ""
   for (i in 2:length(design)) {
@@ -39,12 +39,35 @@ batch_design <- function(se, covariate){
   return(design)
 }
 
-std_pearson_corr_coef <- function(se, covariate) {
-  # Calculate standardized Pearson correlation coefficient
 
+cor_props <- function(bd){
+  #' Calculate correlation properties on a batch_design matrix `bd`
+
+  # Subset matrix to design only
+  m = bd[, -1, ]
+  rowsums = rowSums(m)
+  colsums = colSums(m)
+  tablesum = sum(rowsums)
+  expected = matrix(0, nrow(m), ncol(m))
+  for (i in 1:nrow(m)) {
+    for (j in 1:ncol(m)) {
+      expected[i, j] = rowsums[i] * colsums[j]/tablesum
+    }
+  }
+  chi = sum((m - expected)^2/expected)
+  mmin = min(nrow(counts), ncol(counts))
+  return(chi, mmin, tablesum)
 }
 
-cramers_v <- function(se, covariate) {
-  # Calculate Cramer's V
 
+std_pearson_corr_coef <- function(bd) {
+  #' Calculate standardized Pearson correlation coefficient
+  chi, mmin, tablesum = cor_props(bd)
+  r = sqrt(chi * mmin/((chi + tablesum) * (mmin - 1)))
+}
+
+cramers_v <- function(bd) {
+  # Calculate Cramer's V
+  chi, mmin, tablesum <- cor_props(bd)
+  v = sqrt(chi/(tablesum * (mmin - 1)))
 }

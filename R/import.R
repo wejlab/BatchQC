@@ -12,20 +12,21 @@ ingest_data <- function(counts_path, metadata_path){
   counts <- read.csv(counts_path, row.names=1,header=T)
   # Read in metadata
   md <- read.csv(metadata_path, row.names=1,header=T)
-  # CHECK that "Sample" and "Batch" columns are in md
-  ## ^^ Is this something that the SE handles?
+  # CHECK that "Sample" and "Batch" columns are in md and find covariates
+  cols <- names(md)
+  covs <- cols[cols != 'Batch']
 
   # Add in check of integrity: only create se object if all the samples in the metadata are presented in counts and vice versa, return NULL object else and capture the error later.
   if (all(rownames(md)%in%colnames(counts))&all(colnames(counts)%in%rownames(md))) {
   # Order the columns of the count data in the order of samples in metadata.
     counts = counts[,match(rownames(md),colnames(counts))]
     se <- SummarizedExperiment(list(counts=counts), colData=md)
+    # Add covariates
+    metadata(se)$covariates <- covs
   }
   else {
 	se = NULL
   }
-  #
-  # Ingest into SummarizedExperiment
   return(se)
 }
 

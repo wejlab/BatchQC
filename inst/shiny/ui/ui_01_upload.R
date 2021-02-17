@@ -1,11 +1,3 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
 accepted = c("text/csv",
              "text/comma-separated-values",
@@ -47,7 +39,7 @@ tabPanel("Upload Data",
                   accept = accepted)
         ),
 
-        # Show a plot of the generated distribution
+        # Show a table of the inputted data
         mainPanel(
             tabsetPanel(
                 tabPanel("Input",

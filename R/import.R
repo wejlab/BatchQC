@@ -4,7 +4,7 @@ library(dplyr)
 library(tidyr)
 
 ingest_data <- function(counts_path, metadata_path){
-
+  require(SummarizedExperiment)
   # Format for input:
   ## Counts must be a comma delimited csv file with header and sample name in the first row.
   ## Metadata is the same.

@@ -38,13 +38,9 @@ observeEvent(input$covariate, {
 })
 
 # Compute counfounding design
-output$text <- renderText("this is a test")
-
-#TODO: Let's make this table a matrix of both metrics for all covariates
 observeEvent(input$covariate, {
     req(se)
     output$confoundingTable <- renderTable({
-        spcc <<- std_pearson_corr_coef(bd)
-        cv <<- cramers_v(bd)
-    })
+        metadata(se)$confound.metrics
+    }, rownames = T)
 })

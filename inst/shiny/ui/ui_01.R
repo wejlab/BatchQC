@@ -22,7 +22,7 @@ tabPanel("Upload Data",
                  fluidRow(
                    column(7, h1("BatchQC"))
                  ),
-                 p("Batch Effects Quality Control Software"),
+                 tags$p("Batch Effects Quality Control Software"),
                  uiOutput("tab")
 
            )
@@ -34,7 +34,7 @@ tabPanel("Upload Data",
     sidebarLayout(
         sidebarPanel(
         h3("Upload counts and metadata table"),
-        tags$div(p('Metadata file must contain "Sample" and "Batch" columns')),
+        tags$div(tags$p('Metadata file must contain "Sample" and "Batch" columns')),
         fileInput("counts", "Counts table",
                   multiple = FALSE,
                   accept = accepted),
@@ -45,12 +45,20 @@ tabPanel("Upload Data",
         fileInput("se", "Summarized Experiment",
                   multiple = FALSE,
                   accept = accepted)
-    ),
+        ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            selectInput("covariate", "Covariate:", choices = ""),
-            tableOutput("summaryTable")
+            tabsetPanel(
+                tabPanel("Input",
+                    selectInput("covariate", "Select Covariate:", choices = ""),
+                    tableOutput("summaryTable"),
+                ),
+                tabPanel("Confounding",
+                    textOutput("text")
+                    # tableOutput("confoundingTable")
+                )
+            )
         )
     )
 )

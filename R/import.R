@@ -23,6 +23,8 @@ ingest_data <- function(counts_path, metadata_path){
     se <- SummarizedExperiment(list(counts=counts), colData=md)
     # Add covariates
     metadata(se)$covariates <- covs
+    # Get counfounding metrics
+    metadata(se)$confound.metrics <- confound_metrics(se)
   }
   else {
 	se = NULL
@@ -75,4 +77,20 @@ cramers_v <- function(bd) {
   c <- cor_props(bd)
   v <- sqrt(c$chi/(c$tablesum * (c$mmin - 1)))
   return(v)
+}
+
+confound_metrics <- function(se){
+  metrics <- list("Pearson Correlation Coefficient"=std_pearson_corr_coef, "Cramer's V"=cramers_v)
+  metric.mat <- matrix(nrow=length(covs), ncol=length(methods), dimnames = list(covs, names(metrics)))
+
+  for (c in covs){
+    # Get batch design
+    bd <- batch_design(se, c)
+    for (m in names(metrics)){
+      # Compute metric and place in appropriate slot
+      metric.mat[c, m] <- metrics[[m]](bd)
+      }
+  }
+  # Add metrics to se
+  return(metric.mat)
 }

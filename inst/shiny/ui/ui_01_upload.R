@@ -35,15 +35,17 @@ tabPanel("Upload Data",
             fileInput("md", "Metadata",
                       multiple = FALSE,
                       accept = accepted),
-            h3("Or upload a Summarized Experiment"),
-            fileInput(
-                "se",
-                "Summarized Experiment",
-                multiple = FALSE,
-                accept = accepted
-            ),
-            selectInput('group','Biological setting Column',choices =list(),multiple = F,selected = NULL),
-            selectInput('batch','Batch Variable Column',choices =list(),multiple = F,selected = NULL)
+            selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
+                           options = list(
+                               placeholder = 'Please select an option below',
+                               onInitialize = I('function() { this.setValue(""); }')
+                           )),
+            selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
+                           options = list(
+                               placeholder = 'Please select an option below',
+                               onInitialize = I('function() { this.setValue(""); }')
+                           )),
+            actionButton(inputId = 'Clear_selction',label = 'Clear Selection')
 
         ),
 
@@ -53,11 +55,10 @@ tabPanel("Upload Data",
                 tabPanel(
                     "Input",
                     selectInput("covariate", "Select Covariate:", choices = ""),
-                    tableOutput("summaryTable"),
                 ),
                 tabPanel("Confounding",
                          textOutput("text"),
-                         tableOutput("confoundingTable"),
+                         tableOutput("confoundingTable")
                 )
             )
         )

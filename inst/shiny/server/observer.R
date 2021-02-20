@@ -2,37 +2,122 @@
 
 
 # Store the location of the counts data in reactive value
-
+#### Obtain the Counts matrix and Count table location ####
 observeEvent( input$counts, {
   if (is.null(input$counts)) return()
-  reactivevalue$counts_location = input$counts
-
+  reactivevalue$counts = input$counts
+  reactivevalue$counts_location=input$counts$datapath
 })
 
 # Store the location of the metadata in reactive value
+#### Obtain the metadata matrix and metadata table location ####
 
 observeEvent( input$md, {
   if (is.null(input$md)) return()
-  reactivevalue$md = input$md
+  reactivevalue$metadata_location=input$md$datapath
 
-  updateSelectInput(inputId = "group", choices = covs)
+  reactivevalue$metadata = read.csv(reactivevalue$metadata_location,header = T,row.names = 1)
+  updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL
+                       )
+  updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL
+                       )
+
+})
+####offer users two tabs to choose batch and biological group from the column names of metadata####
+
+#### Update the biological group and Batch variable ####
+observeEvent( input$group, {
+  if (is.null(input$group)) return()
+
+  reactivevalue$group_variable_Name = input$group
+})
+
+observeEvent( input$batch, {
+  if (is.null(input$batch)) return()
+
+  reactivevalue$batch_Variable_Name = input$batch
+})
+
+observeEvent( input$Clear_selction, {
+  if (is.null(input$Clear_selction)) return()
+
+  updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL
+  )
+  updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL
+  )
+  reactivevalue$group_variable_Name=NULL
+  reactivevalue$batch_Variable_Name=NULL
+
+
+
+
+
+  })
+
+
+
+#### Organize the variables, ready the variable names for latter analysis ####
+
+observe({
+  if (!is.null(reactivevalue$group_variable_Name)&!is.null(reactivevalue$batch_Variable_Name)){
+    if (reactivevalue$group_variable_Name==reactivevalue$batch_Variable_Name) {
+      reactivevalue$group_variable_Name=NULL
+      reactivevalue$batch_Variable_Name=NULL
+      updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL
+      )
+      updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL
+      )
+}
+    else {
+      reactivevalue$covariates=colnames(reactivevalue$metadata)[!colnames(reactivevalue$metadata)%in%
+                                                                  c(reactivevalue$group_variable_Name,reactivevalue$batch_Variable_Name)]
+      updateSelectInput(session = session,inputId = "covariate", choices = reactivevalue$covariates)
+
+
+
+
+
+      }
+
+  }
+
+
 
 })
 
+
+
+
+#### Create the summarizeexperiment object ####
 observe({
   # Look for user file upload
-  if (!is.null(input$counts) & !is.null(input$md)){
-    se <<- ingest_data(input$counts$datapath, input$md$datapath)
+  if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)
+      & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name)){
+    se <<- ingest_data(reactivevalue$counts_location,
+                       reactivevalue$metadata_location,
+                       reactivevalue$group_variable_Name,
+                       reactivevalue$batch_Variable_Name,
+                       reactivevalue$covariates)
   }
-  else if (!is.null(input$se)){
-    se <<- SummarizedExperiment(input$se$datapath)
-  }
+  #else if (!is.null(input$se)){
+  #  se <<- SummarizedExperiment(input$se$datapath)
+  #}
   else {
     se <<- NULL
   }
   # Populate drop down menu with covariates
+
+  reactivevalue$se=se
+})
+
+
+
+
+### Create batch design table when covariate selected
+observeEvent(input$covariate, {
   req(se)
-  covs <- metadata(se)$covariates
-  updateSelectInput(inputId = "covariate", choices = covs)
+  output$summaryTable <- renderTable({
+    bd <<- batch_design(se, input$covariate)
+  })
 })
 

@@ -1,31 +1,29 @@
 # Basic structure test:
 ## reative value: pre-determined name:
 
+library(SummarizedExperiment)
+source("../../R/import.R")
+
+
+
+
+reactivevalue=reactiveValues(counts=NULL,
+                               counts_location=NULL,
+                               metadata='',
+                               metadata_location=NULL,
+                               batch_Variable_Name=NULL,
+                               group_variable_Name=NULL,
+                               covariates=NULL,
+                               se=NULL)
+
+source('server/observer.R',local = T)
+
+output$group_variable_Name=renderText({reactivevalue$group_variable_Name})
+output$confoundingTable=renderTable({metadata(reactivevalue$se)$confound.metrics})
 
 
 
 
 
-shinyServer(function(input, output, session) {
-  reactivevalue=reactiveValues(counts_location='',
-                               Counts='',
-                               metadata_location='',
-                               Metadata='',
-                               Batch_Variable_Name='',
-                               group_variable_Name='')
-  source('observer.R',local = T)
 
 
-
-
-
-
-
-
-
-
-
-
-
-}
-)

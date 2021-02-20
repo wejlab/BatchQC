@@ -3,18 +3,19 @@ library(SummarizedExperiment)
 library(dplyr)
 library(tidyr)
 
-ingest_data <- function(counts_path, metadata_path){
+ingest_data <- function(counts_path, metadata_path,group,batch,covariates){
   require(SummarizedExperiment)
   # Format for input:
   ## Counts must be a comma delimited csv file with header and sample name in the first row.
   ## Metadata is the same.
   # Read in counts (assuming first column is index)
-  counts <- read.csv(counts_path, row.names=1,header=T)
+  counts <- read.csv(counts_path, row.names=1,header=T,check.names = F)
   # Read in metadata
-  md <- read.csv(metadata_path, row.names=1,header=T)
-  # CHECK that "Sample" and "Batch" columns are in md and find covariates
+  md <- read.csv(metadata_path, row.names=1,header=T,check.names = F)
   cols <- names(md)
-  covs <- cols[cols != 'Batch']
+  covs <- cols[cols!=batch]
+  # Fix name to Batch
+  colnames(md)[colnames(md)==batch]='Batch'
 
   # Add in check of integrity: only create se object if all the samples in the metadata are presented in counts and vice versa, return NULL object else and capture the error later.
   if (all(rownames(md)%in%colnames(counts))&all(colnames(counts)%in%rownames(md))) {
@@ -23,6 +24,7 @@ ingest_data <- function(counts_path, metadata_path){
     se <- SummarizedExperiment(list(counts=counts), colData=md)
     # Add covariates
     metadata(se)$covariates <- covs
+
     # Get counfounding metrics
     metadata(se)$confound.metrics <- confound_metrics(se)
   }
@@ -31,6 +33,7 @@ ingest_data <- function(counts_path, metadata_path){
   }
   return(se)
 }
+
 
 batch_design <- function(se, covariate){
   #' Create a batch design table for the provided covariate
@@ -90,7 +93,7 @@ confound_metrics <- function(se){
     for (m in names(metrics)){
       # Compute metric and place in appropriate slot
       metric.mat[c, m] <- metrics[[m]](bd)
-      }
+    }
   }
   # Add metrics to se
   return(metric.mat)

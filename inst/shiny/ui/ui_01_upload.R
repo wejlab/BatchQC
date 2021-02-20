@@ -24,7 +24,7 @@ tabPanel("Upload Data",
         sidebarPanel(
             h3("Upload counts and metadata table"),
             tags$div(tags$p(
-                'Metadata file must contain "Sample" and "Batch" columns'
+                'Metadata file must be a comma delimited csv file with headers and sample names.'
             )),
             fileInput(
                 "counts",
@@ -41,7 +41,10 @@ tabPanel("Upload Data",
                 "Summarized Experiment",
                 multiple = FALSE,
                 accept = accepted
-            )
+            ),
+            selectInput('group','Biological setting Column',choices =list(),multiple = F,selected = NULL),
+            selectInput('batch','Batch Variable Column',choices =list(),multiple = F,selected = NULL)
+
         ),
 
         # Show a table of the inputted data

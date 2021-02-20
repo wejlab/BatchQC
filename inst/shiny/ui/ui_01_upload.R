@@ -35,6 +35,12 @@ tabPanel("Upload Data",
             fileInput("md", "Metadata",
                       multiple = FALSE,
                       accept = accepted),
+            fileInput(
+                "se",
+                "Summarized Experiment",
+                multiple = FALSE,
+                accept = accepted
+            ),
             selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
                            options = list(
                                placeholder = 'Please select an option below',

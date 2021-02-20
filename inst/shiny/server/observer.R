@@ -24,8 +24,6 @@ observeEvent( input$md, {
 
 })
 ####offer users two tabs to choose batch and biological group from the column names of metadata####
-
-#### Update the biological group and Batch variable ####
 observeEvent( input$group, {
   if (is.null(input$group)) return()
 
@@ -38,6 +36,7 @@ observeEvent( input$batch, {
   reactivevalue$batch_Variable_Name = input$batch
 })
 
+#### Not satisfy with your pick? Bleh! ####
 observeEvent( input$Clear_selction, {
   if (is.null(input$Clear_selction)) return()
 

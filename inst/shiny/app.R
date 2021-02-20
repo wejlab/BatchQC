@@ -1,6 +1,8 @@
 library(shiny)
 library(shinyjs)
 library(shinythemes)
+require(SummarizedExperiment)
+require(pheatmap)
 
 source(file.path("utils", "helpers.R"),  local = TRUE)
 

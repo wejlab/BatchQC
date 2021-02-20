@@ -5,6 +5,7 @@ library(tidyr)
 
 ingest_data <- function(counts_path, metadata_path,group,batch,covariates){
   require(SummarizedExperiment)
+  require(EBSeq)
   # Format for input:
   ## Counts must be a comma delimited csv file with header and sample name in the first row.
   ## Metadata is the same.
@@ -21,7 +22,15 @@ ingest_data <- function(counts_path, metadata_path,group,batch,covariates){
   if (all(rownames(md)%in%colnames(counts))&all(colnames(counts)%in%rownames(md))) {
   # Order the columns of the count data in the order of samples in metadata.
     counts = counts[,match(rownames(md),colnames(counts))]
-    se <- SummarizedExperiment(list(counts=counts), colData=md)
+    libsizes <- colSums(counts)
+
+    CPM <- (counts+1)/libsizes*(10^6)
+
+
+
+    se <- SummarizedExperiment(assay=list(counts=counts,
+                                          CPM=CPM
+                                          ), colData=md)
     # Add covariates
     metadata(se)$covariates <- covs
 
@@ -34,7 +43,6 @@ ingest_data <- function(counts_path, metadata_path,group,batch,covariates){
   return(se)
 }
 
-
 batch_design <- function(se, covariate){
   #' Create a batch design table for the provided covariate
   design <- colData(se) %>% as_tibble %>% group_by(eval(as.symbol(covariate))) %>% count(Batch) %>% pivot_wider(names_from = Batch, values_from = n)
@@ -44,7 +52,6 @@ batch_design <- function(se, covariate){
   }
   return(design)
 }
-
 
 cor_props <- function(bd){
   #' Calculate correlation properties on a batch_design matrix `bd`
@@ -66,7 +73,6 @@ cor_props <- function(bd){
   out = list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
   return(out)
 }
-
 
 std_pearson_corr_coef <- function(bd) {
   #' Calculate standardized Pearson correlation coefficient
@@ -98,3 +104,11 @@ confound_metrics <- function(se){
   # Add metrics to se
   return(metric.mat)
 }
+
+heatmap_displayer = function(se,assaytouse,top_n_genes) {
+
+}
+
+
+
+

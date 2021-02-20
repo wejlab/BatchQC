@@ -98,6 +98,12 @@ observe({
                        reactivevalue$group_variable_Name,
                        reactivevalue$batch_Variable_Name,
                        reactivevalue$covariates)
+    reactivevalue$se=se
+    updateSelectizeInput(session = session,inputId = 'Normalization_method',choices = assayNames((reactivevalue$se)),selected = NULL)
+    updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
+    updateNumericInput(session = session,inputId = 'top_n',value = 500,min = 0,max = dim(reactivevalue$se)[1])
+
+
   }
   #else if (!is.null(input$se)){
   #  se <<- SummarizedExperiment(input$se$datapath)
@@ -107,7 +113,8 @@ observe({
   }
   # Populate drop down menu with covariates
 
-  reactivevalue$se=se
+  #reactivevalue$se=se
+
 })
 
 
@@ -120,4 +127,38 @@ observeEvent(input$covariate, {
     bd <<- batch_design(se, input$covariate)
   })
 })
+
+
+
+
+#### Plot Heatmap based on the input ####
+
+
+observeEvent( input$heatmap_plot, {
+if (!is.null(reactivevalue$se)) {
+  require(pheatmap
+          )
+  data=reactivevalue$se@assays@data[[input$Normalization_method]]
+vargenes=apply(data,1,var)
+vargenes=vargenes[order(vargenes,decreasing = T)]
+vargenes=vargenes[seq(1,input$top_n)]
+data=log(data+1)
+data=data[names(vargenes),]
+coldata=colData(reactivevalue$se)
+if (is.null(input$Variates_to_display)) {
+cor=cor(data)
+coldata=coldata[,c(reactivevalue$group_variable_Name,'Batch')]
+output$correlation_heatmap=renderPlot({pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F)})
+}
+else {
+  cor=cor(data)
+  coldata=coldata[,unique(c(reactivevalue$group_variable_Name,'Batch',input$Variates_to_display))]
+  output$correlation_heatmap=renderPlot({pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F,)})
+}
+
+}
+}
+)
+
+
 

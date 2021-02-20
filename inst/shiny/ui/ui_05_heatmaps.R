@@ -18,7 +18,7 @@ tabPanel("Heatmaps",
            mainPanel(
              tabsetPanel(
                tabPanel("Sample Correlations",
-                        plotOutput('correlation_heatmap')
+                        plotOutput('correlation_heatmap',width = 1024,height = 1024)
                ),
                tabPanel("Heatmap"
                )

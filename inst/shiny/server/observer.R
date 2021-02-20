@@ -1,7 +1,5 @@
-# This script will hold the observeevent function, which monitor and store input.
+# This script will hold the observeevent function, which monitors and stores input.
 
-
-# Store the location of the counts data in reactive value
 #### Obtain the Counts matrix and Count table location ####
 observeEvent( input$counts, {
   if (is.null(input$counts)) return()
@@ -9,7 +7,6 @@ observeEvent( input$counts, {
   reactivevalue$counts_location=input$counts$datapath
 })
 
-# Store the location of the metadata in reactive value
 #### Obtain the metadata matrix and metadata table location ####
 
 observeEvent( input$md, {
@@ -23,6 +20,20 @@ observeEvent( input$md, {
                        )
 
 })
+
+#### Obtain Count matrix and metadata from the rds summarizeexperiment ####
+observeEvent( input$se, {
+  if (is.null(input$se)) return()
+  se=readRDS(input$se$datapath)
+
+
+  updateSelectizeInput(session,'batch',choices=colnames(colData(se)),selected = NULL
+  )
+  updateSelectizeInput(session,'group',choices=colnames(colData(se)),selected = NULL
+  )
+
+})
+
 ####offer users two tabs to choose batch and biological group from the column names of metadata####
 observeEvent( input$group, {
   if (is.null(input$group)) return()

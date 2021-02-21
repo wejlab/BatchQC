@@ -9,11 +9,13 @@ ingest_data <- function(se,group,batch){
 
   if (!is.null(se)) {
     variables=colnames(colData(se))
-    covs=variables[!variables%in%c(batch)]
+    covs=variables[!variables%in%c(batch,group)]
     colnames(colData(se))[colnames(colData(se))==batch]='Batch'
 
     # Add covariates
     metadata(se)$covariates <- covs
+    # Add experimental group variable
+    metadata(se)$Experimental_group=group
 
     # Get counfounding metrics
     metadata(se)$confound.metrics <- confound_metrics(se)

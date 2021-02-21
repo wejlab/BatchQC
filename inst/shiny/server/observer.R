@@ -25,11 +25,11 @@ observeEvent( input$md, {
 observeEvent( input$se, {
   if (is.null(input$se)) return()
   se=readRDS(input$se$datapath)
+  reactivevalue$se=se
 
-
-  updateSelectizeInput(session,'batch',choices=colnames(colData(se)),selected = NULL
+  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL
   )
-  updateSelectizeInput(session,'group',choices=colnames(colData(se)),selected = NULL
+  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
   )
 
 })
@@ -102,18 +102,38 @@ observe({
 observe({
   # Look for user file upload
   if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)
-      & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name)){
-    se <<- ingest_data(reactivevalue$counts_location,
-                       reactivevalue$metadata_location,
-                       reactivevalue$group_variable_Name,
-                       reactivevalue$batch_Variable_Name,
-                       reactivevalue$covariates)
+      & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name) & is.null(reactivevalue$se)){
+    #se <<- ingest_data(reactivevalue$counts_location,
+    #                   reactivevalue$metadata_location,
+    #                   reactivevalue$group_variable_Name,
+    #                   reactivevalue$batch_Variable_Name,
+    #                   reactivevalue$covariates)
+    coldata=read.csv(reactivevalue$metadata_location,header = T,row.names = 1,check.names = F)
+    counts=read.csv(reactivevalue$counts_location,header = T,row.names = 1,check.names = F)
+    # Filter out samples that do not exist, allow redundancies in either input
+    reserve_sample=intersect(rownames(coldata),colnames(counts))
+    coldata=coldata[reserve_sample,]
+    counts=counts[,reserve_sample]
+    counts = counts[,match(rownames(coldata),colnames(counts))]
+    se = SummarizedExperiment(assay=list(counts=counts
+    ), colData=coldata)
+    se = ingest_data(se,reactivevalue$group_variable_Name,
+                                        reactivevalue$batch_Variable_Name)
+
+
     reactivevalue$se=se
     updateSelectizeInput(session = session,inputId = 'Normalization_method',choices = assayNames((reactivevalue$se)),selected = NULL)
     updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
     updateNumericInput(session = session,inputId = 'top_n',value = 500,min = 0,max = dim(reactivevalue$se)[1])
 
 
+  }
+  else if (!is.null(reactivevalue$se) & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name) ) {
+    reactivevalue$se=ingest_data(reactivevalue$se,reactivevalue$group_variable_Name,
+                                 reactivevalue$batch_Variable_Name)
+    updateSelectizeInput(session = session,inputId = 'Normalization_method',choices = assayNames((reactivevalue$se)),selected = NULL)
+    updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
+    updateNumericInput(session = session,inputId = 'top_n',value = 500,min = 0,max = dim(reactivevalue$se)[1])
   }
   #else if (!is.null(input$se)){
   #  se <<- SummarizedExperiment(input$se$datapath)
@@ -130,7 +150,7 @@ observe({
 
 
 
-### Create batch design table when covariate selected
+#### Create batch design table when covariate selected ####
 observeEvent(input$covariate, {
   req(se)
   output$summaryTable <- renderTable({
@@ -154,11 +174,14 @@ vargenes=vargenes[order(vargenes,decreasing = T)]
 vargenes=vargenes[seq(1,input$top_n)]
 data=log(data+1)
 data=data[names(vargenes),]
+
 coldata=colData(reactivevalue$se)
 if (is.null(input$Variates_to_display)) {
 cor=cor(data)
 coldata=coldata[,c(reactivevalue$group_variable_Name,'Batch')]
-output$correlation_heatmap=renderPlot({pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F)})
+output$correlation_heatmap=renderPlot({
+  pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F,annotation_names_col = F,annotation_names_row = F)
+  })
 }
 else {
   cor=cor(data)

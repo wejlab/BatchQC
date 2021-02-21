@@ -3,34 +3,15 @@ library(SummarizedExperiment)
 library(dplyr)
 library(tidyr)
 
-ingest_data <- function(counts_path, metadata_path,group,batch,covariates){
+ingest_data <- function(se,group,batch){
   require(SummarizedExperiment)
   require(EBSeq)
-  # Format for input:
-  ## Counts must be a comma delimited csv file with header and sample name in the first row.
-  ## Metadata is the same.
-  # Read in counts (assuming first column is index)
-  counts <- read.csv(counts_path, row.names=1,header=T,check.names = F)
-  # Read in metadata
-  md <- read.csv(metadata_path, row.names=1,header=T,check.names = F)
-  cols <- names(md)
-  covs <- cols[cols!=batch]
-  # Fix name to Batch
-  colnames(md)[colnames(md)==batch]='Batch'
 
-  # Add in check of integrity: only create se object if all the samples in the metadata are presented in counts and vice versa, return NULL object else and capture the error later.
-  if (all(rownames(md)%in%colnames(counts))&all(colnames(counts)%in%rownames(md))) {
-  # Order the columns of the count data in the order of samples in metadata.
-    counts = counts[,match(rownames(md),colnames(counts))]
-    libsizes <- colSums(counts)
+  if (!is.null(se)) {
+    variables=colnames(colData(se))
+    covs=variables[!variables%in%c(batch)]
+    colnames(colData(se))[colnames(colData(se))==batch]='Batch'
 
-    CPM <- (counts+1)/libsizes*(10^6)
-
-
-
-    se <- SummarizedExperiment(assay=list(counts=counts,
-                                          CPM=CPM
-                                          ), colData=md)
     # Add covariates
     metadata(se)$covariates <- covs
 
@@ -105,9 +86,6 @@ confound_metrics <- function(se){
   return(metric.mat)
 }
 
-heatmap_displayer = function(se,assaytouse,top_n_genes) {
-
-}
 
 
 

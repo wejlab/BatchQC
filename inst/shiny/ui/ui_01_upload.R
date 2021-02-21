@@ -58,6 +58,10 @@ tabPanel("Upload Data",
         # Show a table of the inputted data
         mainPanel(
             tabsetPanel(
+                tabPanel('Overview and statistics',
+                         dataTableOutput('metadata')
+
+                         ),
                 tabPanel(
                     "Input",
                     selectInput("covariate", "Select Covariate:", choices = ""),

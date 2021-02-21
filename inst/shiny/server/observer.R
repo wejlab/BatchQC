@@ -103,11 +103,6 @@ observe({
   # Look for user file upload
   if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)
       & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name) & is.null(reactivevalue$se)){
-    #se <<- ingest_data(reactivevalue$counts_location,
-    #                   reactivevalue$metadata_location,
-    #                   reactivevalue$group_variable_Name,
-    #                   reactivevalue$batch_Variable_Name,
-    #                   reactivevalue$covariates)
     coldata=read.csv(reactivevalue$metadata_location,header = T,row.names = 1,check.names = F)
     counts=read.csv(reactivevalue$counts_location,header = T,row.names = 1,check.names = F)
     # Filter out samples that do not exist, allow redundancies in either input
@@ -115,6 +110,7 @@ observe({
     coldata=coldata[reserve_sample,]
     counts=counts[,reserve_sample]
     counts = counts[,match(rownames(coldata),colnames(counts))]
+
     se = SummarizedExperiment(assay=list(counts=counts
     ), colData=coldata)
     se = ingest_data(se,reactivevalue$group_variable_Name,
@@ -122,18 +118,31 @@ observe({
 
 
     reactivevalue$se=se
-    updateSelectizeInput(session = session,inputId = 'Normalization_method',choices = assayNames((reactivevalue$se)),selected = NULL)
+    updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
+    updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
+
+
     updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
-    updateNumericInput(session = session,inputId = 'top_n',value = 500,min = 0,max = dim(reactivevalue$se)[1])
+    updateSelectInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
+
+    updateSelectInput(session = session,inputId = 'Variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
+
+    updateNumericInput(session = session,inputId = 'top_n_heatmap',value = 500,min = 0,max = dim(reactivevalue$se)[1])
+    output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
 
 
   }
   else if (!is.null(reactivevalue$se) & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name) ) {
     reactivevalue$se=ingest_data(reactivevalue$se,reactivevalue$group_variable_Name,
                                  reactivevalue$batch_Variable_Name)
-    updateSelectizeInput(session = session,inputId = 'Normalization_method',choices = assayNames((reactivevalue$se)),selected = NULL)
+    updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
+    updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
     updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
-    updateNumericInput(session = session,inputId = 'top_n',value = 500,min = 0,max = dim(reactivevalue$se)[1])
+    updateNumericInput(session = session,inputId = 'top_n_heatmap',value = 500,min = 0,max = dim(reactivevalue$se)[1])
+    updateSelectizeInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
+    updateSelectizeInput(session = session,inputId = 'Variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
+    output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
+
   }
   #else if (!is.null(input$se)){
   #  se <<- SummarizedExperiment(input$se$datapath)
@@ -162,32 +171,40 @@ observeEvent(input$covariate, {
 
 
 #### Plot Heatmap based on the input ####
-
-
 observeEvent( input$heatmap_plot, {
 if (!is.null(reactivevalue$se)) {
-  require(pheatmap
-          )
-  data=reactivevalue$se@assays@data[[input$Normalization_method]]
+  data=reactivevalue$se@assays@data[[input$Normalization_method_heatmap]]
+  data=as.matrix(data)
+  data=apply(data,c(1,2),as.numeric)
+  data=data[rowSums(data)!=0,]
 vargenes=apply(data,1,var)
 vargenes=vargenes[order(vargenes,decreasing = T)]
-vargenes=vargenes[seq(1,input$top_n)]
+vargenes=vargenes[seq(1,input$top_n_heatmap)]
 data=log(data+1)
 data=data[names(vargenes),]
+data=data+1
+for (i in 1:nrow(data)) {
+  data[i,]=(data[i,]-mean(data[i,]))/sd(data[i,])
+}
 
-coldata=colData(reactivevalue$se)
-if (is.null(input$Variates_to_display)) {
+coldata=data.frame(colData(reactivevalue$se))
+
 cor=cor(data)
-coldata=coldata[,c(reactivevalue$group_variable_Name,'Batch')]
+coldata=coldata[,unique(c(reactivevalue$group_variable_Name,'Batch',input$Variates_to_display))]
+cat('plotting correlation.')
+correlation=pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F
+                     ,annotation_names_col = F,annotation_names_row = F,display_numbers = T,silent = T)
 output$correlation_heatmap=renderPlot({
-  pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F,annotation_names_col = F,annotation_names_row = F)
-  })
-}
-else {
-  cor=cor(data)
-  coldata=coldata[,unique(c(reactivevalue$group_variable_Name,'Batch',input$Variates_to_display))]
-  output$correlation_heatmap=renderPlot({pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F,)})
-}
+  correlation
+})
+cat('Finish plotting correlation.')
+
+topn_heatmap=  pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+
+output$topn_heatmap=renderPlot({
+  topn_heatmap
+})
+
 
 }
 }
@@ -195,3 +212,37 @@ else {
 
 
 
+
+
+#### Plot PCA based on the input ####
+
+observeEvent( input$PCA_plot, {
+  if (!is.null(reactivevalue$se)) {
+    require(ggplot2)
+    require(plotly)
+    data=reactivevalue$se@assays@data[[input$Normalization_method_PCA]]
+    data=as.matrix(data)
+    data=apply(data,c(1,2),as.numeric)
+    data=data[rowSums(data)!=0,]
+    vargenes=apply(data,1,var)
+    vargenes=vargenes[order(vargenes,decreasing = T)]
+    vargenes=vargenes[seq(1,input$top_n)]
+    data=log(data+1)
+    data=data[names(vargenes),]
+    data=data+1
+    for (i in 1:nrow(data)) {
+      data[i,]=(data[i,]-mean(data[i,]))/sd(data[i,])
+    }
+
+    coldata=data.frame(colData(reactivevalue$se))
+    PCA=prcomp(t(data))
+    coldata=cbind(coldata,PCA$x)
+    coldata$sample=rownames(coldata)
+
+
+    plot=ggplot(coldata,aes_string(x='PC1',y='PC2',colour=input$Variates_color,shape=input$Variates_shape,sample = 'sample'))+geom_point(size=3)
+    output$PCA=renderPlot({(plot)})
+
+  }
+}
+)

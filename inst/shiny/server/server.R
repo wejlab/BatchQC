@@ -18,8 +18,9 @@ reactivevalue=reactiveValues(counts=NULL,
 
 source('server/observer.R',local = T)
 
-output$group_variable_Name=renderText({reactivevalue$group_variable_Name})
-output$confoundingTable=renderTable({metadata(reactivevalue$se)$confound.metrics})
+#output$group_variable_Name=renderText({reactivevalue$group_variable_Name})
+output$confoundingTable=NULL
+output$metadata=NULL
 
 
 

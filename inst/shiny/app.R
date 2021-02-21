@@ -3,6 +3,10 @@ library(shinyjs)
 library(shinythemes)
 require(SummarizedExperiment)
 require(pheatmap)
+require(ggplot2)
+require(plotly)
+require(EBSeq)
+require(data.table)
 
 source(file.path("utils", "helpers.R"),  local = TRUE)
 

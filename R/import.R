@@ -19,6 +19,14 @@ ingest_data <- function(se,group,batch){
 
     # Get counfounding metrics
     metadata(se)$confound.metrics <- confound_metrics(se)
+    # Calculate CPM normalization for the summarizeexperiment
+    se@assays@data$CPM=((se@assays@data$counts+1)/colSums(se@assays@data$counts))*(10^6)
+    # Calculate Median of Ratio normalization for the summarizeexperiment
+    require(EBSeq)
+    se@assays@data$DESEQ_Method=GetNormalizedMat(se@assays@data$counts, MedianNorm(se@assays@data$counts))
+    # EdgeR won't go straight-forward on how exactly they do their normalization, so I will just pass here.
+    colData(se)$library_size=colSums(se@assays@data$counts)
+
   }
   else {
 	se = NULL

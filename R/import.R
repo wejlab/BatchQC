@@ -142,17 +142,24 @@ heatmap_plotter <- function(se, assay, nfeature,experiment_variable,annotation_c
 
   cor=cor(data)
   if (!is.null(annotation_column)) {
-    coldata=coldata[,unique(c(experiment_variable,'Batch',annotation_column))]
+    coldata=coldata[,annotation_column]
+    correlation_heatmap=pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F
+                                 ,annotation_names_col = F,annotation_names_row = F,silent = T)
+
+    topn_heatmap = pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+
+    dendrogram=topn_heatmap$tree_col
+
   }
   else {
-    coldata=coldata[,unique(c(experiment_variable,'Batch'))]
+    correlation_heatmap=pheatmap(cor,show_colnames = F,show_rownames = F
+                                 ,annotation_names_col = F,annotation_names_row = F,silent = T)
+
+    topn_heatmap = pheatmap(data,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+
+    dendrogram=topn_heatmap$tree_col
   }
-  correlation_heatmap=pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F
-                       ,annotation_names_col = F,annotation_names_row = F,display_numbers = T,silent = T)
 
-  topn_heatmap = pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
-
-  dendrogram=topn_heatmap$tree_col
 
   return(list(correlation_heatmap=correlation_heatmap,
               topn_heatmap=topn_heatmap,

@@ -7,6 +7,7 @@ require(ggplot2)
 require(plotly)
 require(EBSeq)
 require(data.table)
+require(reader)
 
 source(file.path("utils", "helpers.R"),  local = TRUE)
 

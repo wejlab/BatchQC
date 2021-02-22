@@ -3,6 +3,7 @@ accepted = c("text/csv",
              "text/plain",
              ".csv")
 
+
 tabPanel("Upload Data",
     useShinyjs(),
     tags$style(appCSS),
@@ -24,7 +25,7 @@ tabPanel("Upload Data",
         sidebarPanel(
             h3("Upload counts and metadata table"),
             tags$div(tags$p(
-                'Metadata file must be a comma delimited csv file with headers and sample names.'
+                'Metadata file must be a table with headers and sample names.'
             )),
             fileInput(
                 "counts",
@@ -41,27 +42,31 @@ tabPanel("Upload Data",
                 multiple = FALSE,
                 accept = accepted
             ),
-            selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
-                           options = list(
-                               placeholder = 'Please select an option below',
-                               onInitialize = I('function() { this.setValue(""); }')
-                           )),
-            selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
-                           options = list(
-                               placeholder = 'Please select an option below',
-                               onInitialize = I('function() { this.setValue(""); }')
-                           )),
-            actionButton(inputId = 'Clear_selction',label = 'Clear Selection')
+            #selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
+            #               options = list(
+            #                   placeholder = 'Please select an option below',
+            #                   onInitialize = I('function() { this.setValue(""); }')
+            #               )),
+            #selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
+            #               options = list(
+            #                   placeholder = 'Please select an option below',
+            #                   onInitialize = I('function() { this.setValue(""); }')
+            #               )),
+            actionButton(inputId = 'submit',label = 'Submit')
 
         ),
 
         # Show a table of the inputted data
         mainPanel(
             tabsetPanel(
-                tabPanel('Overview and statistics',
-                         dataTableOutput('metadata')
+                tabPanel('Preview the first 10 lines of the input.',
+                         tableOutput('counts_header'),
+                         tableOutput('metadata_header')
+
 
                          ),
+                tabPanel('Full Metadata',
+                         dataTableOutput('metadata')),
                 tabPanel(
                     "Input",
                     selectInput("covariate", "Select Covariate:", choices = ""),

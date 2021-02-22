@@ -199,13 +199,16 @@ output$correlation_heatmap=renderPlot({
 })
 cat('Finish plotting correlation.')
 
-topn_heatmap=  pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+topn_heatmap = pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
 
 output$topn_heatmap=renderPlot({
   topn_heatmap
 })
 
-
+dendrogram=topn_heatmap$tree_col
+output$Dendrogram=renderPlot({
+  plot(dendrogram)
+})
 }
 }
 )

@@ -23,6 +23,10 @@ tabPanel("Heatmaps",
                tabPanel("Heatmap",
                         plotOutput('topn_heatmap',width = 1024,height = 1024)
 
+               ),
+               tabPanel("Dendrogram",
+                        plotOutput('Dendrogram',width = 1024,height = 1024)
+
                )
 
 

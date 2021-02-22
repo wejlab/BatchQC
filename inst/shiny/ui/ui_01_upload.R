@@ -3,7 +3,7 @@ accepted = c("text/csv",
              "text/plain",
              ".csv")
 
-tabPanel("Upload Data",
+tabPanel("Upload and Normalization",
     useShinyjs(),
     tags$style(appCSS),
     tags$div(
@@ -17,7 +17,7 @@ tabPanel("Upload Data",
         )
     ),
     # Application title
-    titlePanel("Upload Data"),
+    titlePanel("Upload and Normalization"),
 
     # Place for uploading data
     sidebarLayout(
@@ -58,17 +58,11 @@ tabPanel("Upload Data",
         # Show a table of the inputted data
         mainPanel(
             tabsetPanel(
-                tabPanel('Overview and statistics',
+                tabPanel("Input",
                          dataTableOutput('metadata')
-
-                         ),
-                tabPanel(
-                    "Input",
-                    selectInput("covariate", "Select Covariate:", choices = ""),
                 ),
-                tabPanel("Confounding",
-                         textOutput("text"),
-                         tableOutput("confoundingTable")
+                tabPanel("Normalization"
+                    #selectInput("covariate", "Select Covariate:", choices = ""),
                 )
             )
         )

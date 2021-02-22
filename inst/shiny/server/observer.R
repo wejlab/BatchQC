@@ -5,8 +5,8 @@ observeEvent( input$counts, {
   if (is.null(input$counts)) return()
   #reactivevalue$counts = input$counts
   reactivevalue$counts_location=input$counts$datapath
-  output$counts_header=renderTable(head(read.table(reactivevalue$counts_location,header = T,row.names = 1,
-                                                   sep = get.delim(reactivevalue$counts_location,n = 10,delims = c('\t',',')),check.names = F)))
+  output$counts_header=renderTable((read.table(reactivevalue$counts_location,header = T,row.names = 1,
+                                                   sep = get.delim(reactivevalue$counts_location,n = 10,delims = c('\t',',')),check.names = F))[seq(1,10),seq(1,3)])
 })
 
 #### Obtain the metadata matrix and metadata table location ####
@@ -19,6 +19,7 @@ observeEvent( input$md, {
 
   reactivevalue$metadata = read.table(reactivevalue$metadata_location,header = T,row.names = 1,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
 
+
 })
 
 #### Obtain Count matrix and metadata from the rds summarizeexperiment ####
@@ -27,10 +28,6 @@ observeEvent( input$se, {
   se=readRDS(input$se$datapath)
   reactivevalue$se=se
 
-  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL
-  )
-  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
-  )
 
 })
 
@@ -38,9 +35,11 @@ observeEvent( input$submit, {
   if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
     coldata=read.table(reactivevalue$metadata_location,header = T,row.names = 1,check.names = F,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
     counts=read.table(reactivevalue$counts_location,header = T,row.names = 1,check.names = F,sep = get.delim(reactivevalue$counts_location,n = 10,delims = c('\t',',')))
+    counts=counts[rowSums(counts)>0,]
     se = SummarizedExperiment(assay=list(counts=counts
     ), colData=coldata)
     reactivevalue$se=se
+    reactivevalue$metadata=data.frame(colData(reactivevalue$se))
     updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
     updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
     updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
@@ -48,10 +47,16 @@ observeEvent( input$submit, {
     updateSelectizeInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
     updateSelectizeInput(session = session,inputId = 'Variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
     output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
+    updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL
+    )
+    updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
+    )
   }
   else if (!is.null(input$se$datapath)){
     se = readRDS(input$se$datapath)
+    se = se[rowSums(se@assays@data$counts)>0,]
     reactivevalue$se=se
+    reactivevalue$metadata=data.frame(colData(reactivevalue$se))
     updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
     updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
     updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
@@ -61,49 +66,52 @@ observeEvent( input$submit, {
     updateSelectizeInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
     updateSelectizeInput(session = session,inputId = 'Variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
     output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
+
+    updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL
+    )
+    updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
+    )
   }
 })
-
-
-
-
-
-
 
 ####offer users two tabs to choose batch and biological group from the column names of metadata####
 observeEvent( input$group, {
   if (is.null(input$group)) return()
+  if (!is.null(reactivevalue$se)&!is.null(input$group)){
 
   reactivevalue$group_variable_Name = input$group
+  table=data.frame(table(reactivevalue$metadata[input$group]))
+  colnames(table)=c('Group','Counts')
+  output$group_counts=renderTable(table)}
 })
 
 observeEvent( input$batch, {
-  if (is.null(input$batch)) return()
-
-  reactivevalue$batch_Variable_Name = input$batch
-})
-
-#### Not satisfy with your pick? Bleh! ####
-observeEvent( input$Clear_selction, {
-  if (is.null(input$Clear_selction)) return()
-
-  updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL
-  )
-  updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL
-  )
-  reactivevalue$group_variable_Name=NULL
-  reactivevalue$batch_Variable_Name=NULL
-
-
-
-
-
+  if (is.null(input$batch)&!is.null(input$batch)) return()
+  if (!is.null(reactivevalue$se))
+  {reactivevalue$batch_Variable_Name = input$batch
+  table=data.frame(table(reactivevalue$metadata[input$batch]))
+  colnames(table)=c('batch','Counts')
+  output$batch_counts=renderTable(table)}
 })
 
 
+#### Normalize data ####
+observeEvent(input$DESEQ_normalization, {
+  if (is.null(input$DESEQ_normalization)) return()
+  if (!is.null(reactivevalue$se)){require(EBSeq)
+  reactivevalue$se@assays@data$DESEQ_normalization=GetNormalizedMat(reactivevalue$se@assays@data$counts, MedianNorm(reactivevalue$se@assays@data$counts))
+  updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)}
+})
+
+observeEvent(input$CPM_Normalization, {
+  if (is.null(input$CPM_Normalization)) return()
+if (!is.null(reactivevalue$se)){  reactivevalue$se@assays@data$CPM=((reactivevalue$se@assays@data$counts+1)/colSums(reactivevalue$se@assays@data$counts))*(10^6)
+  updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)}
+  })
 
 #### Organize the variables, ready the variable names for latter analysis ####
-
 observe({
   if (!is.null(reactivevalue$group_variable_Name)&!is.null(reactivevalue$batch_Variable_Name)){
     if (reactivevalue$group_variable_Name==reactivevalue$batch_Variable_Name) {
@@ -132,9 +140,6 @@ observe({
 })
 
 
-
-
-#### Create the summarizeexperiment object ####
 
 
 

@@ -65,8 +65,28 @@ tabPanel("Upload Data",
 
 
                          ),
+                tabPanel('Normalization',
+                         actionButton(inputId = 'DESEQ_normalization',label = 'DESEQ normalization'),
+                         actionButton(inputId = 'CPM_Normalization',label = 'CPM normalization')
+
+                ),
                 tabPanel('Full Metadata',
                          dataTableOutput('metadata')),
+                tabPanel('Setting Variables',
+                         selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
+                                        options = list(
+                                            placeholder = 'Please select an option below',
+                                            onInitialize = I('function() { this.setValue(""); }')
+                                        )),
+                         selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
+                                        options = list(
+                                            placeholder = 'Please select an option below',
+                                            onInitialize = I('function() { this.setValue(""); }')
+                                        )),
+                         tableOutput('group_counts'),
+                         tableOutput('batch_counts')
+
+                         ),
                 tabPanel(
                     "Input",
                     selectInput("covariate", "Select Covariate:", choices = ""),

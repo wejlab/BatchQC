@@ -20,7 +20,7 @@ ingest_data <- function(se,group,batch){
     # Get counfounding metrics
     metadata(se)$confound.metrics <- confound_metrics(se)
     # Calculate CPM normalization for the summarizeexperiment
-    se@assays@data$CPM=((se@assays@data$counts+1)/colSums(se@assays@data$counts))*(10^6)
+    #se@assays@data$CPM=((se@assays@data$counts+1)/colSums(se@assays@data$counts))*(10^6)
     # Calculate Median of Ratio normalization for the summarizeexperiment
     require(EBSeq)
     se@assays@data$DESEQ_Method=GetNormalizedMat(se@assays@data$counts, MedianNorm(se@assays@data$counts))
@@ -142,7 +142,12 @@ heatmap_plotter <- function(se, assay, nfeature,experiment_variable,annotation_c
 
   cor=cor(data)
   if (!is.null(annotation_column)) {
-    coldata=coldata[,annotation_column]
+    if (length(annotation_column)==1) {
+      coldata=data.frame(coldata[,annotation_column],row.names = rownames(coldata))
+    }
+    else {
+      coldata=coldata[,annotation_column]
+    }
     correlation_heatmap=pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F
                                  ,annotation_names_col = F,annotation_names_row = F,silent = T)
 

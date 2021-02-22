@@ -8,7 +8,7 @@ tabPanel("PCA Analysis",
            sidebarPanel(
              selectizeInput('Normalization_method_PCA','Which normalization method to use',choices =c(),multiple = F),
              selectizeInput('Variates_shape','Which variates to show as shape',choices =c(),multiple = F,selected = NULL),
-             numericInput('top_n','How many top variable features to use',value = 500,min = 0,max = 500),
+             numericInput('top_n_PCA','How many top variable features to use',value = 500,min = 0,max = 500),
              selectizeInput('Variates_color','Which variates to show as color',choices =c(),multiple = F,selected = NULL),
 
              actionButton('PCA_plot',label = 'Here we go!')

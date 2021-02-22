@@ -10,7 +10,6 @@ tabPanel("PCA Analysis",
              selectizeInput('Variates_shape','Which variates to show as shape',choices =c(),multiple = F,selected = NULL),
              numericInput('top_n','How many top variable features to use',value = 500,min = 0,max = 500),
              selectizeInput('Variates_color','Which variates to show as color',choices =c(),multiple = F,selected = NULL),
-
              actionButton('PCA_plot',label = 'Here we go!')
            ),
 

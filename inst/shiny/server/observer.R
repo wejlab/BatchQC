@@ -1,4 +1,4 @@
-# This script will hold the observeevent function, which monitors and stores input.
+# This script will hold the observeEvent function, which monitors and stores input.
 
 #### Obtain the Counts matrix and Count table location ####
 observeEvent( input$counts, {
@@ -15,9 +15,9 @@ observeEvent( input$md, {
 
   reactivevalue$metadata = read.csv(reactivevalue$metadata_location,header = T,row.names = 1)
   updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL
-                       )
+  )
   updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL
-                       )
+  )
 
 })
 
@@ -31,19 +31,16 @@ observeEvent( input$se, {
   )
   updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
   )
-
 })
 
 ####offer users two tabs to choose batch and biological group from the column names of metadata####
 observeEvent( input$group, {
   if (is.null(input$group)) return()
-
   reactivevalue$group_variable_Name = input$group
 })
 
 observeEvent( input$batch, {
   if (is.null(input$batch)) return()
-
   reactivevalue$batch_Variable_Name = input$batch
 })
 
@@ -57,12 +54,7 @@ observeEvent( input$Clear_selction, {
   )
   reactivevalue$group_variable_Name=NULL
   reactivevalue$batch_Variable_Name=NULL
-
-
-
-
-
-  })
+})
 
 
 
@@ -77,24 +69,13 @@ observe({
       )
       updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL
       )
-}
-    else {
+    }else {
       reactivevalue$covariates=colnames(reactivevalue$metadata)[!colnames(reactivevalue$metadata)%in%
                                                                   c(reactivevalue$group_variable_Name,reactivevalue$batch_Variable_Name)]
       updateSelectInput(session = session,inputId = "covariate", choices = reactivevalue$covariates)
-
-
-
-
-
-      }
-
+    }
   }
-
-
-
 })
-
 
 
 
@@ -105,6 +86,7 @@ observe({
       & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name) & is.null(reactivevalue$se)){
     coldata=read.csv(reactivevalue$metadata_location,header = T,row.names = 1,check.names = F)
     counts=read.csv(reactivevalue$counts_location,header = T,row.names = 1,check.names = F)
+
     # Filter out samples that do not exist, allow redundancies in either input
     reserve_sample=intersect(rownames(coldata),colnames(counts))
     coldata=coldata[reserve_sample,]
@@ -114,13 +96,11 @@ observe({
     se = SummarizedExperiment(assay=list(counts=counts
     ), colData=coldata)
     se = ingest_data(se,reactivevalue$group_variable_Name,
-                                        reactivevalue$batch_Variable_Name)
-
+                     reactivevalue$batch_Variable_Name)
 
     reactivevalue$se=se
     updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
     updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
-
 
     updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
     updateSelectInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
@@ -129,8 +109,6 @@ observe({
 
     updateNumericInput(session = session,inputId = 'top_n_heatmap',value = 500,min = 0,max = dim(reactivevalue$se)[1])
     output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
-
-
   }
   else if (!is.null(reactivevalue$se) & !is.null(reactivevalue$batch_Variable_Name) & !is.null(reactivevalue$group_variable_Name) ) {
     reactivevalue$se=ingest_data(reactivevalue$se,reactivevalue$group_variable_Name,
@@ -158,9 +136,8 @@ observe({
 
 
 
-
 #### Create batch design table when covariate selected ####
-observeEvent(input$covariate, {
+observeEvent( input$covariate, {
   req(se)
   output$summaryTable <- renderTable({
     bd <<- batch_design(se, input$covariate)
@@ -169,32 +146,29 @@ observeEvent(input$covariate, {
 
 
 
-
 #### Plot Heatmap based on the input ####
 observeEvent( input$heatmap_plot, {
-if (!is.null(reactivevalue$se)) {
+  if (!is.null(reactivevalue$se)) {
 
-results=heatmap_plotter(reactivevalue$se,
-                        input$Normalization_method_heatmap,
-                        input$top_n_heatmap,
-                        reactivevalue$group_variable_Name,
-                        input$Variates_to_display)
+    results=heatmap_plotter(reactivevalue$se,
+                            input$Normalization_method_heatmap,
+                            input$top_n_heatmap,
+                            reactivevalue$group_variable_Name,
+                            input$Variates_to_display)
 
-output$correlation_heatmap=renderPlot({
-  results$correlation_heatmap
+    output$correlation_heatmap=renderPlot({
+      results$correlation_heatmap
+    })
+
+    output$topn_heatmap=renderPlot({
+      results$topn_heatmap
+    })
+
+    output$Dendrogram=renderPlot({
+      plot(results$dendrogram)
+    })
+  }
 })
-output$topn_heatmap=renderPlot({
-  results$topn_heatmap
-})
-
-output$Dendrogram=renderPlot({
-  plot(results$dendrogram)
-})
-}
-}
-)
-
-
 
 
 
@@ -205,12 +179,10 @@ observeEvent( input$PCA_plot, {
     require(ggplot2)
     require(plotly)
     results=PCA_plotter(reactivevalue$se,
-                    input$Normalization_method_PCA,
-                    input$top_n,
-                    input$Variates_color,
-                    shape=input$Variates_shape)
+                        input$Normalization_method_PCA,
+                        input$top_n,
+                        input$Variates_color,
+                        shape=input$Variates_shape)
     output$PCA=renderPlot({(results[['plot']])})
-
   }
-}
-)
+})

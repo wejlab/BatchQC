@@ -1,4 +1,4 @@
-,Infection,Celltype,Modification,Series,hours_after_treatment,strain,MOI,Instrument
+,Infection,Celltype,Modification,Batch,hours_after_treatment,strain,MOI,Instrument
 Series2_A549_Mock_1,Mock,A549,None,Series2,24,None,0,TruSeq RNA Library Prep Kit v2
 Series2_A549_Mock_2,Mock,A549,None,Series2,24,None,0,TruSeq RNA Library Prep Kit v2
 Series2_A549_Mock_3,Mock,A549,None,Series2,24,None,0,TruSeq RNA Library Prep Kit v2

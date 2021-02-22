@@ -173,41 +173,22 @@ observeEvent(input$covariate, {
 #### Plot Heatmap based on the input ####
 observeEvent( input$heatmap_plot, {
 if (!is.null(reactivevalue$se)) {
-  data=reactivevalue$se@assays@data[[input$Normalization_method_heatmap]]
-  data=as.matrix(data)
-  data=apply(data,c(1,2),as.numeric)
-  data=data[rowSums(data)!=0,]
-vargenes=apply(data,1,var)
-vargenes=vargenes[order(vargenes,decreasing = T)]
-vargenes=vargenes[seq(1,input$top_n_heatmap)]
-data=log(data+1)
-data=data[names(vargenes),]
-data=data+1
-for (i in 1:nrow(data)) {
-  data[i,]=(data[i,]-mean(data[i,]))/sd(data[i,])
-}
 
-coldata=data.frame(colData(reactivevalue$se))
+results=heatmap_plotter(reactivevalue$se,
+                        input$Normalization_method_heatmap,
+                        input$top_n_heatmap,
+                        reactivevalue$group_variable_Name,
+                        input$Variates_to_display)
 
-cor=cor(data)
-coldata=coldata[,unique(c(reactivevalue$group_variable_Name,'Batch',input$Variates_to_display))]
-cat('plotting correlation.')
-correlation=pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F
-                     ,annotation_names_col = F,annotation_names_row = F,display_numbers = T,silent = T)
 output$correlation_heatmap=renderPlot({
-  correlation
+  results$correlation_heatmap
 })
-cat('Finish plotting correlation.')
-
-topn_heatmap = pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
-
 output$topn_heatmap=renderPlot({
-  topn_heatmap
+  results$topn_heatmap
 })
 
-dendrogram=topn_heatmap$tree_col
 output$Dendrogram=renderPlot({
-  plot(dendrogram)
+  plot(results$dendrogram)
 })
 }
 }
@@ -223,28 +204,12 @@ observeEvent( input$PCA_plot, {
   if (!is.null(reactivevalue$se)) {
     require(ggplot2)
     require(plotly)
-    data=reactivevalue$se@assays@data[[input$Normalization_method_PCA]]
-    data=as.matrix(data)
-    data=apply(data,c(1,2),as.numeric)
-    data=data[rowSums(data)!=0,]
-    vargenes=apply(data,1,var)
-    vargenes=vargenes[order(vargenes,decreasing = T)]
-    vargenes=vargenes[seq(1,input$top_n)]
-    data=log(data+1)
-    data=data[names(vargenes),]
-    data=data+1
-    for (i in 1:nrow(data)) {
-      data[i,]=(data[i,]-mean(data[i,]))/sd(data[i,])
-    }
-
-    coldata=data.frame(colData(reactivevalue$se))
-    PCA=prcomp(t(data))
-    coldata=cbind(coldata,PCA$x)
-    coldata$sample=rownames(coldata)
-
-
-    plot=ggplot(coldata,aes_string(x='PC1',y='PC2',colour=input$Variates_color,shape=input$Variates_shape,sample = 'sample'))+geom_point(size=3)
-    output$PCA=renderPlot({(plot)})
+    results=PCA_plotter(reactivevalue$se,
+                    input$Normalization_method_PCA,
+                    input$top_n,
+                    input$Variates_color,
+                    shape=input$Variates_shape)
+    output$PCA=renderPlot({(results[['plot']])})
 
   }
 }

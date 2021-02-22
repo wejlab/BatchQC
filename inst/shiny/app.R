@@ -1,6 +1,12 @@
 library(shiny)
 library(shinyjs)
 library(shinythemes)
+require(SummarizedExperiment)
+require(pheatmap)
+require(ggplot2)
+require(plotly)
+require(EBSeq)
+require(data.table)
 
 source(file.path("utils", "helpers.R"),  local = TRUE)
 
@@ -26,7 +32,7 @@ ui <- navbarPage(
 )
 
 server <- function(input, output, session) {
-  source(file.path("server", "server_01.R"),  local = TRUE)$value
+  source(file.path("server/", "server.R"),  local = TRUE)$value
 }
 
 shinyApp(ui = ui, server = server)

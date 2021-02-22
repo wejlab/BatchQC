@@ -24,7 +24,7 @@ tabPanel("Upload Data",
         sidebarPanel(
             h3("Upload counts and metadata table"),
             tags$div(tags$p(
-                'Metadata file must contain "Sample" and "Batch" columns'
+                'Metadata file must be a comma delimited csv file with headers and sample names.'
             )),
             fileInput(
                 "counts",
@@ -35,26 +35,40 @@ tabPanel("Upload Data",
             fileInput("md", "Metadata",
                       multiple = FALSE,
                       accept = accepted),
-            h3("Or upload a Summarized Experiment"),
             fileInput(
                 "se",
                 "Summarized Experiment",
                 multiple = FALSE,
                 accept = accepted
-            )
+            ),
+            selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
+                           options = list(
+                               placeholder = 'Please select an option below',
+                               onInitialize = I('function() { this.setValue(""); }')
+                           )),
+            selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
+                           options = list(
+                               placeholder = 'Please select an option below',
+                               onInitialize = I('function() { this.setValue(""); }')
+                           )),
+            actionButton(inputId = 'Clear_selction',label = 'Clear Selection')
+
         ),
 
         # Show a table of the inputted data
         mainPanel(
             tabsetPanel(
+                tabPanel('Overview and statistics',
+                         dataTableOutput('metadata')
+
+                         ),
                 tabPanel(
                     "Input",
                     selectInput("covariate", "Select Covariate:", choices = ""),
-                    tableOutput("summaryTable"),
                 ),
                 tabPanel("Confounding",
                          textOutput("text"),
-                         tableOutput("confoundingTable"),
+                         tableOutput("confoundingTable")
                 )
             )
         )

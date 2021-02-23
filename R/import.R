@@ -3,6 +3,18 @@ library(SummarizedExperiment)
 library(dplyr)
 library(tidyr)
 
+summarize_experiment = function(Counts_path,metadata_path) {
+  require(reader)
+  coldata=read.table(metadata_path,header = T,row.names = 1,check.names = F,sep = get.delim(metadata_path,n = 10,delims = c('\t',',')))
+  counts=read.table(Counts_path,header = T,row.names = 1,check.names = F,sep = get.delim(Counts_path,n = 10,delims = c('\t',',')))
+  counts=counts[rowSums(counts)>0,]
+  mutual_sample=intersect(colnames(counts),rownames(coldata))
+  counts=counts[,mutual_sample]
+  coldata=coldata[mutual_sample,]
+
+  se = SummarizedExperiment(assay=list(counts=counts
+  ), colData=coldata)
+}
 ingest_data <- function(se,group,batch){
   require(SummarizedExperiment)
   require(EBSeq)

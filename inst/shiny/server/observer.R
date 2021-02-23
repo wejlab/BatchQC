@@ -1,5 +1,3 @@
-# This script will hold the observeevent function, which monitors and stores input.
-
 #### Obtain the Counts matrix and Count table location ####
 observeEvent( input$counts, {
   if (is.null(input$counts)) return()
@@ -25,6 +23,8 @@ observeEvent( input$md, {
 #### Obtain Count matrix and metadata from the rds summarizeexperiment ####
 observeEvent( input$se, {
   if (is.null(input$se)) return()
+  reactivevalue$se_location=input$se$datapath
+
   se=readRDS(input$se$datapath)
   reactivevalue$se=se
 
@@ -33,11 +33,8 @@ observeEvent( input$se, {
 
 observeEvent( input$submit, {
   if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
-    coldata=read.table(reactivevalue$metadata_location,header = T,row.names = 1,check.names = F,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
-    counts=read.table(reactivevalue$counts_location,header = T,row.names = 1,check.names = F,sep = get.delim(reactivevalue$counts_location,n = 10,delims = c('\t',',')))
-    counts=counts[rowSums(counts)>0,]
-    se = SummarizedExperiment(assay=list(counts=counts
-    ), colData=coldata)
+    se = summarize_experiment(reactivevalue$counts_location,
+                              reactivevalue$metadata_location)
     reactivevalue$se=se
     reactivevalue$metadata=data.frame(colData(reactivevalue$se))
     updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
@@ -53,7 +50,7 @@ observeEvent( input$submit, {
     )
   }
   else if (!is.null(input$se$datapath)){
-    se = readRDS(input$se$datapath)
+    se = readRDS(reactivevalue$se_location)
     se = se[rowSums(se@assays@data$counts)>0,]
     reactivevalue$se=se
     reactivevalue$metadata=data.frame(colData(reactivevalue$se))
@@ -75,24 +72,39 @@ observeEvent( input$submit, {
 })
 
 ####offer users two tabs to choose batch and biological group from the column names of metadata####
-observeEvent( input$group, {
-  if (is.null(input$group)) return()
-  if (!is.null(reactivevalue$se)&!is.null(input$group)){
+#observeEvent( input$group, {
+#  if (is.null(input$group)) return()
+#  if (!is.null(reactivevalue$se)&!is.null(input$group)){
+#
+#  reactivevalue$group_variable_Name = input$group
+#  table=data.frame(table(reactivevalue$metadata[input$group]))
+#  colnames(table)=c('Group','Counts')
+#  output$group_counts=renderTable(table)}
+#})
 
-  reactivevalue$group_variable_Name = input$group
-  table=data.frame(table(reactivevalue$metadata[input$group]))
-  colnames(table)=c('Group','Counts')
-  output$group_counts=renderTable(table)}
+#observeEvent( input$batch, {
+#  if (is.null(input$batch)&!is.null(input$batch)) return()
+#  if (!is.null(reactivevalue$se))
+#  {reactivevalue$batch_Variable_Name = input$batch
+#  table=data.frame(table(reactivevalue$metadata[input$batch]))
+#  colnames(table)=c('batch','Counts')
+#  output$batch_counts=renderTable(table)}
+#})
+
+observeEvent(input$submit_variables, {
+  if (is.null(input$submit_variables)) return()
+  if (!is.null(reactivevalue$se)&!is.null(input$group) & !is.null(input$batch)) {
+    reactivevalue$batch_Variable_Name = input$batch
+    reactivevalue$group_variable_Name = input$group
+    variable_overview=data.frame(table(reactivevalue$metadata[,reactivevalue$group_variable_Name],
+                                              reactivevalue$metadata[,reactivevalue$batch_Variable_Name]))
+    colnames(variable_overview)=c('Biological Group','Batch Group','Number of Sample')
+    output$variable_overview=renderDataTable({variable_overview})
+  }
+
 })
 
-observeEvent( input$batch, {
-  if (is.null(input$batch)&!is.null(input$batch)) return()
-  if (!is.null(reactivevalue$se))
-  {reactivevalue$batch_Variable_Name = input$batch
-  table=data.frame(table(reactivevalue$metadata[input$batch]))
-  colnames(table)=c('batch','Counts')
-  output$batch_counts=renderTable(table)}
-})
+
 
 
 #### Normalize data ####
@@ -126,17 +138,8 @@ observe({
       reactivevalue$covariates=colnames(reactivevalue$metadata)[!colnames(reactivevalue$metadata)%in%
                                                                   c(reactivevalue$group_variable_Name,reactivevalue$batch_Variable_Name)]
       updateSelectInput(session = session,inputId = "covariate", choices = reactivevalue$covariates)
-
-
-
-
-
       }
-
   }
-
-
-
 })
 
 

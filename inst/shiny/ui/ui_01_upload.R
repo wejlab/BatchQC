@@ -83,8 +83,8 @@ tabPanel("Upload Data",
                                             placeholder = 'Please select an option below',
                                             onInitialize = I('function() { this.setValue(""); }')
                                         )),
-                         tableOutput('group_counts'),
-                         tableOutput('batch_counts')
+                         actionButton(inputId = 'submit_variables',label = 'Submit'),
+                         dataTableOutput('variable_overview')
 
                          ),
                 tabPanel(

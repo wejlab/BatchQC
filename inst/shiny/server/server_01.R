@@ -17,7 +17,7 @@ source("../../R/import.R")
 #    if (!is.null(input$counts) & !is.null(input$md)){
 #        se <<- ingest_data(input$counts$datapath, input$md$datapath)
 #    }
- #   else if (!is.null(input$se)){
+#   else if (!is.null(input$se)){
 #        se <<- SummarizedExperiment(input$se$datapath)
 #    }
 #    else {

@@ -32,7 +32,7 @@ ingest_data <- function(se,group,batch){
     # Get counfounding metrics
     metadata(se)$confound.metrics <- confound_metrics(se)
     # Calculate CPM normalization for the summarizeexperiment
-    #se@assays@data$CPM=((se@assays@data$counts+1)/colSums(se@assays@data$counts))*(10^6)
+    se@assays@data$CPM=((se@assays@data$counts+1)/colSums(se@assays@data$counts))*(10^6)
     # Calculate Median of Ratio normalization for the summarizeexperiment
     require(EBSeq)
     se@assays@data$DESEQ_Method=GetNormalizedMat(se@assays@data$counts, MedianNorm(se@assays@data$counts))
@@ -41,7 +41,7 @@ ingest_data <- function(se,group,batch){
 
   }
   else {
-	se = NULL
+    se = NULL
   }
   return(se)
 }
@@ -56,22 +56,6 @@ batch_design <- function(se, covariate){
   return(design)
 }
 
-cor_props <- function(bd){
-  #' Calculate correlation properties on a batch_design matrix `bd`
-
-  # Subset matrix to design only
-  m = bd[, -1, ]
-  rowsums = rowSums(m)
-  colsums = colSums(m)
-  tablesum = sum(rowsums)
-  expected = matrix(0, nrow(m), ncol(m))
-  for (i in 1:nrow(m)) {
-    for (j in 1:ncol(m)) {
-      expected[i, j] = rowsums[i] * colsums[j]/tablesum
-    }
-  }
-  chi = sum((m - expected)^2/expected)
-  mmin = min(nrow(m), ncol(m))
 
   out = list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
   return(out)

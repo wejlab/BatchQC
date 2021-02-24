@@ -1,6 +1,6 @@
 
 
-tabPanel("Variation and P-Value Analysis",
+tabPanel("Variation Analysis",
 
     # Application title
     titlePanel("Variation and P-Value Analysis"),
@@ -15,6 +15,8 @@ tabPanel("Variation and P-Value Analysis",
                  )
         ),
         tabPanel("P-Value Analysis"
+        ),
+        tabPanel("Differential Expression"
         )
     )
 

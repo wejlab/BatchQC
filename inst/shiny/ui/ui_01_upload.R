@@ -60,7 +60,7 @@ tabPanel("Upload Data",
         # Show a table of the inputted data
         mainPanel(
             tabsetPanel(
-                tabPanel('Preview the first 10 lines of the input.',
+                tabPanel('Input Summary',
                          tableOutput('counts_header'),
                          tableOutput('metadata_header')
 
@@ -87,15 +87,7 @@ tabPanel("Upload Data",
                          actionButton(inputId = 'submit_variables',label = 'Submit'),
                          dataTableOutput('variable_overview')
 
-                         ),
-                tabPanel(
-                    "Input",
-                    selectInput("covariate", "Select Covariate:", choices = ""),
-                ),
-                tabPanel("Confounding",
-                         textOutput("text"),
-                         tableOutput("confoundingTable")
-                )
+                         )
             )
         )
     )

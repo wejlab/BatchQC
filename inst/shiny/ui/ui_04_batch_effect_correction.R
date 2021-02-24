@@ -1,8 +1,8 @@
 
-tabPanel("Differential Expression",
+tabPanel("Batch Effect Correction",
 
          # Application title
-         titlePanel("Differential Expression"),
+         titlePanel("Batch Effect Correction"),
 
          # Sidebar with a slider input for number of bins
          sidebarLayout(
@@ -12,11 +12,13 @@ tabPanel("Differential Expression",
            # Show a plot of the generated distribution
            mainPanel(
              tabsetPanel(
-               tabPanel("Expression Plots"
+               tabPanel("ComBat-seq"
                ),
-               tabPanel("Summary"
+               tabPanel("ComBat"
                ),
-               tabPanel("Limma"
+               tabPanel("SVA"
+               ),
+               tabPanel("RUV"
                )
              )
            )

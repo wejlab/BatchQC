@@ -1,0 +1,62 @@
+,Infection,Celltype,Modification,Batch,hours_after_treatment,strain,MOI,Instrument
+Series2_A549_Mock_1,Mock,A549,None,Series2,24,None,0,TruSeq RNA Library Prep Kit v2
+Series2_A549_Mock_2,Mock,A549,None,Series2,24,None,0,TruSeq RNA Library Prep Kit v2
+Series2_A549_Mock_3,Mock,A549,None,Series2,24,None,0,TruSeq RNA Library Prep Kit v2
+Series2_A549_SARS-CoV-2_1,SARS_CoV_2,A549,None,Series2,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series2_A549_SARS-CoV-2_2,SARS_CoV_2,A549,None,Series2,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series2_A549_SARS-CoV-2_3,SARS_CoV_2,A549,None,Series2,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series3_A549_Mock_1,Mock,A549,None,Series3,24,None,0,TruSeq RNA Library Prep Kit v2
+Series3_A549_Mock_2,Mock,A549,None,Series3,24,None,0,TruSeq RNA Library Prep Kit v2
+Series3_A549_RSV_1,RSV,A549,None,Series3,24,RSV_A2,15,TruSeq RNA Library Prep Kit v2
+Series3_A549_RSV_2,RSV,A549,None,Series3,24,RSV_A2,15,TruSeq RNA Library Prep Kit v2
+Series4_A549_Mock_1,Mock,A549,None,Series4,9,None,0,TruSeq RNA Library Prep Kit v2
+Series4_A549_Mock_2,Mock,A549,None,Series4,9,None,0,TruSeq RNA Library Prep Kit v2
+Series4_A549_IAV_1,IAV,A549,None,Series4,9,H1N1,5,TruSeq RNA Library Prep Kit v2
+Series4_A549_IAV_2,IAV,A549,None,Series4,9,H1N1,5,TruSeq RNA Library Prep Kit v2
+Series5_A549_Mock_1,Mock,A549,None,Series5,24,None,0,TruSeq RNA Library Prep Kit v2
+Series5_A549_Mock_2,Mock,A549,None,Series5,24,None,0,TruSeq RNA Library Prep Kit v2
+Series5_A549_Mock_3,Mock,A549,None,Series5,24,None,0,TruSeq RNA Library Prep Kit v2
+Series5_A549_SARS-CoV-2_1,SARS_CoV_2,A549,None,Series5,24,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series5_A549_SARS-CoV-2_2,SARS_CoV_2,A549,None,Series5,24,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series5_A549_SARS-CoV-2_3,SARS_CoV_2,A549,None,Series5,24,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_Mock_1,Mock,A549,transduce ACE2 vector,Series6,24,None,0,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_Mock_2,Mock,A549,transduce ACE2 vector,Series6,24,None,0,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_Mock_3,Mock,A549,transduce ACE2 vector,Series6,24,None,0,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_SARS-CoV-2_1,SARS_CoV_2,A549,transduce ACE2 vector,Series6,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_SARS-CoV-2_2,SARS_CoV_2,A549,transduce ACE2 vector,Series6,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_SARS-CoV-2_3,SARS_CoV_2,A549,transduce ACE2 vector,Series6,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series8_A549_Mock_1,Mock,A549,None,Series8,24,None,0,TruSeq RNA Library Prep Kit v2
+Series8_A549_Mock_2,Mock,A549,None,Series8,24,None,0,TruSeq RNA Library Prep Kit v2
+Series8_A549_Mock_3,Mock,A549,None,Series8,24,None,0,TruSeq RNA Library Prep Kit v2
+Series8_A549_RSV_1,RSV,A549,None,Series8,24,RSV_A2,2,TruSeq RNA Library Prep Kit v2
+Series8_A549_RSV_2,RSV,A549,None,Series8,24,RSV_A2,2,TruSeq RNA Library Prep Kit v2
+Series8_A549_RSV_3,RSV,A549,None,Series8,24,RSV_A2,2,TruSeq RNA Library Prep Kit v2
+Series8_A549_HPIV3_3,HPIV3,A549,None,Series8,24,HPIV_JS,3,TruSeq RNA Library Prep Kit v2
+Series8_A549_HPIV3_2,HPIV3,A549,None,Series8,24,HPIV_JS,3,TruSeq RNA Library Prep Kit v2
+Series8_A549_HPIV3_1,HPIV3,A549,None,Series8,24,HPIV_JS,3,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_Mock_1,Mock,A549,transduce ACE2 vector,Series16,None,None,0,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_Mock_2,Mock,A549,transduce ACE2 vector,Series16,None,None,0,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_Mock_3,Mock,A549,transduce ACE2 vector,Series16,None,None,0,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_SARS-CoV-2_1,SARS_CoV_2,A549,transduce ACE2 vector,Series16,None,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_SARS-CoV-2_2,SARS_CoV_2,A549,transduce ACE2 vector,Series16,None,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_SARS-CoV-2_3,SARS_CoV_2,A549,transduce ACE2 vector,Series16,None,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series7_Calu3_Mock_1,Mock,Calu3,None,Series7,24,None,0,TruSeq Stranded mRNA LP
+Series7_Calu3_Mock_2,Mock,Calu3,None,Series7,24,None,0,TruSeq Stranded mRNA LP
+Series7_Calu3_Mock_3,Mock,Calu3,None,Series7,24,None,0,TruSeq Stranded mRNA LP
+Series7_Calu3_SARS-CoV-2_1,SARS_CoV_2,Calu3,None,Series7,24,USA_WA1_2020,2,TruSeq Stranded mRNA LP
+Series7_Calu3_SARS-CoV-2_2,SARS_CoV_2,Calu3,None,Series7,24,USA_WA1_2020,2,TruSeq Stranded mRNA LP
+Series7_Calu3_SARS-CoV-2_3,SARS_CoV_2,Calu3,None,Series7,24,USA_WA1_2020,2,TruSeq Stranded mRNA LP
+Series1_NHBE_Mock_1,Mock,NHBE,None,Series1,24,None,0,TruSeq Stranded mRNA LP
+Series1_NHBE_Mock_2,Mock,NHBE,None,Series1,24,None,0,TruSeq Stranded mRNA LP
+Series1_NHBE_Mock_3,Mock,NHBE,None,Series1,24,None,0,TruSeq Stranded mRNA LP
+Series1_NHBE_SARS-CoV-2_1,SARS_CoV_2,NHBE,None,Series1,24,USA_WA1_2020,2,TruSeq Stranded mRNA LP
+Series1_NHBE_SARS-CoV-2_2,SARS_CoV_2,NHBE,None,Series1,24,USA_WA1_2020,2,TruSeq Stranded mRNA LP
+Series1_NHBE_SARS-CoV-2_3,SARS_CoV_2,NHBE,None,Series1,24,USA_WA1_2020,2,TruSeq Stranded mRNA LP
+Series9_NHBE_Mock_1,Mock,NHBE,None,Series9,12,None,0,TruSeq Stranded mRNA LP
+Series9_NHBE_Mock_2,Mock,NHBE,None,Series9,12,None,0,TruSeq Stranded mRNA LP
+Series9_NHBE_Mock_3,Mock,NHBE,None,Series9,12,None,0,TruSeq Stranded mRNA LP
+Series9_NHBE_Mock_4,Mock,NHBE,None,Series9,12,None,0,TruSeq Stranded mRNA LP
+Series9_NHBE_IAV_1,IAV,NHBE,None,Series9,12,H1N1,3,TruSeq Stranded mRNA LP
+Series9_NHBE_IAV_2,IAV,NHBE,None,Series9,12,H1N1,3,TruSeq Stranded mRNA LP
+Series9_NHBE_IAV_3,IAV,NHBE,None,Series9,12,H1N1,3,TruSeq Stranded mRNA LP
+Series9_NHBE_IAV_4,IAV,NHBE,None,Series9,12,H1N1,3,TruSeq Stranded mRNA LP

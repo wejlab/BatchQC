@@ -36,6 +36,7 @@ tabPanel("Upload Data",
             fileInput("md", "Metadata",
                       multiple = FALSE,
                       accept = accepted),
+            h4("-OR-"),
             fileInput(
                 "se",
                 "Summarized Experiment",

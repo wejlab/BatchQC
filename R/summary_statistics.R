@@ -23,20 +23,20 @@ cor_props <- function(bd){
   #Calculate correlation properties on a batch_design matrix `bd`
 
   # Subset matrix to design only
-  m = bd[, -1, ]
-  rowsums = rowSums(m)
-  colsums = colSums(m)
-  tablesum = sum(rowsums)
-  expected = matrix(0, nrow(m), ncol(m))
+  m <- bd[, -1, ]
+  rowsums <- rowSums(m)
+  colsums <- colSums(m)
+  tablesum <- sum(rowsums)
+  expected <- matrix(0, nrow(m), ncol(m))
   for (i in 1:nrow(m)) {
     for (j in 1:ncol(m)) {
-      expected[i, j] = rowsums[i] * colsums[j]/tablesum
+      expected[i, j] <- rowsums[i] * colsums[j]/tablesum
     }
   }
-  chi = sum((m - expected)^2/expected)
-  mmin = min(nrow(m), ncol(m))
+  chi <- sum((m - expected)^2/expected)
+  mmin <- min(nrow(m), ncol(m))
 
-  out = list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
+  out <- list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
   return(out)
 }
 
@@ -70,7 +70,7 @@ cramers_v <- function(bd) {
 #'
 #' @export
 confound_metrics <- function(se){
-  covs = metadata(se)$covariates
+  covs <- metadata(se)$covariates
   metrics <- list("Pearson Correlation Coefficient"=std_pearson_corr_coef, "Cramer's V"=cramers_v)
   metric.mat <- matrix(nrow=length(covs), ncol=length(metrics), dimnames = list(covs, names(metrics)))
 

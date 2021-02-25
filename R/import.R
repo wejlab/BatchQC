@@ -3,18 +3,19 @@
 #' @param metadata_path path to metadata file
 #' @return a summarized experiment object
 #' @import SummarizedExperiment
+#' @import reader
 #'
 #' @export
 summarize_experiment = function(Counts_path,metadata_path) {
   #require(reader)
-  coldata=read.table(metadata_path,header = T,row.names = 1,check.names = F,sep = get.delim(metadata_path,n = 10,delims = c('\t',',')))
-  counts=read.table(Counts_path,header = T,row.names = 1,check.names = F,sep = get.delim(Counts_path,n = 10,delims = c('\t',',')))
-  counts=counts[rowSums(counts)>0,]
-  mutual_sample=intersect(colnames(counts),rownames(coldata))
-  counts=counts[,mutual_sample]
-  coldata=coldata[mutual_sample,]
+  coldata <- read.table(metadata_path,header = T,row.names = 1,check.names = F,sep = get.delim(metadata_path,n = 10,delims = c('\t',',')))
+  counts <-read.table(Counts_path,header = T,row.names = 1,check.names = F,sep = get.delim(Counts_path,n = 10,delims = c('\t',',')))
+  counts <- counts[rowSums(counts)>0,]
+  mutual_sample <- intersect(colnames(counts),rownames(coldata))
+  counts <- counts[,mutual_sample]
+  coldata <- coldata[mutual_sample,]
 
-  se = SummarizedExperiment(assay=list(counts=counts
+  se <- SummarizedExperiment(assay=list(counts=counts
   ), colData=coldata)
 }
 
@@ -33,28 +34,28 @@ ingest_data <- function(se,group,batch){
   #require(EBSeq)
 
   if (!is.null(se)) {
-    variables=colnames(colData(se))
-    covs=variables[!variables%in%c(batch,group)]
-    colnames(colData(se))[colnames(colData(se))==batch]='Batch'
+    variables <- colnames(colData(se))
+    covs <- variables[!variables%in%c(batch,group)]
+    colnames(colData(se))[colnames(colData(se))==batch] <- 'Batch'
 
     # Add covariates
     metadata(se)$covariates <- covs
     # Add experimental group variable
-    metadata(se)$Experimental_group=group
+    metadata(se)$Experimental_group <- group
 
     # Get counfounding metrics
     metadata(se)$confound.metrics <- confound_metrics(se)
     # Calculate CPM normalization for the summarizeexperiment
     #se@assays@data$CPM=((se@assays@data$counts+1)/colSums(se@assays@data$counts))*(10^6)
     # Calculate Median of Ratio normalization for the summarizeexperiment
-    require(EBSeq)
-    se@assays@data$DESEQ_Method=GetNormalizedMat(se@assays@data$counts, MedianNorm(se@assays@data$counts))
+    #require(EBSeq)
+    se@assays@data$DESEQ_Method <- GetNormalizedMat(se@assays@data$counts, MedianNorm(se@assays@data$counts))
     # EdgeR won't go straight-forward on how exactly they do their normalization, so I will just pass here.
-    colData(se)$library_size=colSums(se@assays@data$counts)
+    colData(se)$library_size <- colSums(se@assays@data$counts)
 
   }
   else {
-	se = NULL
+	se <- NULL
   }
   return(se)
 }

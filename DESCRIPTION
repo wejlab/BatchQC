@@ -34,17 +34,17 @@ License: use_gpl3_license()
 Encoding: UTF-8
 LazyData: true
 Imports:
-   shiny,
-   shinyjs,
-   shinythemes,
-   SummarizedExperiment,
-   pheatmap,
-   ggplot2,
-   plotly,
-   EBSeq,
-   data.table,
-   reader,
-   dplyr,
-   tidyr
+    shiny,
+    shinyjs,
+    shinythemes,
+    SummarizedExperiment,
+    pheatmap,
+    ggplot2,
+    plotly,
+    EBSeq,
+    data.table,
+    reader,
+    dplyr,
+    tidyr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

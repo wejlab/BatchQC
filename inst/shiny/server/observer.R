@@ -41,28 +41,41 @@ observeEvent( input$submit, {
     reactivevalue$se=se
     reactivevalue$metadata=data.frame(colData(reactivevalue$se))
   }
-  # Add options to plots
-  setupPlots()
+  # Display metadata table
+  output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
+  # Add options to input selections
+  setupSelections()
 })
 
 ## Set up plotting options
-setupPlots = function(){
+setupSelections = function(){
+  # Experimental design
+  updateSelectizeInput(session=session, inputId="design_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="design_covariate", choices=names(colData(reactivevalue$se)),selected=NULL)
+  # Heatmap selections
   updateSelectizeInput(session = session,inputId = 'Normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
-  updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
-  updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_heatmap',value = 500,min = 0,max = dim(reactivevalue$se)[1])
+  # PCA Selections
+  updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_PCA',value = 500,min = 0,max = dim(reactivevalue$se)[1])
-
   updateSelectizeInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateSelectizeInput(session = session,inputId = 'Variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
-  output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
-
-  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL
-  )
-  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
-  )
 }
 
+### EXPERIMENTAL DESIGN TAB
+# Update experimental design
+observeEvent(input$design_covariate, {
+  req(input$design_batch, input$design_covariate, reactivevalue$se)
+  # Create batch design table
+  design <- batchDesign(reactivevalue$se, input$design_batch, input$design_covariate)
+  output$batch_design <- renderTable(design)
+})
+# Update confounding design table
+observeEvent(input$design_batch, {
+  req(input$design_batch, reactivevalue$se)
+  conf_stats <- confoundMetrics(reactivevalue$se, input$design_batch)
+  output$confoundingTable <- renderTable(conf_stats, rownames = T)
+})
 
 ####offer users two tabs to choose batch and biological group from the column names of metadata####
 #observeEvent( input$group, {

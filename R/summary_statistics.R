@@ -1,17 +1,19 @@
 #' This function allows you to make a batch design matrix
 #' @param se summarized experiment
 #' @param covariate biological covariate
+#' @param batch batch variable
+#' @import tidyverse
 #' @return design table
 #'
 #' @export
-batch_design <- function(se, covariate){
-  #Create a batch design table for the provided covariate
-  batch_col = se
-  design <- colData(se) %>% as_tibble %>% group_by(eval(as.symbol(covariate))) %>% count(Batch) %>% pivot_wider(names_from = Batch, values_from = n)
-  names(design)[names(design) == "eval(as.symbol(covariate))"] <- ""
-  for (i in 2:length(design)) {
-    colnames(design)[i] <- paste("Batch",i-1)
-  }
+batchDesign <- function(se, batch, covariate){
+
+  ### Create a batch design table for the provided covariate
+  design <- colData(se) %>% as_tibble %>%
+    group_by_at(covariate) %>%
+    dplyr::count(across(batch)) %>%
+    pivot_wider(names_from = batch, values_from = n) %>%
+    replace(is.na(.), 0)
   return(design)
 }
 

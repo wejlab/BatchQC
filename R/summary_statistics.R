@@ -1,16 +1,19 @@
 #' This function allows you to make a batch design matrix
 #' @param se summarized experiment
 #' @param covariate biological covariate
+#' @param batch batch variable
+#' @import tidyverse
 #' @return design table
 #'
 #' @export
-batch_design <- function(se, covariate){
-  #Create a batch design table for the provided covariate
-  design <- colData(se) %>% as_tibble %>% group_by(eval(as.symbol(covariate))) %>% count(Batch) %>% pivot_wider(names_from = Batch, values_from = n)
-  names(design)[names(design) == "eval(as.symbol(covariate))"] <- ""
-  for (i in 2:length(design)) {
-    colnames(design)[i] <- paste("Batch",i-1)
-  }
+batchDesign <- function(se, batch, covariate){
+
+  ### Create a batch design table for the provided covariate
+  design <- colData(se) %>% as_tibble %>%
+    group_by_at(covariate) %>%
+    dplyr::count(across(batch)) %>%
+    pivot_wider(names_from = batch, values_from = n) %>%
+    replace(is.na(.), 0)
   return(design)
 }
 
@@ -66,17 +69,20 @@ cramers_v <- function(bd) {
 
 #' This function allows you to combine std. pearson corr coef and cramer's V
 #' @param se summarized experiment
+#' @param batch batch variable
 #' @return metrics of confounding
 #'
 #' @export
-confound_metrics <- function(se){
-  covs <- metadata(se)$covariates
+confoundMetrics <- function(se, batch){
+  # Covariates are non-batch
+  cols <- names(colData(se))
+  covs <- cols[cols != batch]
   metrics <- list("Pearson Correlation Coefficient"=std_pearson_corr_coef, "Cramer's V"=cramers_v)
   metric.mat <- matrix(nrow=length(covs), ncol=length(metrics), dimnames = list(covs, names(metrics)))
 
   for (c in covs){
     # Get batch design
-    bd <- batch_design(se, c)
+    bd <- batchDesign(se, batch, c)
     for (m in names(metrics)){
       # Compute metric and place in appropriate slot
       metric.mat[c, m] <- metrics[[m]](bd)

@@ -4,6 +4,7 @@
 #' @return a summarized experiment object
 #' @import SummarizedExperiment
 #' @import reader
+#' @import EBSeq
 #'
 #' @export
 summarize_experiment = function(Counts_path,metadata_path) {
@@ -15,8 +16,18 @@ summarize_experiment = function(Counts_path,metadata_path) {
   counts <- counts[,mutual_sample]
   coldata <- coldata[mutual_sample,]
 
-  se <- SummarizedExperiment(assay=list(counts=counts
+  # Normalize data
+  DESEQ_normalization <- GetNormalizedMat(counts, MedianNorm(counts))
+  CPM_Normalization <- (counts+1) / counts *(10^6)
+
+  se <- SummarizedExperiment(assay=list(counts=counts,
+                                        DESEQ_normalization=DESEQ_normalization,
+                                        CPM_Normalization=CPM_Normalization
   ), colData=coldata)
+
+  # Normalize data
+  se@assays@data$DESEQ_normalization=GetNormalizedMat(counts, MedianNorm(counts))
+  return(se)
 }
 
 

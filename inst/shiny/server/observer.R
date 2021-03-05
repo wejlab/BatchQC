@@ -77,25 +77,6 @@ observeEvent(input$design_batch, {
   output$confoundingTable <- renderTable(conf_stats, rownames = T)
 })
 
-####offer users two tabs to choose batch and biological group from the column names of metadata####
-#observeEvent( input$group, {
-#  if (is.null(input$group)) return()
-#  if (!is.null(reactivevalue$se)&!is.null(input$group)){
-#
-#  reactivevalue$group_variable_Name = input$group
-#  table=data.frame(table(reactivevalue$metadata[input$group]))
-#  colnames(table)=c('Group','Counts')
-#  output$group_counts=renderTable(table)}
-#})
-
-#observeEvent( input$batch, {
-#  if (is.null(input$batch)&!is.null(input$batch)) return()
-#  if (!is.null(reactivevalue$se))
-#  {reactivevalue$batch_Variable_Name = input$batch
-#  table=data.frame(table(reactivevalue$metadata[input$batch]))
-#  colnames(table)=c('batch','Counts')
-#  output$batch_counts=renderTable(table)}
-#})
 
 observeEvent(input$submit_variables, {
   if (is.null(input$submit_variables)) return()

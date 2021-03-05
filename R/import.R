@@ -24,54 +24,7 @@ summarize_experiment = function(Counts_path,metadata_path) {
                                         DESEQ_normalization=DESEQ_normalization,
                                         CPM_Normalization=CPM_Normalization
   ), colData=coldata)
-
-  # Normalize data
-  se@assays@data$DESEQ_normalization=GetNormalizedMat(counts, MedianNorm(counts))
+  # Add library size
+  colData(se)$library_size <- colSums(se@assays@data$counts)
   return(se)
 }
-
-
-#' This function allows you to ingest data
-#' @param se summarized experiment
-#' @param group biological covariate
-#' @param batch batch
-#' @import SummarizedExperiment
-#' @import EBSeq
-#' @return a summarized experiment object
-#'
-#' @export
-ingest_data <- function(se, batch){
-  #require(SummarizedExperiment)
-  #require(EBSeq)
-
-  if (!is.null(se)) {
-    variables <- colnames(colData(se))
-    # All non-batch variables are covariates
-    covs <- variables[variables != batch]
-    colnames(colData(se))[colnames(colData(se))==batch] <- 'Batch'
-
-    # Add covariates
-    metadata(se)$covariates <- covs
-    # Add experimental group variable
-    metadata(se)$Experimental_group <- group
-
-    # Get counfounding metrics
-    metadata(se)$confound.metrics <- confound_metrics(se)
-    # Calculate CPM normalization for the summarizeexperiment
-    #se@assays@data$CPM=((se@assays@data$counts+1)/colSums(se@assays@data$counts))*(10^6)
-    # Calculate Median of Ratio normalization for the summarizeexperiment
-    #require(EBSeq)
-    se@assays@data$DESEQ_Method <- GetNormalizedMat(se@assays@data$counts, MedianNorm(se@assays@data$counts))
-    # EdgeR won't go straight-forward on how exactly they do their normalization, so I will just pass here.
-    colData(se)$library_size <- colSums(se@assays@data$counts)
-
-  }
-  else {
-	se <- NULL
-  }
-  return(se)
-}
-
-
-
-

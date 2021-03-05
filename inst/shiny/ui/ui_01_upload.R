@@ -66,11 +66,6 @@ tabPanel("Upload Data",
 
 
                          ),
-                tabPanel('Normalization',
-                         actionButton(inputId = 'DESEQ_normalization',label = 'DESEQ normalization'),
-                         actionButton(inputId = 'CPM_Normalization',label = 'CPM normalization')
-
-                ),
                 tabPanel('Full Metadata',
                          dataTableOutput('metadata')),
                 tabPanel('Setting Variables',

@@ -29,13 +29,14 @@ summarize_experiment = function(Counts_path,metadata_path) {
 #' @return a summarized experiment object
 #'
 #' @export
-ingest_data <- function(se,group,batch){
+ingest_data <- function(se, batch){
   #require(SummarizedExperiment)
   #require(EBSeq)
 
   if (!is.null(se)) {
     variables <- colnames(colData(se))
-    covs <- variables[!variables%in%c(batch,group)]
+    # All non-batch variables are covariates
+    covs <- variables[variables != batch]
     colnames(colData(se))[colnames(colData(se))==batch] <- 'Batch'
 
     # Add covariates

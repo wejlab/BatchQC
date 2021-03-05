@@ -6,6 +6,7 @@
 #' @export
 batch_design <- function(se, covariate){
   #Create a batch design table for the provided covariate
+  batch_col = se
   design <- colData(se) %>% as_tibble %>% group_by(eval(as.symbol(covariate))) %>% count(Batch) %>% pivot_wider(names_from = Batch, values_from = n)
   names(design)[names(design) == "eval(as.symbol(covariate))"] <- ""
   for (i in 2:length(design)) {

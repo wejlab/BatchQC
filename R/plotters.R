@@ -1,3 +1,30 @@
+#' This function allows you to plot explained variation
+#' @param se Summarized experiment object
+#' @param batch Batch covariate
+#' @param condition Condition covariate of interest
+#' @param assay_name Assay of choice
+#' @return List of explained variation by batch and condition
+#' @export
+EV_plotter <- function(se, batch, condition, assay_name) {
+  batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
+  EV_boxplot <- ggplot(data = melt(as.data.frame(batchqc_ev$explained_variation),id.vars=NULL),aes(x = variable, y = value, fill = variable)) +
+    geom_violin() +
+    #geom_boxplot() +
+    scale_x_discrete(name = "") +
+    scale_y_continuous(name = "Percent Variation Explained for Each Gene") +
+    theme(legend.position = "none")
+
+
+  # apply(batchqc_ev$explained_variation, 2, summary)
+  # EV_boxplot <- boxplot(batchqc_ev$explained_variation, ylab =
+  #         "Percent Explained Variation", main =
+  #         "Percent of Variation Explained by Source")
+  return(list(EV_boxplot=EV_boxplot))
+}
+
+
+
+
 #' This function allows you to plot PCA
 #' @param se summarized experiment
 #' @param assay normalized or corrected

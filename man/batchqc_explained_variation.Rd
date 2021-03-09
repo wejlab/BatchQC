@@ -5,14 +5,16 @@
 \title{Returns a list of explained variation by batch and condition
 combinations}
 \usage{
-batchqc_explained_variation(se, condition, batch)
+batchqc_explained_variation(se, batch, condition, assay_name)
 }
 \arguments{
 \item{se}{Summarized experiment object}
 
+\item{batch}{Batch covariate}
+
 \item{condition}{Condition covariate of interest}
 
-\item{batch}{Batch covariate}
+\item{assay_name}{Assay of choice}
 }
 \value{
 List of explained variation by batch and condition

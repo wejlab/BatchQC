@@ -67,6 +67,8 @@ setupSelections = function(){
   )
   # Variation Analysis selections
   updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="variation_condition", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="variation_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
 }
 
 ### EXPERIMENTAL DESIGN TAB
@@ -82,6 +84,22 @@ observeEvent(input$design_batch, {
   req(input$design_batch, reactivevalue$se)
   conf_stats <- confoundMetrics(reactivevalue$se, input$design_batch)
   output$confoundingTable <- renderTable(conf_stats, rownames = T)
+})
+
+
+### VARIATION ANALYSIS TAB
+# Update variation analysis
+observeEvent(input$variation_plot, {
+  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
+  # Create boxplot for variation explained by batch, condition, and batch + condition
+  batchqc_ev_plot <- EV_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+  output$EV_plot <- renderPlot({
+    batchqc_ev_plot$EV_boxplot
+  })
+    # apply(batchqc_ev$explained_variation, 2, summary),
+    # boxplot(batchqc_ev$explained_variation, ylab =
+    #                         "Percent Explained Variation", main =
+    #                         "Percent of Variation Explained by Source"))
 })
 
 

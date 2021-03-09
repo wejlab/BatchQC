@@ -17,11 +17,11 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     cond_mod <- matrix(rep(1, ncol(se)), ncol = 1)
     batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
   } else if(nlb <= 1)  {
-    cond_mod <- model.matrix(~as.factor(condition))
+    cond_mod <- model.matrix(~df[[condition]])
     batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
   } else if(nlc <= 1)  {
     cond_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-    batch_mod <- model.matrix(~as.factor(batch))
+    batch_mod <- model.matrix(~df[[batch]])
   } else {
     cond_mod <- model.matrix(~df[[condition]])
     batch_mod <- model.matrix(~df[[batch]])

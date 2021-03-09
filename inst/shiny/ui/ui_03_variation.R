@@ -1,23 +1,34 @@
 
 
-tabPanel("Variation Analysis",
+tabPanel(
+    "Variation Analysis",
 
     # Application title
-    titlePanel("Variation and P-Value Analysis"),
+    titlePanel("Variation Analysis"),
 
-    # Sidebar with a slider input for number of bins
-    tabsetPanel(
-        tabPanel("Variation Analysis",
-                 br(),
-                 sidebarLayout(
-                     sidebarPanel(),
-                     mainPanel()
-                 )
+    sidebarLayout(sidebarPanel(
+        h3("Variation Analysis"),
+        selectizeInput('variation_batch', 'Select Batch Variable', choices = "",options = list(
+            placeholder = 'Please select an option below',
+            onInitialize = I('function() { this.setValue(""); }')
+        ))
+    ),
+    mainPanel(tabsetPanel(
+        tabPanel(
+            "Variation Analysis"
+            # selectizeInput("design_covariate", "Select Covariate:", choices = "",options = list(
+            #     placeholder = 'Please select an option below',
+            #     onInitialize = I('function() { this.setValue(""); }')
+            # )),
+            # tableOutput('batch_design')
         ),
-        tabPanel("P-Value Analysis"
+        tabPanel(
+            "P-Value Analysis"
+            # tableOutput("confoundingTable")
         ),
-        tabPanel("Differential Expression"
+        tabPanel(
+            "Differential Expression"
+            # tableOutput("confoundingTable")
         )
-    )
-
+    )))
 )

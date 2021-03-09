@@ -30,7 +30,7 @@ observeEvent( input$se, {
 ### Create summarized experiment object and setup plot options
 observeEvent( input$submit, {
   if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
-    se = summarize_experiment(reactivevalue$counts_location,
+    se = summarized_experiment(reactivevalue$counts_location,
                               reactivevalue$metadata_location)
     reactivevalue$se=se
     reactivevalue$metadata=data.frame(colData(reactivevalue$se))
@@ -65,7 +65,8 @@ setupSelections = function(){
   )
   updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
   )
-
+  # Variation Analysis selections
+  updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
 }
 
 ### EXPERIMENTAL DESIGN TAB

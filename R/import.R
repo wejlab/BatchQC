@@ -1,4 +1,4 @@
-#' This function allows you to create aa summarized experiment object
+#' This function allows you to create a summarized experiment object
 #' @param counts_path path to counts file
 #' @param metadata_path path to metadata file
 #' @return a summarized experiment object
@@ -7,7 +7,7 @@
 #' @import EBSeq
 #'
 #' @export
-summarize_experiment = function(Counts_path,metadata_path) {
+summarized_experiment = function(Counts_path,metadata_path) {
   #require(reader)
   coldata <- read.table(metadata_path,header = T,row.names = 1,check.names = F,sep = get.delim(metadata_path,n = 10,delims = c('\t',',')))
   counts <-read.table(Counts_path,header = T,row.names = 1,check.names = F,sep = get.delim(Counts_path,n = 10,delims = c('\t',',')))

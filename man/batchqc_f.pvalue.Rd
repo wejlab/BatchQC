@@ -4,14 +4,14 @@
 \alias{batchqc_f.pvalue}
 \title{Returns R2 values from F-test (full/reduced model)}
 \usage{
-batchqc_f.pvalue(se, mod, mod0, assay_name)
+batchqc_f.pvalue(se, mod, batch_mod, assay_name)
 }
 \arguments{
 \item{se}{Summarized experiment object}
 
 \item{mod}{mod}
 
-\item{mod0}{mod}
+\item{batch_mod}{mod}
 
 \item{assay_name}{Name of chosen assay}
 }

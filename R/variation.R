@@ -9,8 +9,6 @@
 #' @export
 batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   df <- se@colData
-  # batch_data <- df[names(df)==batch]
-  # covariate_data <- df[names(df)==condition]
   nlb <- n_distinct(as.data.frame(df[batch]))
   nlc <- n_distinct(as.data.frame(df[condition]))
   if ((nlb <= 1)&&(nlc <= 1))  {
@@ -25,8 +23,6 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   } else {
     cond_mod <- model.matrix(~df[[condition]])
     batch_mod <- model.matrix(~df[[batch]])
-    # cond_mod <- model.matrix(~df$Infection)
-    # batch_mod <- model.matrix(~df$Batch)
   }
   mod <- cbind(cond_mod, batch_mod[, -1])
 
@@ -64,17 +60,14 @@ batchqc_f.pvalue <- function(se, mod, batch_mod,assay_name) {
   df0 <- dim(batch_mod)[2]
   p <- rep(0, m)
 
-  # resid <- se - se %*% mod %*% solve(t(mod) %*% mod) %*% t(mod)
   resid <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(se@assays@data[[assay_name]]) %*% mod %*% solve(t(mod) %*% mod) %*% t(mod)
   rss1 <- rowSums(resid * resid)
   rm(resid)
 
-  # resid0 <- se - se %*% batch_mod %*% solve(t(batch_mod) %*% batch_mod) %*% t(batch_mod)
   resid0 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(se@assays@data[[assay_name]]) %*% batch_mod %*% solve(t(batch_mod) %*% batch_mod) %*% t(batch_mod)
   rss0 <- rowSums(resid0 * resid0)
   rm(resid0)
 
-  # resid00 <- se - se %*% mod00 %*% solve(t(mod00) %*% mod00) %*% t(mod00)
   resid00 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(se@assays@data[[assay_name]]) %*% mod00 %*% solve(t(mod00) %*% mod00) %*% t(mod00)
   rss00 <- rowSums(resid00 * resid00)
   rm(resid00)

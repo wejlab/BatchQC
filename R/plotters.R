@@ -3,22 +3,19 @@
 #' @param batch Batch covariate
 #' @param condition Condition covariate of interest
 #' @param assay_name Assay of choice
+#' @import reshape2
+#' @import ggplot2
 #' @return List of explained variation by batch and condition
 #' @export
 EV_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
   EV_boxplot <- ggplot(data = melt(as.data.frame(batchqc_ev$explained_variation),id.vars=NULL),aes(x = variable, y = value, fill = variable)) +
-    geom_violin() +
-    #geom_boxplot() +
+    #geom_violin() +
+    geom_boxplot() +
     scale_x_discrete(name = "") +
-    scale_y_continuous(name = "Percent Variation Explained for Each Gene") +
+    scale_y_continuous(name = "Percent Explained Variation") +
+    ggtitle("Percent of Variation Explained by Source") +
     theme(legend.position = "none")
-
-
-  # apply(batchqc_ev$explained_variation, 2, summary)
-  # EV_boxplot <- boxplot(batchqc_ev$explained_variation, ylab =
-  #         "Percent Explained Variation", main =
-  #         "Percent of Variation Explained by Source")
   return(list(EV_boxplot=EV_boxplot))
 }
 

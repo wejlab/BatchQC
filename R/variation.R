@@ -26,6 +26,13 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   }
   mod <- cbind(cond_mod, batch_mod[, -1])
 
+  if(qr(mod)$rank<ncol(mod)){
+    if(ncol(mod)==(nlb+1)){stop("The covariate is confounded with batch! Please choose a different covariate.")}
+    if(ncol(mod)>(nlb+1)){
+      if((qr(mod[,-c(1:nlb)])$rank<ncol(mod[,-c(1:nlb)]))){stop('The covariate is confounded with batch! Please choose a different covariate.')
+      }else{stop("The covariate is confounded with batch! Please choose a different covariate.")}}
+  }
+
   cond_test <- batchqc_f.pvalue(se, mod, batch_mod, assay_name)
   batch_test <- batchqc_f.pvalue(se, mod, cond_mod, assay_name)
 
@@ -81,4 +88,20 @@ batchqc_f.pvalue <- function(se, mod, batch_mod,assay_name) {
     p <- 1 - pf(fstats, df1 = (df1 - df0), df2 = (n - df1))
   }
   return(list(p = p, r2_full = r2_full, r2_reduced = r2_reduced))
+}
+
+
+#' Returns table with percent variation explained for specified number of genes
+#'
+#' @param se Summarized experiment object
+#' @param mod mod
+#' @param batch_mod mod
+#' @param assay_name Name of chosen assay
+#' @param number_of_genes Number of genes to include in the table
+#' @return List of explained variation by batch and condition
+#' @export
+batchqc_ev_table <- function(se, batch, condition, assay_name, number_of_genes) {
+  batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
+  EV_table <- batchqc_ev$explained_variation[1:number_of_genes,]
+  return(list(EV_table=EV_table))
 }

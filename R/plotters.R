@@ -14,8 +14,8 @@ EV_plotter <- function(se, batch, condition, assay_name) {
     geom_boxplot() +
     scale_x_discrete(name = "") +
     scale_y_continuous(name = "Percent Explained Variation") +
-    ggtitle("Percent of Variation Explained by Source") +
-    theme(legend.position = "none")
+    labs(title="Percent of Variation Explained by Source") +
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
   return(list(EV_boxplot=EV_boxplot))
 }
 

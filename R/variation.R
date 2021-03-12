@@ -105,3 +105,21 @@ batchqc_ev_table <- function(se, batch, condition, assay_name, number_of_genes) 
   EV_table <- batchqc_ev$explained_variation[1:number_of_genes,]
   return(list(EV_table=EV_table))
 }
+
+
+#' Returns list of covariates not confounded by batch
+#'
+#' @param se Summarized experiment object
+#' @param batch Batch variable
+#' @return List of explained variation by batch and condition
+#' @export
+covariates_not_confounded <- function(se, batch) {
+  df <- confoundMetrics(se,batch)
+  covariate_options <- rownames(df)
+  for (i in 1:dim(df)[1]) {
+    if (df[i]== 1) {
+      covariate_options <- covariate_options[!(covariate_options) %in% rownames(df)[i]]
+    }
+  }
+  return(covariate_options)
+}

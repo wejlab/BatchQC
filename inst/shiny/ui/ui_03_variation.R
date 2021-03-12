@@ -8,11 +8,11 @@ tabPanel(
 
     sidebarLayout(sidebarPanel(
         h3("Variation Analysis"),
-        selectizeInput('variation_batch', 'Select Batch Variable', choices = "",options = list(
+        selectizeInput('variation_assay', 'Select Assay Name', choices = "",options = list(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),
-        selectizeInput('variation_assay', 'Select Assay Name', choices = "",options = list(
+        selectizeInput('variation_batch', 'Select Batch Variable', choices = "",options = list(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),
@@ -20,7 +20,6 @@ tabPanel(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),
-        # uiOutput('variation_condition'),
         sliderInput('variation_slider',
                     'Number of genes to include in the table:',
                     min = 1,

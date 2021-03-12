@@ -66,9 +66,8 @@ setupSelections = function(){
   updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
   )
   # Variation Analysis selections
-  updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
-  updateSelectizeInput(session=session, inputId="variation_condition", choices=names(colData(reactivevalue$se)),selected=NULL)
   updateSelectizeInput(session=session, inputId="variation_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
   updateSliderInput(session=session, "variation_slider",max=dim(reactivevalue$se)[1],min=1,step=1)
 }
 
@@ -89,44 +88,15 @@ observeEvent(input$design_batch, {
 
 
 ### VARIATION ANALYSIS TAB
-
-# validate_not_confounding <- function(se, batch, condition, assay_name) {
-#   df <- se@colData
-#   nlb <- n_distinct(as.data.frame(df[batch]))
-#   nlc <- n_distinct(as.data.frame(df[condition]))
-#   if ((nlb <= 1)&&(nlc <= 1))  {
-#     cond_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-#     batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-#   } else if(nlb <= 1)  {
-#     cond_mod <- model.matrix(~df[[condition]])
-#     batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-#   } else if(nlc <= 1)  {
-#     cond_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-#     batch_mod <- model.matrix(~df[[batch]])
-#   } else {
-#     cond_mod <- model.matrix(~df[[condition]])
-#     batch_mod <- model.matrix(~df[[batch]])
-#   }
-#   mod <- cbind(cond_mod, batch_mod[, -1])
-#
-#   if(qr(mod)$rank<ncol(mod)){
-#     if(ncol(mod)==(nlb+1)){stop("The covariate is confounded with batch! Please choose a different covariate for this visualization.")}
-#     if(ncol(mod)>(nlb+1)){
-#       if((qr(mod[,-c(1:nlb)])$rank<ncol(mod[,-c(1:nlb)]))){stop('The covariate is confounded with batch! Please choose a different covariate for this visualization.')
-#       }else{stop("The covariate is confounded with batch! Please choose a different covariate for this visualization.")}}
-#   }
-# }
-#
-# output$select_variation_covariate <- renderUI({
-#   covariate_choice <- reactive({
-#
-#   })
-# })
-
+# Update covariate options to only those that are not confounded with batch
+observeEvent(input$variation_batch, {
+  req(reactivevalue$se, input$variation_batch)
+  covariate_choices <- covariates_not_confounded(reactivevalue$se,input$variation_batch)
+  updateSelectizeInput(session=session, inputId="variation_condition", choices=covariate_choices,selected=NULL)
+})
 # Update variation analysis plot
 observeEvent(input$variation, {
   req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
-  # validate(validate_not_confounding(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay))
   # Create boxplot for variation explained by batch, condition, and batch + condition
   batchqc_ev_plot <- EV_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
   output$EV_plot <- renderPlot({
@@ -136,7 +106,7 @@ observeEvent(input$variation, {
 # Update variation analysis table
 observeEvent(input$variation, {
   req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
-  # Create boxplot for variation explained by batch, condition, and batch + condition
+  # Create table fo percent variation explained for a specified number of genes
   batchqc_ev_plot <- batchqc_ev_table(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay, input$variation_slider)
   output$EV_table <- renderTable({
     batchqc_ev_plot$EV_table

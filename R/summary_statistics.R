@@ -3,6 +3,8 @@
 #' @param covariate biological covariate
 #' @param batch batch variable
 #' @import tidyverse
+#' @import dplyr
+#' @import tidyr
 #' @return design table
 #'
 #' @export

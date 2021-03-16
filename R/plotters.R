@@ -49,11 +49,12 @@ PCA_plotter <- function(se, nfeature, color, shape, assay1, assay2=NULL) {
       pca_md <- cbind(coldata, pca_12)
       pca_md$sample <- rownames(coldata)
       # Add to data
-      pca_plot_data <- rbind(pca_data, pca_md)
+      pca_plot_data <- rbind(pca_plot_data, pca_md)
     }
   }
-
-  plot <- ggplot(pca_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3)+ facet_grid(cols =vars(assay))
+  # Reorder data
+  pca_plot_data$assay <- factor(pca_plot_data$assay, levels=c(assay1, assay2))
+  plot <- ggplot(pca_plot_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3) + facet_grid(cols =vars(assay), scales = 'free')
   return(list(PCA=pca_plot_data, plot=plot))
 }
 

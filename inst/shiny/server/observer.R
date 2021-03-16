@@ -57,7 +57,8 @@ setupSelections = function(){
   updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_heatmap',value = 500,min = 0,max = dim(reactivevalue$se)[1])
   # PCA Selections
-  updateSelectizeInput(session = session,inputId = 'Normalization_method_PCA',choices = assayNames((reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'pca_data_left',choices = assayNames((reactivevalue$se)), selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'pca_data_right',choices = assayNames((reactivevalue$se)), selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_PCA',value = 500,min = 0,max = dim(reactivevalue$se)[1])
   updateSelectizeInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateSelectizeInput(session = session,inputId = 'Variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
@@ -142,21 +143,17 @@ observeEvent( input$heatmap_plot, {
   }
 })
 
-
-
-
-
 #### Plot PCA based on the input ####
 
 observeEvent( input$PCA_plot, {
   if (!is.null(reactivevalue$se)) {
     require(ggplot2)
-    require(plotly)
     results=PCA_plotter(reactivevalue$se,
-                        input$Normalization_method_PCA,
                         input$top_n_PCA,
                         input$Variates_color,
-                        shape=input$Variates_shape)
+                        input$Variates_shape,
+                        input$pca_data_left,
+                        input$pca_data_right)
     output$PCA=renderPlot({(results[['plot']])})
 
   }

@@ -1,14 +1,6 @@
-#' This function allows you to plot PCA
-#' @param se summarized experiment
-#' @param assay normalized or corrected
-#' @param nfeature number of features
-#' @param color choose a color
-#' @param shape choose a shape
-#' @import ggplot2
-#' @return PCA plot
+#' Preprocess normalized count data for PCA
 #'
-#' @export
-PCA_plotter <- function(se, assay, nfeature,color, shape ) {
+PCA_preprocess <- function(se, assay, nfeature){
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
   data <- apply(data,c(1,2),as.numeric)
@@ -19,18 +11,50 @@ PCA_plotter <- function(se, assay, nfeature,color, shape ) {
   data <- log(data+1)
   data <- data[names(vargenes),]
   data <- data+1
-  for (i in 1:nrow(data)) {
-    data[i,] <- (data[i,]-mean(data[i,]))/sd(data[i,])
+
+  # Center
+  centered <- data - rowMeans(data)/rowSds(data)
+  # for (i in 1:nrow(data)) {
+  #   data[i,] <- (data[i,]-mean(data[i,]))/sd(data[i,])
+  # }
+  coldata <- data.frame(colData(se))
+  PCA <- prcomp(t(centered), center=F)
+
+  return(PCA)
+}
+#' This function allows you to plot PCA
+#' @param se summarized experiment
+#' @param nfeature number of features
+#' @param color choose a color
+#' @param shape choose a shape
+#' @param assay1 data to display. Appears on left if `assay2` is provided
+#' @param assay2 second assay to display
+
+#' @import ggplot2
+#' @return PCA plot
+#'
+#' @export
+PCA_plotter <- function(se, nfeature, color, shape, assay1, assay2=NULL) {
+  pca_plot_data <- data.frame()
+  coldata <- data.frame(colData(se))
+  for (assay in c(assay1, assay2)){
+    if (!is.null(assay)){
+      # Preprocess data
+      pca <- PCA_preprocess(se, assay, nfeature)
+      # Extract PC1 and PC2
+      pca_12 <- as.data.frame(pca$x)[, c('PC1', 'PC2')]
+      # Annotate with assay name
+      pca_12['assay'] <- assay
+      # Merge metadata
+      pca_md <- cbind(coldata, pca_12)
+      pca_md$sample <- rownames(coldata)
+      # Add to data
+      pca_plot_data <- rbind(pca_data, pca_md)
+    }
   }
 
-  coldata <- data.frame(colData(se))
-  PCA <- prcomp(t(data))
-  coldata <- cbind(coldata,PCA$x)
-  coldata$sample <- rownames(coldata)
-
-
-  plot <- ggplot(coldata,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3)
-  return(list(PCA=PCA,plot=plot))
+  plot <- ggplot(pca_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3)+ facet_grid(cols =vars(assay))
+  return(list(PCA=pca_plot_data, plot=plot))
 }
 
 

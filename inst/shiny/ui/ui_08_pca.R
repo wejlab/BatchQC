@@ -24,7 +24,7 @@ tabPanel("PCA Analysis",
            mainPanel(
              tabsetPanel(
                tabPanel("PCA",
-                        plotOutput('PCA',width = 600,height = 600)
+                        plotOutput('PCA',width = 800,height = 500)
                ),
                tabPanel("Summary"
                ),

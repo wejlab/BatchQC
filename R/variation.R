@@ -52,7 +52,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   mod2 <- list.cbind(cond_mod)
   mod2 <- cbind(mod2, batch_mod[,-1])
   if (length(condition) > 1){
-    idx <- which(duplicated(colnames(mod2)) && colnames(mod2) == "(Intercept)")
+    idx <- which(duplicated(colnames(mod2)) & colnames(mod2) == "(Intercept)")
     mod2 <- mod2[,-idx]
   }
 
@@ -66,14 +66,13 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 
   explained_variation <- round(cbind(r2_full, batch_r2,list.cbind(cond_r2)), 5) * 100
 
+  # Name columns according to batch and covariate names
   if (length(condition) == 1) {
     colnames(explained_variation)[1] <- "Full (Covariate + Batch)"
   } else {
     colnames(explained_variation)[1] <- "Full (Covariates + Batch)"
   }
-
   colnames(explained_variation)[2] <- "Batch"
-
   for (i in 1:length(condition)) {
     colnames(explained_variation)[i+2] <- condition[i]
   }

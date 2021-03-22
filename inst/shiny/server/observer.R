@@ -18,7 +18,7 @@ observeEvent( input$md, {
   reactivevalue$metadata = read.table(reactivevalue$metadata_location,header = T,row.names = 1,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
 })
 
-#### Obtain Count matrix and metadata from the rds summarizeexperiment ####
+#### Obtain Count matrix and metadata from the rds summarized experiment ####
 observeEvent( input$se, {
   if (is.null(input$se)) return()
   reactivevalue$se_location=input$se$datapath
@@ -174,10 +174,7 @@ observeEvent( input$heatmap_plot, {
 
 
 
-
-
 #### Plot PCA based on the input ####
-
 observeEvent( input$PCA_plot, {
   if (!is.null(reactivevalue$se)) {
     require(ggplot2)

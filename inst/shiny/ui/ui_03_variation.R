@@ -16,7 +16,7 @@ tabPanel(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),
-        selectizeInput('variation_condition', 'Select Covariate', choices = "",options = list(
+        selectizeInput('variation_condition', 'Select Covariate', choices = "",multiple = T, options = list(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),
@@ -34,9 +34,6 @@ tabPanel(
                      tableOutput('EV_table')
             ),
             tabPanel("P-Value Analysis"
-                     # tableOutput("confoundingTable")
-            ),
-            tabPanel("Differential Expression"
                      # tableOutput("confoundingTable")
             )
         )

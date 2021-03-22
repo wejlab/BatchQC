@@ -12,7 +12,7 @@ batchqc_explained_variation(se, batch, condition, assay_name)
 
 \item{batch}{Batch covariate}
 
-\item{condition}{Condition covariate of interest}
+\item{condition}{Condition covariate(s) of interest}
 
 \item{assay_name}{Assay of choice}
 }

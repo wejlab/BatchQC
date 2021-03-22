@@ -108,9 +108,9 @@ observeEvent(input$variation, {
   req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
   # Create table fo percent variation explained for a specified number of genes
   batchqc_ev_plot <- batchqc_ev_table(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay, input$variation_slider)
-  output$EV_table <- renderTable({
-    batchqc_ev_plot$EV_table
-  })
+  output$EV_table <- renderTable(
+    batchqc_ev_plot$EV_table, rownames = T
+  )
 })
 
 

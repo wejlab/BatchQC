@@ -3,53 +3,88 @@
 #'
 #' @param se Summarized experiment object
 #' @param batch Batch covariate
-#' @param condition Condition covariate of interest
+#' @param condition Condition covariate(s) of interest
 #' @param assay_name Assay of choice
+#' @import rlist
 #' @return List of explained variation by batch and condition
 #' @export
 batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   df <- se@colData
+
   nlb <- n_distinct(as.data.frame(df[batch]))
-  nlc <- n_distinct(as.data.frame(df[condition]))
-  if ((nlb <= 1)&&(nlc <= 1))  {
-    cond_mod <- matrix(rep(1, ncol(se)), ncol = 1)
+  if (nlb <=1) {
     batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-  } else if(nlb <= 1)  {
-    cond_mod <- model.matrix(~df[[condition]])
-    batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-  } else if(nlc <= 1)  {
-    cond_mod <- matrix(rep(1, ncol(se)), ncol = 1)
-    batch_mod <- model.matrix(~df[[batch]])
   } else {
-    cond_mod <- model.matrix(~df[[condition]])
     batch_mod <- model.matrix(~df[[batch]])
   }
-  mod <- cbind(cond_mod, batch_mod[, -1])
 
-  if(qr(mod)$rank<ncol(mod)){
-    if(ncol(mod)==(nlb+1)){stop("The covariate is confounded with batch! Please choose a different covariate.")}
-    if(ncol(mod)>(nlb+1)){
-      if((qr(mod[,-c(1:nlb)])$rank<ncol(mod[,-c(1:nlb)]))){stop('The covariate is confounded with batch! Please choose a different covariate.')
-      }else{stop("The covariate is confounded with batch! Please choose a different covariate.")}}
+  nlc <- rep(0,length(condition))
+  cond_mod <- list()
+  mod <- list()
+  cond_test <- list()
+  batch_test <- list()
+  cond_r2 <- list()
+
+  for (i in 1:length(condition)) {
+    nlc[i] <- n_distinct(as.data.frame(df[condition[i]]))
+
+    if (nlc[i] <= 1) {
+      cond_mod[[i]] <- matrix(rep(1, ncol(se)), ncol = 1)
+    } else {
+      cond_mod[[i]] <- model.matrix(~df[[condition[i]]])
+    }
+
+    mod[[i]] <- cbind(cond_mod[[i]], batch_mod[, -1])
+
+    if(qr(mod[[i]])$rank<ncol(mod[[i]])){
+      if(ncol(mod[[i]])==(nlb+1)){stop("A covariate is confounded with batch! Please choose different covariates.")}
+      if(ncol(mod[[i]])>(nlb+1)){
+        if((qr(mod[[i]][,-c(1:nlb)])$rank<ncol(mod[[i]][,-c(1:nlb)]))){stop('A covariate is confounded with batch! Please choose different covariates.')
+        }else{stop("A covariate is confounded with batch! Please choose different covariates.")}}
+    }
+
+    cond_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], batch_mod, assay_name)
+    batch_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], cond_mod[[i]], assay_name)
+
+    cond_r2[[i]] <- batch_test[[i]]$r2_reduced
   }
 
-  cond_test <- batchqc_f.pvalue(se, mod, batch_mod, assay_name)
-  batch_test <- batchqc_f.pvalue(se, mod, cond_mod, assay_name)
+  mod2 <- list.cbind(cond_mod)
+  mod2 <- cbind(mod2, batch_mod[,-1])
+  if (length(condition) > 1){
+    idx <- which(duplicated(colnames(mod2)) && colnames(mod2) == "(Intercept)")
+    mod2 <- mod2[,-idx]
+  }
+
+  full_test <- batchqc_f.pvalue(se, mod2, batch_mod, assay_name)
 
   cond_ps <- cond_test$p
   batch_ps <- batch_test$p
 
-  r2_full <- cond_test$r2_full
-  cond_r2 <- batch_test$r2_reduced
-  batch_r2 <- cond_test$r2_reduced
-  explained_variation <- round(cbind(`Full (Condition+Batch)` = r2_full,
-                                     Condition = cond_r2, Batch = batch_r2), 5) * 100
+  r2_full <- full_test$r2_full
+  batch_r2 <- full_test$r2_reduced
+
+  explained_variation <- round(cbind(r2_full, batch_r2,list.cbind(cond_r2)), 5) * 100
+
+  if (length(condition) == 1) {
+    colnames(explained_variation)[1] <- "Full (Covariate + Batch)"
+  } else {
+    colnames(explained_variation)[1] <- "Full (Covariates + Batch)"
+  }
+
+  colnames(explained_variation)[2] <- "Batch"
+
+  for (i in 1:length(condition)) {
+    colnames(explained_variation)[i+2] <- condition[i]
+  }
+
   rownames(explained_variation) <- rownames(data.matrix)
   batchqc_ev <- list(explained_variation = explained_variation,
                      cond_test = cond_test, batch_test = batch_test)
 
   return(batchqc_ev)
 }
+
 
 #' Returns R2 values from F-test (full/reduced model)
 #'
@@ -59,7 +94,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 #' @param assay_name Name of chosen assay
 #' @return List of explained variation by batch and condition
 #' @export
-batchqc_f.pvalue <- function(se, mod, batch_mod,assay_name) {
+batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
   mod00 <- matrix(rep(1, ncol(se)), ncol = 1)
   n <- dim(se)[2]
   m <- dim(se)[1]

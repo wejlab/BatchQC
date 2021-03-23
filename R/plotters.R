@@ -1,5 +1,5 @@
 #' Preprocess normalized count data for PCA
-#'
+#' @import matrixStats
 PCA_preprocess <- function(se, assay, nfeature){
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
@@ -27,18 +27,20 @@ PCA_preprocess <- function(se, assay, nfeature){
 #' @param nfeature number of features
 #' @param color choose a color
 #' @param shape choose a shape
-#' @param assay1 data to display. Appears on left if `assay2` is provided
-#' @param assay2 second assay to display
-
+#' @param assays array of assay names from `se`
 #' @import ggplot2
 #' @return PCA plot
 #'
 #' @export
-PCA_plotter <- function(se, nfeature, color, shape, assay1, assay2=NULL) {
+PCA_plotter <- function(se, nfeature, color, shape, assays) {
   pca_plot_data <- data.frame()
   coldata <- data.frame(colData(se))
-  for (assay in c(assay1, assay2)){
-    if (!is.null(assay)){
+  for (assay in assays){
+    if (! assay %in%  names(se@assays)){
+      warning(sprintf('"%s" is not an available assay', assay))
+      next
+    }
+    else {
       # Preprocess data
       pca <- PCA_preprocess(se, assay, nfeature)
       # Extract PC1 and PC2
@@ -53,7 +55,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assay1, assay2=NULL) {
     }
   }
   # Reorder data
-  pca_plot_data$assay <- factor(pca_plot_data$assay, levels=c(assay1, assay2))
+  pca_plot_data$assay <- factor(pca_plot_data$assay, levels=assays)
   plot <- ggplot(pca_plot_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3) + facet_grid(cols =vars(assay), scales = 'free')
   return(list(PCA=pca_plot_data, plot=plot))
 }

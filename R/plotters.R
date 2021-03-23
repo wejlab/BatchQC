@@ -56,7 +56,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
   }
   # Reorder data
   pca_plot_data$assay <- factor(pca_plot_data$assay, levels=assays)
-  plot <- ggplot(pca_plot_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3) + facet_grid(cols =vars(assay), scales = 'free')
+  plot <- ggplot(pca_plot_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3) + facet_wrap(vars(assay), ncol = 2, scales = 'free')
   return(list(PCA=pca_plot_data, plot=plot))
 }
 

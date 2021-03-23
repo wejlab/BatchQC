@@ -11,24 +11,26 @@ tabPanel("PCA Analysis",
              numericInput('top_n_PCA','How many top variable features to use',value = 500,min = 0,max = 500),
              selectizeInput('Variates_color','Which variates to show as color',choices =c(),multiple = F,selected = NULL),
 
-             # Left plot data
+             # List of assays to plot from se
              selectizeInput('pca_assays','Assays to plot', choices =c(), multiple = T),
 
              actionButton('PCA_plot', label = 'Here we go!')
+
            ),
 
            # Show a plot of the generated distribution
            mainPanel(
-             tabsetPanel(
-               tabPanel("PCA",
-                        plotOutput('PCA',width = 800,height = 500)
-               ),
-               tabPanel("Summary"
-               ),
-               tabPanel("Table"
-               ),
-               tabPanel("Explained Variation")
-             )
+             plotOutput('PCA',width = 1000,height = 750)
+           #   tabsetPanel(
+           #     tabPanel("PCA",
+           #              plotOutput('PCA',width = 800,height = 500)
+           #     ),
+           #     tabPanel("Summary"
+           #     ),
+           #     tabPanel("Table"
+           #     ),
+           #     tabPanel("Explained Variation")
+           #   )
            )
          )
 )

@@ -147,12 +147,18 @@ observeEvent( input$heatmap_plot, {
 observeEvent( input$PCA_plot, {
   if (!is.null(reactivevalue$se)) {
     require(ggplot2)
+    assays <- input$pca_assays
+    msg <- sprintf('Generating plot for: %s...', paste(assays, collapse=', '))
+    withProgress(message=msg, {
     results=PCA_plotter(reactivevalue$se,
                         input$top_n_PCA,
                         input$Variates_color,
                         input$Variates_shape,
-                        input$pca_assays)
+                        assays)
+    setProgress(.8, 'Displaying figure...')
     output$PCA=renderPlot({(results[['plot']])})
+    setProgress(1, 'Complete.')
+    })
 
   }
 }

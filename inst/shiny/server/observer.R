@@ -57,8 +57,7 @@ setupSelections = function(){
   updateSelectInput(session = session,inputId = 'Variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_heatmap',value = 500,min = 0,max = dim(reactivevalue$se)[1])
   # PCA Selections
-  updateSelectizeInput(session = session,inputId = 'pca_data_left',choices = assayNames((reactivevalue$se)), selected = NULL)
-  updateSelectizeInput(session = session,inputId = 'pca_data_right',choices = assayNames((reactivevalue$se)), selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'pca_assays',choices = assayNames((reactivevalue$se)), selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_PCA',value = 500,min = 0,max = dim(reactivevalue$se)[1])
   updateSelectizeInput(session = session,inputId = 'Variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateSelectizeInput(session = session,inputId = 'Variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
@@ -152,8 +151,7 @@ observeEvent( input$PCA_plot, {
                         input$top_n_PCA,
                         input$Variates_color,
                         input$Variates_shape,
-                        input$pca_data_left,
-                        input$pca_data_right)
+                        input$pca_assays)
     output$PCA=renderPlot({(results[['plot']])})
 
   }

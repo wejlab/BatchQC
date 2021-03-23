@@ -12,12 +12,9 @@ tabPanel("PCA Analysis",
              selectizeInput('Variates_color','Which variates to show as color',choices =c(),multiple = F,selected = NULL),
 
              # Left plot data
-             selectizeInput('pca_data_left','Left Plot Data',choices =c(),multiple = F),
+             selectizeInput('pca_assays','Assays to plot', choices =c(), multiple = T),
 
-             # Right plot data
-             selectizeInput('pca_data_right','Right Plot Data',choices =c(),multiple = F, selected=NULL),
-
-             actionButton('PCA_plot',label = 'Here we go!')
+             actionButton('PCA_plot', label = 'Here we go!')
            ),
 
            # Show a plot of the generated distribution

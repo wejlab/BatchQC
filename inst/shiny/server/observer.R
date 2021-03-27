@@ -68,7 +68,6 @@ setupSelections = function(){
   # Variation Analysis selections
   updateSelectizeInput(session=session, inputId="variation_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
   updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
-  updateSliderInput(session=session, "variation_slider",max=dim(reactivevalue$se)[1],min=1,step=1)
 }
 
 ### EXPERIMENTAL DESIGN TAB
@@ -95,23 +94,34 @@ observeEvent(input$variation_batch, {
   updateSelectizeInput(session=session, inputId="variation_condition", choices=covariate_choices,selected=NULL)
 })
 # Update variation analysis plot
-observeEvent(input$variation, {
+ev_plot_reactive <- eventReactive( input$variation, {
   req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
   # Create boxplot for variation explained by batch, condition, and batch + condition
-  batchqc_ev_plot <- EV_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
-  output$EV_plot <- renderPlot({
-    batchqc_ev_plot$EV_boxplot
+  tryCatch({
+    batchqc_ev_plot <- EV_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+    plot(batchqc_ev_plot$EV_boxplot)
+  }, error = function(err) {
+    print("At least one covariate is confounded with another! Please choose different covariates.")
   })
 })
-# Update variation analysis table
-observeEvent(input$variation, {
-  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
-  # Create table fo percent variation explained for a specified number of genes
-  batchqc_ev_plot <- batchqc_ev_table(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay, input$variation_slider)
-  output$EV_table <- renderTable(
-    batchqc_ev_plot$EV_table, rownames = T
-  )
+output$EV_show_plot <- renderPlot({
+  ev_plot_reactive()
 })
+# Update variation analysis table
+ev_table_reactive <- eventReactive( input$variation, {
+  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
+  # Create boxplot for variation explained by batch, condition, and batch + condition
+  tryCatch({
+    batchqc_ev_table <- EV_table(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+    batchqc_ev_table$EV_table
+  }, error = function(err) {
+    showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
+  })
+})
+output$EV_show_table <- renderDataTable({
+  ev_table_reactive()
+})
+
 
 
 observeEvent(input$submit_variables, {

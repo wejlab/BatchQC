@@ -4,14 +4,12 @@
 \alias{batchqc_ev_table}
 \title{Returns table with percent variation explained for specified number of genes}
 \usage{
-batchqc_ev_table(se, batch, condition, assay_name, number_of_genes)
+batchqc_ev_table(se, batch, condition, assay_name)
 }
 \arguments{
 \item{se}{Summarized experiment object}
 
 \item{assay_name}{Name of chosen assay}
-
-\item{number_of_genes}{Number of genes to include in the table}
 
 \item{mod}{mod}
 

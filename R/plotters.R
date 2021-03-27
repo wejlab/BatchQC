@@ -10,7 +10,6 @@
 EV_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
   EV_boxplot <- ggplot(data = melt(as.data.frame(batchqc_ev$explained_variation),id.vars=NULL),aes(x = variable, y = value, fill = variable)) +
-    #geom_violin() +
     geom_boxplot() +
     scale_x_discrete(name = "") +
     scale_y_continuous(name = "Percent Explained Variation") +

@@ -37,6 +37,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     mod[[i]] <- cbind(cond_mod[[i]], batch_mod[, -1])
 
     if(qr(mod[[i]])$rank<ncol(mod[[i]])){
+      options(error = NULL)
       if(ncol(mod[[i]])==(nlb+1)){stop("A covariate is confounded with batch! Please choose different covariates.")}
       if(ncol(mod[[i]])>(nlb+1)){
         if((qr(mod[[i]][,-c(1:nlb)])$rank<ncol(mod[[i]][,-c(1:nlb)]))){stop('A covariate is confounded with batch! Please choose different covariates.')
@@ -54,6 +55,14 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   if (length(condition) > 1){
     idx <- which(duplicated(colnames(mod2)) & colnames(mod2) == "(Intercept)")
     mod2 <- mod2[,-idx]
+  }
+
+  if(qr(mod2)$rank<ncol(mod2)){
+    options(error = NULL)
+    if(ncol(mod2)==(nlb+1)){stop("A covariate is confounded with batch! Please choose different covariates.")}
+    if(ncol(mod2)>(nlb+1)){
+      if((qr(mod2[,-c(1:nlb)])$rank<ncol(mod2[,-c(1:nlb)]))){stop('A covariate is confounded with batch! Please choose different covariates.')
+      }else{stop("A covariate is confounded with batch! Please choose different covariates.")}}
   }
 
   full_test <- batchqc_f.pvalue(se, mod2, batch_mod, assay_name)
@@ -77,7 +86,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     colnames(explained_variation)[i+2] <- condition[i]
   }
 
-  rownames(explained_variation) <- rownames(data.matrix)
+  # rownames(explained_variation) <- rownames(data.matrix)
   batchqc_ev <- list(explained_variation = explained_variation,
                      cond_test = cond_test, batch_test = batch_test)
 
@@ -131,12 +140,12 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
 #' @param mod mod
 #' @param batch_mod mod
 #' @param assay_name Name of chosen assay
-#' @param number_of_genes Number of genes to include in the table
 #' @return List of explained variation by batch and condition
 #' @export
-batchqc_ev_table <- function(se, batch, condition, assay_name, number_of_genes) {
+EV_table <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
-  EV_table <- batchqc_ev$explained_variation[1:number_of_genes,]
+  EV_table <- data.table(batchqc_ev$explained_variation[], keep.rownames = T)
+  colnames(EV_table)[1] <- "Gene Name"
   return(list(EV_table=EV_table))
 }
 

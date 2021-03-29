@@ -2,9 +2,9 @@
 
 export(BatchQC)
 export(EV_plotter)
+export(EV_table)
 export(PCA_plotter)
 export(batchDesign)
-export(batchqc_ev_table)
 export(batchqc_explained_variation)
 export(batchqc_f.pvalue)
 export(confoundMetrics)

@@ -157,7 +157,7 @@ EV_table <- function(se, batch, condition, assay_name) {
 #' @return List of explained variation by batch and condition
 #' @export
 covariates_not_confounded <- function(se, batch) {
-  df <- confoundMetrics(se,batch)
+  df <- confound_metrics(se,batch)
   covariate_options <- rownames(df)
   for (i in 1:dim(df)[1]) {
     if (df[i]== 1) {

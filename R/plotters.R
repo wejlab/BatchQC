@@ -20,7 +20,11 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 
 
 #' Preprocess normalized count data for PCA
+#' @param se Summarized Experiment object
+#' @param assay Assay from summarized experiment object
+#' @param nfeature Number of variable features to use
 #' @import matrixStats
+#' @export
 PCA_preprocess <- function(se, assay, nfeature){
 
   data <- se@assays@data[[assay]]
@@ -85,7 +89,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 
 #' This function allows you to plot a heatmap
 #' @param se summarized experiment
-#' @param assay normalized or corrected
+#' @param assay normalized or corrected assay
 #' @param nfeature number of features to display
 #' @param experiment_variable what is the experiment variable
 #' @param annotation_column choose column

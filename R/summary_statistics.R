@@ -8,8 +8,7 @@
 #' @return design table
 #'
 #' @export
-batchDesign <- function(se, batch, covariate){
-
+batch_design <- function(se, batch, covariate){
   ### Create a batch design table for the provided covariate
   design <- colData(se) %>% as_tibble %>%
     group_by_at(covariate) %>%
@@ -18,6 +17,7 @@ batchDesign <- function(se, batch, covariate){
     replace(is.na(.), 0)
   return(design)
 }
+
 
 #' This function allows you to calculate correlation properties
 #' @param bd batch design
@@ -45,6 +45,7 @@ cor_props <- function(bd){
   return(out)
 }
 
+
 #' This function allows you to calculate a standardized pearson corr coef
 #' @param bd batch design
 #' @return standardized pearson correlation coefficient
@@ -56,6 +57,7 @@ std_pearson_corr_coef <- function(bd) {
   r <- sqrt(c$chi * c$mmin/((c$chi + c$tablesum) * (c$mmin - 1)))
   return(r)
 }
+
 
 #' This function allows you to calculate cramer's V
 #' @param bd batch design
@@ -69,13 +71,14 @@ cramers_v <- function(bd) {
   return(v)
 }
 
+
 #' This function allows you to combine std. pearson corr coef and cramer's V
 #' @param se summarized experiment
 #' @param batch batch variable
 #' @return metrics of confounding
 #'
 #' @export
-confoundMetrics <- function(se, batch){
+confound_metrics <- function(se, batch){
   # Covariates are non-batch
   cols <- names(colData(se))
   covs <- cols[cols != batch]
@@ -84,7 +87,7 @@ confoundMetrics <- function(se, batch){
 
   for (c in covs){
     # Get batch design
-    bd <- batchDesign(se, batch, c)
+    bd <- batch_design(se, batch, c)
     for (m in names(metrics)){
       # Compute metric and place in appropriate slot
       metric.mat[c, m] <- metrics[[m]](bd)

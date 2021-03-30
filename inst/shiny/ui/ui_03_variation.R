@@ -29,7 +29,6 @@ tabPanel(
                      dataTableOutput('EV_show_table')
             ),
             tabPanel("P-Value Analysis"
-                     # tableOutput("confoundingTable")
             )
         )
         )

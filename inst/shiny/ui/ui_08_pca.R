@@ -7,9 +7,9 @@ tabPanel("PCA Analysis",
          sidebarLayout(
            sidebarPanel(
              # Options for both plots
-             selectizeInput('Variates_shape','Which variates to show as shape',choices =c(),multiple = F,selected = NULL),
-             numericInput('top_n_PCA','How many top variable features to use',value = 500,min = 0,max = 500),
-             selectizeInput('Variates_color','Which variates to show as color',choices =c(),multiple = F,selected = NULL),
+             selectizeInput('variates_shape','Choose which variate to show as shape:',choices =c(),multiple = F,selected = NULL),
+             numericInput('top_n_PCA','Choose how many top variable features to use:',value = 500,min = 0,max = 500),
+             selectizeInput('variates_color','Choose which variates to show as color:',choices =c(),multiple = F,selected = NULL),
 
              # List of assays to plot from se
              selectizeInput('pca_assays','Assays to plot', choices =c(), multiple = T),

@@ -9,7 +9,7 @@ heatmap_plotter(se, assay, nfeature, experiment_variable, annotation_column)
 \arguments{
 \item{se}{summarized experiment}
 
-\item{assay}{normalized or corrected}
+\item{assay}{normalized or corrected assay}
 
 \item{nfeature}{number of features to display}
 

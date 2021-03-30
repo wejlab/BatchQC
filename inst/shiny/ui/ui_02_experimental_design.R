@@ -25,7 +25,7 @@ tabPanel(
     ),
     tabPanel(
       "Confounding Statistics",
-      tableOutput("confoundingTable")
+      tableOutput("confounding_table")
     )
   )))
 )

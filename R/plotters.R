@@ -23,7 +23,6 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 #' @param se Summarized Experiment object
 #' @param assay Assay from summarized experiment object
 #' @param nfeature Number of variable features to use
-#' @import matrixStats
 #' @export
 PCA_preprocess <- function(se, assay, nfeature){
 

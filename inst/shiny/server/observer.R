@@ -1,18 +1,14 @@
-#### Obtain the Counts matrix and Count table location ####
+### Obtain the counts matrix and count table location ###
 observeEvent( input$counts, {
   req(input$counts)
-  # if (is.null(input$counts)) return()
-  #reactivevalue$counts = input$counts
   reactivevalue$counts_location=input$counts$datapath
   output$counts_header=renderTable((read.table(reactivevalue$counts_location,header = T,row.names = 1,
                                                sep = get.delim(reactivevalue$counts_location,n = 10,delims = c('\t',',')),check.names = F))[seq(1,10),seq(1,3)])
 })
 
-#### Obtain the metadata matrix and metadata table location ####
-
+### Obtain the metadata matrix and metadata table location ###
 observeEvent( input$md, {
   req(input$md)
-  # if (is.null(input$md)) return()
   reactivevalue$metadata_location=input$md$datapath
   output$metadata_header=renderTable(head(read.table(reactivevalue$metadata_location,header = T,row.names = 1,
                                                      sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')),check.names = F)))
@@ -20,17 +16,15 @@ observeEvent( input$md, {
   reactivevalue$metadata = read.table(reactivevalue$metadata_location,header = T,row.names = 1,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
 })
 
-#### Obtain Count matrix and metadata from the rds summarized experiment ####
+### Obtain Count matrix and metadata from the rds summarized experiment ###
 observeEvent( input$se, {
   req(input$se)
-  # if (is.null(input$se)) return()
   reactivevalue$se_location=input$se$datapath
-
   se=readRDS(input$se$datapath)
   reactivevalue$se=se
 })
 
-### Create summarized experiment object and setup plot options
+### Create summarized experiment object and set up plot options ###
 observeEvent( input$submit, {
   if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
     se = summarized_experiment(reactivevalue$counts_location,
@@ -50,7 +44,8 @@ observeEvent( input$submit, {
   setupSelections()
 })
 
-## Set up plotting options
+
+### Set up plotting options ###
 setupSelections = function(){
   # Experimental design
   updateSelectizeInput(session=session, inputId="design_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
@@ -64,16 +59,15 @@ setupSelections = function(){
   updateNumericInput(session = session,inputId = 'top_n_PCA',value = 500,min = 0,max = dim(reactivevalue$se)[1])
   updateSelectizeInput(session = session,inputId = 'variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateSelectizeInput(session = session,inputId = 'variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
-  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL
-  )
-  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
-  )
+  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL)
   # Variation Analysis selections
   updateSelectizeInput(session=session, inputId="variation_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
   updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
 }
 
-### EXPERIMENTAL DESIGN TAB
+
+### EXPERIMENTAL DESIGN TAB ###
 # Update experimental design
 observeEvent(input$design_covariate, {
   req(input$design_batch, input$design_covariate, reactivevalue$se)
@@ -89,7 +83,7 @@ observeEvent(input$design_batch, {
 })
 
 
-### VARIATION ANALYSIS TAB
+### VARIATION ANALYSIS TAB ###
 # Update covariate options to only those that are not confounded with batch
 observeEvent(input$variation_batch, {
   req(reactivevalue$se, input$variation_batch)
@@ -126,77 +120,62 @@ output$EV_show_table <- renderDataTable({
 })
 
 
-
+### Setting global batch and covariate variables ###
 observeEvent(input$submit_variables, {
   req(input$submit_variables, reactivevalue$se, input$batch)
-  # if (is.null(input$submit_variables)) return()
-  # if (!is.null(reactivevalue$se)&!is.null(input$group) & !is.null(input$batch)) {
     reactivevalue$batch_Variable_Name = input$batch
     reactivevalue$group_variable_Name = input$group
     variable_overview=data.frame(table(reactivevalue$metadata[,reactivevalue$group_variable_Name],
                                        reactivevalue$metadata[,reactivevalue$batch_Variable_Name]))
-    colnames(variable_overview)=c('Biological Group','Batch Group','Number of Sample')
+    colnames(variable_overview)=c('Biological Group','Batch Group','Number of Samples')
     output$variable_overview=renderDataTable({variable_overview})
-  # }
-
 })
+
 
 #### Organize the variables, ready the variable names for later analysis ####
 observe({
   req(reactivevalue$group_variable_name, reactivevalue$batch_variable_name)
-  # if (!is.null(reactivevalue$group_variable_name)&!is.null(reactivevalue$batch_variable_name)){
-    if (reactivevalue$group_variable_name==reactivevalue$batch_variable_name) {
-      reactivevalue$group_variable_name=NULL
-      reactivevalue$batch_variable_name=NULL
-      updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL
-      )
-      updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL
-      )
-    }
-    else {
-      reactivevalue$covariates=colnames(reactivevalue$metadata)[!colnames(reactivevalue$metadata)%in%
-                                                                  c(reactivevalue$group_variable_name,reactivevalue$batch_variable_name)]
-      updateSelectInput(session = session,inputId = "covariate", choices = reactivevalue$covariates)
-    }
-  # }
+  if (reactivevalue$group_variable_name==reactivevalue$batch_variable_name) {
+    reactivevalue$group_variable_name=NULL
+    reactivevalue$batch_variable_name=NULL
+    updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL)
+    updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL)
+  }else {
+    reactivevalue$covariates=colnames(reactivevalue$metadata)[!colnames(reactivevalue$metadata)%in%
+                                                                c(reactivevalue$group_variable_name,reactivevalue$batch_variable_name)]
+    updateSelectInput(session = session,inputId = "covariate", choices = reactivevalue$covariates)
+  }
 })
 
 
-
-
-#### Plot Heatmap based on the input ####
+#### Plot heatmap  ####
 observeEvent( input$heatmap_plot, {
   req(reactivevalue$se)
-  # if (!is.null(reactivevalue$se)) {
+  results=heatmap_plotter(reactivevalue$se,
+                          input$normalization_method_heatmap,
+                          input$top_n_heatmap,
+                          reactivevalue$group_variable_name,
+                          input$variates_to_display)
 
-    results=heatmap_plotter(reactivevalue$se,
-                            input$normalization_method_heatmap,
-                            input$top_n_heatmap,
-                            reactivevalue$group_variable_name,
-                            input$variates_to_display)
+  output$correlation_heatmap=renderPlot({
+    results$correlation_heatmap
+  }, height = function() {session$clientData$output_correlation_heatmap_width})
+  output$topn_heatmap=renderPlot({
+    results$topn_heatmap
+  }, height = function() {session$clientData$output_topn_heatmap_width})
 
-    output$correlation_heatmap=renderPlot({
-      results$correlation_heatmap
-    })
-    output$topn_heatmap=renderPlot({
-      results$topn_heatmap
-    })
-
-    output$dendrogram=renderPlot({
-      plot(results$dendrogram)
-    })
-  # }
+  output$dendrogram=renderPlot({
+    plot(results$dendrogram)
+  }, height = function() {session$clientData$output_dendrogram_width})
 })
 
 
-#### Plot PCA based on the input ####
+#### Plot PCA ####
 observeEvent( input$PCA_plot, {
   req(reactivevalue$se)
-  # if (!is.null(reactivevalue$se)) {
-    require(ggplot2)
-    assays <- input$pca_assays
-    msg <- sprintf('Generating plot for: %s...', paste(assays, collapse=', '))
-    withProgress(message=msg, {
+  assays <- input$pca_assays
+  msg <- sprintf('Generating plot for: %s...', paste(assays, collapse=', '))
+  withProgress(message=msg, {
     results=PCA_plotter(reactivevalue$se,
                         input$top_n_PCA,
                         input$variates_color,
@@ -206,8 +185,5 @@ observeEvent( input$PCA_plot, {
     output$PCA=renderPlot(results$plot)
     output$var_explained=renderTable(results$var_explained, rownames=T, digits=4)
     setProgress(1, 'Complete.')
-    })
-
-  # }
-}
-)
+  })
+})

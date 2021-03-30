@@ -18,15 +18,13 @@ tabPanel("Heatmaps",
            mainPanel(
              tabsetPanel(
                tabPanel("Sample Correlations",
-                        plotOutput('correlation_heatmap',width = 1024,height = 1024)
+                        plotOutput('correlation_heatmap')
                ),
                tabPanel("Heatmap",
-                        plotOutput('topn_heatmap',width = 1024,height = 1024)
-
+                        plotOutput('topn_heatmap')
                ),
                tabPanel("Dendrogram",
-                        plotOutput('dendrogram',width = 1024,height = 1024)
-
+                        plotOutput('dendrogram')
                )
 
 

@@ -23,6 +23,7 @@ summarized_experiment = function(counts_path,metadata_path) {
                                         DESEQ_normalization=DESEQ_normalization,
                                         CPM_Normalization=CPM_Normalization
   ), colData=coldata)
+
   # Add library size
   colData(se)$library_size <- colSums(se@assays@data$counts)
   return(se)

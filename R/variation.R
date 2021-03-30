@@ -86,7 +86,6 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     colnames(explained_variation)[i+2] <- condition[i]
   }
 
-  # rownames(explained_variation) <- rownames(data.matrix)
   batchqc_ev <- list(explained_variation = explained_variation,
                      cond_test = cond_test, batch_test = batch_test)
 

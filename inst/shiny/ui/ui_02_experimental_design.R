@@ -1,6 +1,4 @@
 
-
-
 tabPanel(
   "Experimental Design",
 

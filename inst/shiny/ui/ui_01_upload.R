@@ -53,7 +53,7 @@ tabPanel("Upload Data",
             #                   placeholder = 'Please select an option below',
             #                   onInitialize = I('function() { this.setValue(""); }')
             #               )),
-            actionButton(inputId = 'submit',label = 'Submit')
+            actionButton(inputId = 'submit',label = 'Upload')
 
         ),
 

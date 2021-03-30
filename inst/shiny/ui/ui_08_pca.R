@@ -20,7 +20,7 @@ tabPanel("PCA Analysis",
 
            # Show a plot of the generated distribution
            mainPanel(
-             plotOutput('PCA',width = 1000,height = 750)
+             plotOutput('PCA')
            #   tabsetPanel(
            #     tabPanel("PCA",
            #              plotOutput('PCA',width = 800,height = 500)

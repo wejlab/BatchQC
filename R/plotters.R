@@ -60,6 +60,7 @@ PCA_preprocess <- function(se, assay, nfeature){
 #' @export
 PCA_plotter <- function(se, nfeature, color, shape, assays) {
   pca_plot_data <- data.frame()
+  var_explained_data <- NULL
   coldata <- data.frame(colData(se))
   for (assay in assays){
     if (! assay %in%  names(se@assays)){
@@ -69,12 +70,23 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
     else {
       # Preprocess data
       pca <- PCA_preprocess(se, assay, nfeature)
-      # Extract PC1 and PC2
-      pca_12 <- as.data.frame(pca$x)[, c('PC1', 'PC2')]
+      # Get variance explained
+      var_explained <- summary(pca)$importance["Proportion of Variance",]
+      var_explained_df <- setNames(as.data.frame(var_explained), assay)
+      if (is.null(var_explained_data)){
+        var_explained_data <- var_explained_df
+      }
+      else{
+        var_explained_data <- cbind(var_explained_data, var_explained_df)
+      }
+
+
+      # Extract PC data
+      pca_data <- as.data.frame(pca$x)
       # Annotate with assay name
-      pca_12['assay'] <- assay
+      pca_data['assay'] <- assay
       # Merge metadata
-      pca_md <- cbind(coldata, pca_12)
+      pca_md <- cbind(coldata, pca_data)
       pca_md$sample <- rownames(coldata)
       # Add to data
       pca_plot_data <- rbind(pca_plot_data, pca_md)
@@ -83,7 +95,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
   # Reorder data
   pca_plot_data$assay <- factor(pca_plot_data$assay, levels=assays)
   plot <- ggplot(pca_plot_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3) + facet_wrap(vars(assay), ncol = 2, scales = 'free')
-  return(list(PCA=pca_plot_data, plot=plot))
+  return(list(PCA=pca_plot_data, var_explained=var_explained_data, plot=plot))
 }
 
 

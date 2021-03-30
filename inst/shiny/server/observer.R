@@ -203,7 +203,8 @@ observeEvent( input$PCA_plot, {
                         input$variates_shape,
                         assays)
     setProgress(.8, 'Displaying figure...')
-    output$PCA=renderPlot({(results[['plot']])})
+    output$PCA=renderPlot(results$plot)
+    output$var_explained=renderTable(results$var_explained, rownames=T, digits=4)
     setProgress(1, 'Complete.')
     })
 

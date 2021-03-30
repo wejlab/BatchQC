@@ -20,17 +20,9 @@ tabPanel("PCA Analysis",
 
            # Show a plot of the generated distribution
            mainPanel(
-             plotOutput('PCA')
-           #   tabsetPanel(
-           #     tabPanel("PCA",
-           #              plotOutput('PCA',width = 800,height = 500)
-           #     ),
-           #     tabPanel("Summary"
-           #     ),
-           #     tabPanel("Table"
-           #     ),
-           #     tabPanel("Explained Variation")
-           #   )
+             plotOutput('PCA'),
+             h3('Variance Explained'),
+             tableOutput('var_explained')
            )
          )
 )

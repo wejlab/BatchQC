@@ -1,14 +1,6 @@
-#' This function allows you to plot PCA
-#' @param se summarized experiment
-#' @param assay normalized or corrected
-#' @param nfeature number of features
-#' @param color choose a color
-#' @param shape choose a shape
-#' @import ggplot2
-#' @return PCA plot
-#'
-#' @export
-PCA_plotter <- function(se, assay, nfeature,color, shape ) {
+#' Preprocess normalized count data for PCA
+#' @import matrixStats
+PCA_preprocess <- function(se, assay, nfeature){
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
   data <- apply(data,c(1,2),as.numeric)
@@ -19,18 +11,53 @@ PCA_plotter <- function(se, assay, nfeature,color, shape ) {
   data <- log(data+1)
   data <- data[names(vargenes),]
   data <- data+1
-  for (i in 1:nrow(data)) {
-    data[i,] <- (data[i,]-mean(data[i,]))/sd(data[i,])
-  }
 
+  # Center
+  centered <- data - rowMeans(data)/rowSds(data)
+  # for (i in 1:nrow(data)) {
+  #   data[i,] <- (data[i,]-mean(data[i,]))/sd(data[i,])
+  # }
   coldata <- data.frame(colData(se))
-  PCA <- prcomp(t(data))
-  coldata <- cbind(coldata,PCA$x)
-  coldata$sample <- rownames(coldata)
+  PCA <- prcomp(t(centered), center=F)
 
-
-  plot <- ggplot(coldata,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3)
-  return(list(PCA=PCA,plot=plot))
+  return(PCA)
+}
+#' This function allows you to plot PCA
+#' @param se summarized experiment
+#' @param nfeature number of features
+#' @param color choose a color
+#' @param shape choose a shape
+#' @param assays array of assay names from `se`
+#' @import ggplot2
+#' @return PCA plot
+#'
+#' @export
+PCA_plotter <- function(se, nfeature, color, shape, assays) {
+  pca_plot_data <- data.frame()
+  coldata <- data.frame(colData(se))
+  for (assay in assays){
+    if (! assay %in%  names(se@assays)){
+      warning(sprintf('"%s" is not an available assay', assay))
+      next
+    }
+    else {
+      # Preprocess data
+      pca <- PCA_preprocess(se, assay, nfeature)
+      # Extract PC1 and PC2
+      pca_12 <- as.data.frame(pca$x)[, c('PC1', 'PC2')]
+      # Annotate with assay name
+      pca_12['assay'] <- assay
+      # Merge metadata
+      pca_md <- cbind(coldata, pca_12)
+      pca_md$sample <- rownames(coldata)
+      # Add to data
+      pca_plot_data <- rbind(pca_plot_data, pca_md)
+    }
+  }
+  # Reorder data
+  pca_plot_data$assay <- factor(pca_plot_data$assay, levels=assays)
+  plot <- ggplot(pca_plot_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3) + facet_wrap(vars(assay), ncol = 2, scales = 'free')
+  return(list(PCA=pca_plot_data, plot=plot))
 }
 
 

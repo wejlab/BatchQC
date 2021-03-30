@@ -18,7 +18,7 @@ observeEvent( input$md, {
   reactivevalue$metadata = read.table(reactivevalue$metadata_location,header = T,row.names = 1,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
 })
 
-#### Obtain Count matrix and metadata from the rds summarizeexperiment ####
+#### Obtain Count matrix and metadata from the rds summarized experiment ####
 observeEvent( input$se, {
   if (is.null(input$se)) return()
   reactivevalue$se_location=input$se$datapath
@@ -30,7 +30,7 @@ observeEvent( input$se, {
 ### Create summarized experiment object and setup plot options
 observeEvent( input$submit, {
   if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
-    se = summarize_experiment(reactivevalue$counts_location,
+    se = summarized_experiment(reactivevalue$counts_location,
                               reactivevalue$metadata_location)
     reactivevalue$se=se
     reactivevalue$metadata=data.frame(colData(reactivevalue$se))
@@ -65,7 +65,9 @@ setupSelections = function(){
   )
   updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL
   )
-
+  # Variation Analysis selections
+  updateSelectizeInput(session=session, inputId="variation_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
 }
 
 ### EXPERIMENTAL DESIGN TAB
@@ -82,6 +84,44 @@ observeEvent(input$design_batch, {
   conf_stats <- confoundMetrics(reactivevalue$se, input$design_batch)
   output$confoundingTable <- renderTable(conf_stats, rownames = T)
 })
+
+
+### VARIATION ANALYSIS TAB
+# Update covariate options to only those that are not confounded with batch
+observeEvent(input$variation_batch, {
+  req(reactivevalue$se, input$variation_batch)
+  covariate_choices <- covariates_not_confounded(reactivevalue$se,input$variation_batch)
+  updateSelectizeInput(session=session, inputId="variation_condition", choices=covariate_choices,selected=NULL)
+})
+# Update variation analysis plot
+ev_plot_reactive <- eventReactive( input$variation, {
+  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
+  # Create boxplot for variation explained by batch, condition, and batch + condition
+  tryCatch({
+    batchqc_ev_plot <- EV_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+    plot(batchqc_ev_plot$EV_boxplot)
+  }, error = function(err) {
+    print("At least one covariate is confounded with another! Please choose different covariates.")
+  })
+})
+output$EV_show_plot <- renderPlot({
+  ev_plot_reactive()
+})
+# Update variation analysis table
+ev_table_reactive <- eventReactive( input$variation, {
+  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
+  # Create boxplot for variation explained by batch, condition, and batch + condition
+  tryCatch({
+    batchqc_ev_table <- EV_table(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+    batchqc_ev_table$EV_table
+  }, error = function(err) {
+    showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
+  })
+})
+output$EV_show_table <- renderDataTable({
+  ev_table_reactive()
+})
+
 
 
 observeEvent(input$submit_variables, {
@@ -142,8 +182,8 @@ observeEvent( input$heatmap_plot, {
   }
 })
 
-#### Plot PCA based on the input ####
 
+#### Plot PCA based on the input ####
 observeEvent( input$PCA_plot, {
   if (!is.null(reactivevalue$se)) {
     require(ggplot2)

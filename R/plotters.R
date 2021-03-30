@@ -1,6 +1,28 @@
+#' This function allows you to plot explained variation
+#' @param se Summarized experiment object
+#' @param batch Batch covariate
+#' @param condition Condition covariate of interest
+#' @param assay_name Assay of choice
+#' @import reshape2
+#' @import ggplot2
+#' @return List of explained variation by batch and condition
+#' @export
+EV_plotter <- function(se, batch, condition, assay_name) {
+  batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
+  EV_boxplot <- ggplot(data = melt(as.data.frame(batchqc_ev$explained_variation),id.vars=NULL),aes(x = variable, y = value, fill = variable)) +
+    geom_boxplot() +
+    scale_x_discrete(name = "") +
+    scale_y_continuous(name = "Percent Explained Variation") +
+    labs(title="Percent of Variation Explained by Source") +
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+  return(list(EV_boxplot=EV_boxplot))
+}
+
+
 #' Preprocess normalized count data for PCA
 #' @import matrixStats
 PCA_preprocess <- function(se, assay, nfeature){
+
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
   data <- apply(data,c(1,2),as.numeric)
@@ -118,3 +140,4 @@ heatmap_plotter <- function(se, assay, nfeature,experiment_variable,annotation_c
               topn_heatmap=topn_heatmap,
               dendrogram=dendrogram))
 }
+

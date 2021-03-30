@@ -1,23 +1,37 @@
 
 
-tabPanel("Variation Analysis",
+tabPanel(
+    "Variation Analysis",
 
     # Application title
-    titlePanel("Variation and P-Value Analysis"),
+    titlePanel("Variation Analysis"),
 
-    # Sidebar with a slider input for number of bins
-    tabsetPanel(
-        tabPanel("Variation Analysis",
-                 br(),
-                 sidebarLayout(
-                     sidebarPanel(),
-                     mainPanel()
-                 )
-        ),
-        tabPanel("P-Value Analysis"
-        ),
-        tabPanel("Differential Expression"
+    sidebarLayout(sidebarPanel(
+        h3("Variation Analysis"),
+        selectizeInput('variation_assay', 'Select Assay Name', choices = "",options = list(
+            placeholder = 'Please select an option below',
+            onInitialize = I('function() { this.setValue(""); }')
+        )),
+        selectizeInput('variation_batch', 'Select Batch Variable', choices = "",options = list(
+            placeholder = 'Please select an option below',
+            onInitialize = I('function() { this.setValue(""); }')
+        )),
+        selectizeInput('variation_condition', 'Select Covariate', choices = "",multiple = T, options = list(
+            placeholder = 'Please select an option below',
+            onInitialize = I('function() { this.setValue(""); }')
+        )),
+        actionButton('variation',label = 'Here we go!')
+    ),
+    mainPanel(
+        tabsetPanel(
+            tabPanel("Variation Analysis",
+                     plotOutput('EV_show_plot'),
+                     dataTableOutput('EV_show_table')
+            ),
+            tabPanel("P-Value Analysis"
+                     # tableOutput("confoundingTable")
+            )
+        )
         )
     )
-
 )

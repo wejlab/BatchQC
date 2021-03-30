@@ -4,18 +4,18 @@
 \alias{PCA_plotter}
 \title{This function allows you to plot PCA}
 \usage{
-PCA_plotter(se, assay, nfeature, color, shape)
+PCA_plotter(se, nfeature, color, shape, assays)
 }
 \arguments{
 \item{se}{summarized experiment}
-
-\item{assay}{normalized or corrected}
 
 \item{nfeature}{number of features}
 
 \item{color}{choose a color}
 
 \item{shape}{choose a shape}
+
+\item{assays}{array of assay names from \code{se}}
 }
 \value{
 PCA plot

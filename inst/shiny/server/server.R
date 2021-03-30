@@ -12,8 +12,8 @@ reactivevalue=reactiveValues(counts=NULL,
                                metadata='',
                                metadata_location=NULL,
                                se_location=NULL,
-                               batch_Variable_Name=NULL,
-                               group_variable_Name=NULL,
+                               batch_variable_name=NULL,
+                               group_variable_name=NULL,
                                covariates=NULL,
                                se=NULL)
 

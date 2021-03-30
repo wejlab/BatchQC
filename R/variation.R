@@ -86,7 +86,6 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     colnames(explained_variation)[i+2] <- condition[i]
   }
 
-  # rownames(explained_variation) <- rownames(data.matrix)
   batchqc_ev <- list(explained_variation = explained_variation,
                      cond_test = cond_test, batch_test = batch_test)
 
@@ -157,7 +156,7 @@ EV_table <- function(se, batch, condition, assay_name) {
 #' @return List of explained variation by batch and condition
 #' @export
 covariates_not_confounded <- function(se, batch) {
-  df <- confoundMetrics(se,batch)
+  df <- confound_metrics(se,batch)
   covariate_options <- rownames(df)
   for (i in 1:dim(df)[1]) {
     if (df[i]== 1) {

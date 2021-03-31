@@ -139,6 +139,7 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
 #' @param mod mod
 #' @param batch_mod mod
 #' @param assay_name Name of chosen assay
+#' @import data.table
 #' @return List of explained variation by batch and condition
 #' @export
 EV_table <- function(se, batch, condition, assay_name) {

@@ -23,6 +23,7 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 #' @param se Summarized Experiment object
 #' @param assay Assay from summarized experiment object
 #' @param nfeature Number of variable features to use
+#' @import data.table
 #' @export
 PCA_preprocess <- function(se, assay, nfeature){
 
@@ -54,6 +55,7 @@ PCA_preprocess <- function(se, assay, nfeature){
 #' @param shape choose a shape
 #' @param assays array of assay names from `se`
 #' @import ggplot2
+#' @import data.table
 #' @return PCA plot
 #'
 #' @export
@@ -105,6 +107,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 #' @param experiment_variable what is the experiment variable
 #' @param annotation_column choose column
 #' @import pheatmap
+#' @import data.table
 #' @return heatmap plot
 #'
 #' @export

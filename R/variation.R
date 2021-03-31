@@ -24,6 +24,8 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   cond_test <- list()
   batch_test <- list()
   cond_r2 <- list()
+  cond_ps <- list()
+  # batch_ps <- list()
 
   for (i in 1:length(condition)) {
     nlc[i] <- n_distinct(as.data.frame(df[condition[i]]))
@@ -47,6 +49,9 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     cond_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], batch_mod, assay_name)
     batch_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], cond_mod[[i]], assay_name)
 
+    cond_ps[[i]] <- cond_test[[i]]$p
+    # batch_ps[[i]] <- batch_test[[i]]$p
+
     cond_r2[[i]] <- batch_test[[i]]$r2_reduced
   }
 
@@ -67,8 +72,8 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 
   full_test <- batchqc_f.pvalue(se, mod2, batch_mod, assay_name)
 
-  cond_ps <- cond_test$p
-  batch_ps <- batch_test$p
+  # cond_ps <- cond_test$p
+  batch_ps <- full_test$p
 
   r2_full <- full_test$r2_full
   batch_r2 <- full_test$r2_reduced
@@ -87,7 +92,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   }
 
   batchqc_ev <- list(explained_variation = explained_variation,
-                     cond_test = cond_test, batch_test = batch_test)
+                     cond_test = cond_test, batch_ps = batch_ps)
 
   return(batchqc_ev)
 }
@@ -139,6 +144,7 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
 #' @param mod mod
 #' @param batch_mod mod
 #' @param assay_name Name of chosen assay
+#' @import data.table
 #' @return List of explained variation by batch and condition
 #' @export
 EV_table <- function(se, batch, condition, assay_name) {

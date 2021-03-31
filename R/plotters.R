@@ -19,6 +19,54 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 }
 
 
+#' This function allows you to plot covariate pvalues of explained variation
+#' @param se Summarized experiment object
+#' @param batch Batch covariate
+#' @param condition Condition covariate of interest
+#' @param assay_name Assay of choice
+#' @import reshape2
+#' @import ggplot2
+#' @return List of explained variation by batch and condition
+#' @export
+covariate_pval_plotter <- function(se, batch, condition, assay_name) {
+  batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
+  for (i in 1:length(condition)) {
+    names(batchqc_ev$cond_test[[i]])[1] <- condition[i]
+  }
+  covar_boxplot <- ggplot(subset(melt(as.data.frame(batchqc_ev$cond_test),id.vars=NULL), variable %in% condition),aes(x = variable, y = value, fill = variable)) +
+    geom_boxplot() +
+    coord_flip() +
+    scale_x_discrete(name = "Covariate") +
+    scale_y_continuous(name = "P-Values")+
+    labs(title="Distribution of Covariate Effects (P-Values) Across Genes") +
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+  return(list(covar_boxplot=covar_boxplot))
+}
+
+
+#' This function allows you to plot batch pvalues of explained variation
+#' @param se Summarized experiment object
+#' @param batch Batch covariate
+#' @param condition Condition covariate of interest
+#' @param assay_name Assay of choice
+#' @import reshape2
+#' @import ggplot2
+#' @return List of explained variation by batch and condition
+#' @export
+batch_pval_plotter <- function(se, batch, condition, assay_name) {
+  batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
+  batch_boxplot <- ggplot(data = (melt(as.data.frame(batchqc_ev$batch_ps),id.vars=NULL)),aes(x = variable, y = value, fill = variable)) +
+    geom_boxplot() +
+    coord_flip() +
+    scale_x_discrete(name = "Batch",labels = "") +
+    scale_y_continuous(name = "P-Values")+
+    labs(title="Distribution of Batch Effect (P-Values) Across Genes") +
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+  return(list(batch_boxplot=batch_boxplot))
+}
+
+
+
 #' Preprocess normalized count data for PCA
 #' @param se Summarized Experiment object
 #' @param assay Assay from summarized experiment object
@@ -54,6 +102,7 @@ PCA_preprocess <- function(se, assay, nfeature){
 #' @param shape choose a shape
 #' @param assays array of assay names from `se`
 #' @import ggplot2
+#' @import data.frame
 #' @return PCA plot
 #'
 #' @export
@@ -105,6 +154,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 #' @param experiment_variable what is the experiment variable
 #' @param annotation_column choose column
 #' @import pheatmap
+#' @import data.frame
 #' @return heatmap plot
 #'
 #' @export

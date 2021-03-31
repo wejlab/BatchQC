@@ -28,7 +28,9 @@ tabPanel(
                      plotOutput('EV_show_plot'),
                      dataTableOutput('EV_show_table')
             ),
-            tabPanel("P-Value Analysis"
+            tabPanel("P-Value Analysis",
+                     plotOutput('batch_pval_plot'),
+                     plotOutput('covariate_pval_plot')
             )
         )
         )

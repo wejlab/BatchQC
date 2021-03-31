@@ -120,6 +120,38 @@ output$EV_show_table <- renderDataTable({
 })
 
 
+
+# Update batch pvalue boxplot
+batch_pvals_reactive <- eventReactive( input$variation, {
+  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
+  # Create boxplot for batch pvals
+  tryCatch({
+    plot_batch_pvals <- batch_pval_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+    plot_batch_pvals$batch_boxplot
+  }, error = function(err) {
+    # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
+  })
+})
+output$batch_pval_plot <- renderPlot({
+  batch_pvals_reactive()
+})
+# Update covariate pvalue boxplot
+covariate_pvals_reactive <- eventReactive( input$variation, {
+  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
+  # Create boxplot for batch pvals
+  tryCatch({
+    plot_covariate_pvals <- covariate_pval_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+    plot_covariate_pvals$covar_boxplot
+  }, error = function(err) {
+    # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
+  })
+})
+output$covariate_pval_plot <- renderPlot({
+  covariate_pvals_reactive()
+})
+
+
+
 ### Setting global batch and covariate variables ###
 observeEvent(input$submit_variables, {
   req(input$submit_variables, reactivevalue$se, input$batch)

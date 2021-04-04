@@ -119,7 +119,23 @@ output$EV_show_table <- renderDataTable({
   ev_table_reactive()
 })
 
-
+# Update pvalue summary table
+pvals_summary_reactive <- eventReactive( input$variation, {
+  req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
+  # Create boxplot for batch pvals
+  tryCatch({
+    pval_summary_table <- pval_summary(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
+    pval_summary_table$pval_table
+  }, error = function(err) {
+    # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
+  })
+})
+output$pval_summary <- renderTable({
+  pvals_summary_reactive()},
+  rownames= T,
+  striped = T,
+  bordered = T
+)
 
 # Update batch pvalue boxplot
 batch_pvals_reactive <- eventReactive( input$variation, {

@@ -144,7 +144,7 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
 #' @param mod mod
 #' @param batch_mod mod
 #' @param assay_name Name of chosen assay
-#' @import data.table
+#' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
 #' @export
 EV_table <- function(se, batch, condition, assay_name) {
@@ -170,4 +170,29 @@ covariates_not_confounded <- function(se, batch) {
     }
   }
   return(covariate_options)
+}
+
+
+#' Returns summary table for p-values of explained variation
+#'
+#' @param se Summarized experiment object
+#' @param mod mod
+#' @param batch_mod mod
+#' @param assay_name Name of chosen assay
+#' @importFrom data.table data.table
+#' @return List of explained variation by batch and condition
+#' @export
+pval_summary <- function(se, batch, condition, assay_name) {
+  batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
+
+  pval_table <- rbind(summary(batchqc_ev$batch_ps))
+
+  for (i in 1:length(condition)) {
+    pval_table <- rbind(pval_table, summary(batchqc_ev$cond_test[[i]]$p))
+    rownames(pval_table)[i + 1] <- condition[i]
+  }
+
+  rownames(pval_table)[1] <- "Batch"
+
+  return(list(pval_table=pval_table))
 }

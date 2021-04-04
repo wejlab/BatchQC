@@ -34,9 +34,10 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
     names(batchqc_ev$cond_test[[i]])[1] <- condition[i]
   }
   covar_boxplot <- ggplot(subset(melt(as.data.frame(batchqc_ev$cond_test),id.vars=NULL), variable %in% condition),aes(x = variable, y = value, fill = variable)) +
-    geom_boxplot() +
+    geom_violin(trim=FALSE, width = 0.8) +
+    geom_boxplot(width = 0.1) +
     coord_flip() +
-    scale_x_discrete(name = "Covariate") +
+    scale_x_discrete(name = "") +
     scale_y_continuous(name = "P-Values")+
     labs(title="Distribution of Covariate Effects (P-Values) Across Genes") +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
@@ -56,9 +57,11 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
 batch_pval_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
   batch_boxplot <- ggplot(data = (melt(as.data.frame(batchqc_ev$batch_ps),id.vars=NULL)),aes(x = variable, y = value, fill = variable)) +
-    geom_boxplot() +
+    geom_violin(trim=FALSE, width = 0.8) +
+    geom_boxplot(width = 0.1) +
+    scale_color_manual(values = "#56B4E9", aesthetics = "fill") +
     coord_flip() +
-    scale_x_discrete(name = "Batch",labels = "") +
+    scale_x_discrete(name = "",labels = "Batch") +
     scale_y_continuous(name = "P-Values")+
     labs(title="Distribution of Batch Effect (P-Values) Across Genes") +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
@@ -102,7 +105,6 @@ PCA_preprocess <- function(se, assay, nfeature){
 #' @param shape choose a shape
 #' @param assays array of assay names from `se`
 #' @import ggplot2
-#' @import data.frame
 #' @return PCA plot
 #'
 #' @export
@@ -154,7 +156,6 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 #' @param experiment_variable what is the experiment variable
 #' @param annotation_column choose column
 #' @import pheatmap
-#' @import data.frame
 #' @return heatmap plot
 #'
 #' @export

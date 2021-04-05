@@ -69,10 +69,11 @@ tabPanel("Upload Data",
                 tabPanel('Full Metadata',
                          dataTableOutput('metadata')),
                 tabPanel('Normalization',
-                         selectizeInput('Normalization_Method','Choose Normalization Method',multiple=F,choices = c('CPM','DESeq')),
+                         selectizeInput('Normalization_Method','Choose Normalization Method',multiple=F,choices = c('CPM','DESeq'),selected = NULL),
                          selectizeInput('Normalization_Assay','Choose the assay to do normalization',
-                                        multiple=F,choices = c('CPM','DESeq')),
-
+                                        multiple=F,choices = c(''),selected = NULL),
+                         textInput(inputId = 'Normalization_Results_Name','Name for the normalized Assay',value = ''),
+                         actionButton(inputId = 'Normalize',label = 'Normalize')
                          ),
 
                 tabPanel('Setting Variables',
@@ -88,7 +89,16 @@ tabPanel("Upload Data",
                                         )),
                          actionButton(inputId = 'submit_variables',label = 'Submit')
 
-                         )
+                         ),
+                tabPanel('Batch effect Correction',
+                         selectizeInput('Correct_Method','Choose correct method',multiple=F,choices = c('ComBat-Seq','ComBat'),selected = NULL),
+                         selectizeInput('Correct_Assay','Choose the assay to do correction',multiple=F,choices = c(''),selected = NULL),
+                         selectizeInput('Batch_for_Batch','Choose batch variables for correction',multiple=F,choices = c(''),selected = NULL),
+                         selectizeInput('covariates_for_Batch','Choose Covariate variables for correction',multiple=T,choices = c(''),selected = NULL),
+
+                         textInput(inputId = 'Batch_Results_Name','Name for the corrected Assay'),
+                         actionButton(inputId = 'Correct',label = 'Correct')
+                )
             )
         )
     )

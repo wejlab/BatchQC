@@ -19,7 +19,7 @@ summarized_experiment = function(counts_path,metadata_path) {
   #DESEQ_normalization <- GetNormalizedMat(counts, MedianNorm(counts))
   #CPM_Normalization <- (counts+1) / counts *(10^6)
 
-  se <- SummarizedExperiment(assay=list(counts=counts,
+  se <- SummarizedExperiment(assay=list(counts=counts#,
                                         #DESEQ_normalization=DESEQ_normalization,
                                         #CPM_Normalization=CPM_Normalization
   ), colData=coldata)

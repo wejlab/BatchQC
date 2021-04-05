@@ -43,15 +43,63 @@ observeEvent( input$submit, {
   # Add options to input selections
   setupSelections()
 })
+### Normalization ###
+observe( if (!is.null(input$Normalization_Method)&
+             !is.null(input$Normalization_Assay)) {
+  updateTextInput(session = session,inputId = 'Normalization_Results_Name','Name for the normalized Assay',value = paste(input$Normalization_Assay,
+                                                                                                       input$Normalization_Method,
+                                                                                                       sep = '_'))
+})
 
+observeEvent( input$Normalize, if (!is.null(input$Normalization_Method)&
+             !is.null(input$Normalization_Assay)
+             &!is.null(input$Normalization_Results_Name)) {
+  reactivevalue$se=NormalizateSE(reactivevalue$se,
+                                 input$Normalization_Method,
+                                 input$Normalization_Assay,
+                                 input$Normalization_Results_Name)
+  setupSelections()
+})
+
+### Batch Correction ###
+observe( if (!is.null(input$Correct_Assay)&
+             !is.null(input$Batch_for_Batch)&
+             !is.null(input$Correct_Method)) {
+  if (!is.null(input$covariates_for_Batch)){
+  updateTextInput(session = session,inputId = 'Batch_Results_Name','Name for the corrected Assay',value = paste(input$Correct_Assay,
+                                                                                                                         input$Batch_for_Batch,input$Correct_Method,paste(input$covariates_for_Batch,collapse = '_'),
+                                                                                                                         sep = '_'))
+  }
+  else {
+    updateTextInput(session = session,inputId = 'Batch_Results_Name','Name for the corrected Assay',value = paste(input$Correct_Assay,
+                                                                                                                  input$Batch_for_Batch,input$Correct_Method,
+                                                                                                                  sep = '_'))
+  }
+})
+
+observeEvent( input$Correct, if (!is.null(input$Correct_Assay)&
+                                   !is.null(input$Batch_for_Batch)
+                                   &!is.null(input$Correct_Method)) {
+  reactivevalue$se=BatchCorrect(reactivevalue$se,
+                                input$Correct_Method,
+                                input$Correct_Assay,input$Batch_for_Batch,
+                                input$covariates_for_Batch,input$Batch_Results_Name)
+  setupSelections()
+})
 
 ### Set up plotting options ###
 setupSelections = function(){
   # Experimental design
   updateSelectizeInput(session=session, inputId="design_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
   updateSelectizeInput(session=session, inputId="design_covariate", choices=names(colData(reactivevalue$se)),selected=NULL)
+
   # Normalization
   updateSelectizeInput(session = session,inputId = 'Normalization_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
+  # Batch Correction
+  updateSelectizeInput(session=session, inputId="Batch_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session = session,inputId = 'Correct_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session=session, inputId="covariates_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+
   # Heatmap selections
   updateSelectizeInput(session = session,inputId = 'normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
   updateSelectInput(session = session,inputId = 'variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)

@@ -15,7 +15,7 @@ BatchCorrect = function(se,Method,assaytouse,batch,covar,output_assay_name) {
   se=se
   batch=data.frame(colData(se))[,batch]
   if (Method=='ComBat-Seq'){
-    tryCatch(  {if (is.null(covar)) {
+  if (is.null(covar)) {
       se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch)
 
     }
@@ -41,10 +41,7 @@ BatchCorrect = function(se,Method,assaytouse,batch,covar,output_assay_name) {
 
       }
 
-    }},
-    error=function(cond) {
-      stop(cond)
-    })
+    }
 
 
   }

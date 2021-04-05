@@ -80,10 +80,13 @@ observe( if (!is.null(input$Correct_Assay)&
 observeEvent( input$Correct, if (!is.null(input$Correct_Assay)&
                                    !is.null(input$Batch_for_Batch)
                                    &!is.null(input$Correct_Method)) {
-  reactivevalue$se=BatchCorrect(reactivevalue$se,
+  tryCatch({{reactivevalue$se=BatchCorrect(reactivevalue$se,
                                 input$Correct_Method,
                                 input$Correct_Assay,input$Batch_for_Batch,
-                                input$covariates_for_Batch,input$Batch_Results_Name)
+                                input$covariates_for_Batch,input$Batch_Results_Name)}},
+           error = function(err) {
+             showNotification('Confounding', type = "error")
+           })
   setupSelections()
 })
 

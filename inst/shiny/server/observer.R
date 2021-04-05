@@ -50,6 +50,8 @@ setupSelections = function(){
   # Experimental design
   updateSelectizeInput(session=session, inputId="design_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
   updateSelectizeInput(session=session, inputId="design_covariate", choices=names(colData(reactivevalue$se)),selected=NULL)
+  # Normalization
+  updateSelectizeInput(session = session,inputId = 'Normalization_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
   # Heatmap selections
   updateSelectizeInput(session = session,inputId = 'normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
   updateSelectInput(session = session,inputId = 'variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)

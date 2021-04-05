@@ -16,12 +16,12 @@ summarized_experiment = function(counts_path,metadata_path) {
   coldata <- coldata[mutual_sample,]
 
   # Normalize data
-  DESEQ_normalization <- GetNormalizedMat(counts, MedianNorm(counts))
-  CPM_Normalization <- (counts+1) / counts *(10^6)
+  #DESEQ_normalization <- GetNormalizedMat(counts, MedianNorm(counts))
+  #CPM_Normalization <- (counts+1) / counts *(10^6)
 
   se <- SummarizedExperiment(assay=list(counts=counts,
-                                        DESEQ_normalization=DESEQ_normalization,
-                                        CPM_Normalization=CPM_Normalization
+                                        #DESEQ_normalization=DESEQ_normalization,
+                                        #CPM_Normalization=CPM_Normalization
   ), colData=coldata)
 
   # Add library size

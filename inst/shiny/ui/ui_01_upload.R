@@ -68,6 +68,13 @@ tabPanel("Upload Data",
                          ),
                 tabPanel('Full Metadata',
                          dataTableOutput('metadata')),
+                tabPanel('Normalization',
+                         selectizeInput('Normalization_Method','Choose Normalization Method',multiple=F,choices = c('CPM','DESeq')),
+                         selectizeInput('Normalization_Assay','Choose the assay to do normalization',
+                                        multiple=F,choices = c('CPM','DESeq')),
+
+                         ),
+
                 tabPanel('Setting Variables',
                          selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
                                         options = list(

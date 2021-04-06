@@ -77,17 +77,22 @@ observe( if (!is.null(input$Correct_Assay)&
   }
 })
 
+
+
 observeEvent( input$Correct, if (!is.null(input$Correct_Assay)&
                                    !is.null(input$Batch_for_Batch)
                                    &!is.null(input$Correct_Method)) {
   tryCatch({{reactivevalue$se=BatchCorrect(reactivevalue$se,
                                 input$Correct_Method,
-                                input$Correct_Assay,input$Batch_for_Batch,
+                                input$Correct_Assay,input$Batch_for_Batch,input$Group_for_Batch,
                                 input$covariates_for_Batch,input$Batch_Results_Name)}},
-           error = function(err) {
+           error = function(error) {
              showNotification('Confounding', type = "error")
-           })
+             print(error)
+           }
+           )
   setupSelections()
+  showNotification('Batch Correction Completed', type = "message")
 })
 
 ### Set up plotting options ###
@@ -100,6 +105,8 @@ setupSelections = function(){
   updateSelectizeInput(session = session,inputId = 'Normalization_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
   # Batch Correction
   updateSelectizeInput(session=session, inputId="Batch_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+
+  updateSelectizeInput(session=session, inputId="Group_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
   updateSelectizeInput(session = session,inputId = 'Correct_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
   updateSelectizeInput(session=session, inputId="covariates_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
 

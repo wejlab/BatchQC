@@ -11,7 +11,7 @@
 #' @import EBSeq
 #'
 #' @export
-BatchCorrect = function(se,Method,assaytouse,batch,covar,output_assay_name) {
+BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay_name) {
   se=se
   batch=data.frame(colData(se))[,batch]
   if (Method=='ComBat-Seq'){
@@ -26,8 +26,13 @@ BatchCorrect = function(se,Method,assaytouse,batch,covar,output_assay_name) {
         cov=as.numeric(cov)
         cov=as.matrix(cov)
         rownames(cov)=rownames(data.frame(colData(se)))
-        se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov)
+        if (!is.null(group)){
+        se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group,full_mod = T)
+        }
+        else {
+          se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group)
 
+        }
       }
       else {
         cov=data.frame(colData(se))[,covar]
@@ -36,8 +41,13 @@ BatchCorrect = function(se,Method,assaytouse,batch,covar,output_assay_name) {
           cov[,i]=as.numeric(cov[,i])
         }
 
-        se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = as.matrix(cov))
+        if (!is.null(group)){
+          se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group,full_mod = T)
+        }
+        else {
+          se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group)
 
+        }
 
       }
 

@@ -9,6 +9,7 @@
 #' @import SummarizedExperiment
 #' @import reader
 #' @import EBSeq
+#' @import sva
 #'
 #' @export
 BatchCorrect = function(se,Method,assaytouse,batch,covar,output_assay_name) {

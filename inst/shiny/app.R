@@ -1,6 +1,7 @@
 library(shiny)
 library(shinyjs)
 library(shinythemes)
+library(sva)
 #require(SummarizedExperiment)
 #require(pheatmap)
 #require(ggplot2)

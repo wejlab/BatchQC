@@ -58,6 +58,9 @@ observeEvent( input$Normalize, if (!is.null(input$Normalization_Method)&
                                  input$Normalization_Method,
                                  input$Normalization_Assay,
                                  input$Normalization_Results_Name)
+  if (input$Log) {
+    reactivevalue$se@assays@data[[input$Normalization_Results_Name]]=log(reactivevalue$se@assays@data[[input$Normalization_Results_Name]])
+  }
   setupSelections()
 })
 

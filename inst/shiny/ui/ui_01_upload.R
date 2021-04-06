@@ -73,6 +73,7 @@ tabPanel("Upload Data",
                          selectizeInput('Normalization_Assay','Choose the assay to do normalization',
                                         multiple=F,choices = c(''),selected = NULL),
                          textInput(inputId = 'Normalization_Results_Name','Name for the normalized Assay',value = ''),
+                         checkboxInput('Log','Log Transform the results'),
                          actionButton(inputId = 'Normalize',label = 'Normalize')
                          ),
 

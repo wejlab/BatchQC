@@ -34,7 +34,7 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
     names(batchqc_ev$cond_test[[i]])[1] <- condition[i]
   }
   covar_boxplot <- ggplot(subset(melt(as.data.frame(batchqc_ev$cond_test),id.vars=NULL), variable %in% condition),aes(x = variable, y = value, fill = variable)) +
-    geom_violin(trim=FALSE, width = 0.8) +
+    geom_violin(width = 0.8) +
     geom_boxplot(width = 0.1) +
     coord_flip() +
     scale_x_discrete(name = "") +
@@ -57,7 +57,7 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
 batch_pval_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
   batch_boxplot <- ggplot(data = (melt(as.data.frame(batchqc_ev$batch_ps),id.vars=NULL)),aes(x = variable, y = value, fill = variable)) +
-    geom_violin(trim=FALSE, width = 0.8) +
+    geom_violin(width = 0.8) +
     geom_boxplot(width = 0.1) +
     scale_color_manual(values = "#56B4E9", aesthetics = "fill") +
     coord_flip() +

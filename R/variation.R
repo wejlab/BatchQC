@@ -57,9 +57,12 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 
   mod2 <- list.cbind(cond_mod)
   mod2 <- cbind(mod2, batch_mod[,-1])
+  cond_mod2 <- list.cbind(cond_mod)
   if (length(condition) > 1){
     idx <- which(duplicated(colnames(mod2)) & colnames(mod2) == "(Intercept)")
+    idx2 <- which(duplicated(colnames(cond_mod2)) & colnames(cond_mod2) == "(Intercept)")
     mod2 <- mod2[,-idx]
+    cond_mod2 <- cond_mod2[,-idx2]
   }
 
   if(qr(mod2)$rank<ncol(mod2)){
@@ -70,15 +73,15 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
       }else{stop("A covariate is confounded with batch! Please choose different covariates.")}}
   }
 
-  full_test <- batchqc_f.pvalue(se, mod2, batch_mod, assay_name)
+  batch_test <- batchqc_f.pvalue(se, mod2, cond_mod2, assay_name)
 
   # cond_ps <- cond_test$p
-  batch_ps <- full_test$p
+  batch_ps <- batch_test$p
 
-  r2_full <- full_test$r2_full
-  batch_r2 <- full_test$r2_reduced
+  r2_full <- batch_test$r2_full
+  batch_r2 <- batch_test$r2_reduced
 
-  explained_variation <- round(cbind(r2_full, batch_r2,list.cbind(cond_r2)), 5) * 100
+  explained_variation <- round(cbind(r2_full, batch_r2, list.cbind(cond_r2)), 5) * 100
 
   # Name columns according to batch and covariate names
   if (length(condition) == 1) {

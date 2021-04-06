@@ -127,14 +127,17 @@ pvals_summary_reactive <- eventReactive( input$variation, {
     pval_summary_table <- pval_summary(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
     pval_summary_table$pval_table
   }, error = function(err) {
-    # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
+    showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
 })
 output$pval_summary <- renderTable({
   pvals_summary_reactive()},
   rownames= T,
   striped = T,
-  bordered = T
+  bordered = T,
+  caption = "<b> <span style='color:#000000'> P-Value Summary Table </b>",
+  caption.placement = getOption("xtable.caption.placement","top"),
+
 )
 
 # Update batch pvalue boxplot

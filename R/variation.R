@@ -46,13 +46,13 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
         }else{stop("A covariate is confounded with batch! Please choose different covariates.")}}
     }
 
-    cond_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], batch_mod, assay_name)
-    batch_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], cond_mod[[i]], assay_name)
+    # cond_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], batch_mod, assay_name)
+    # batch_test[[i]] <- batchqc_f.pvalue(se, mod[[i]], cond_mod[[i]], assay_name)
 
-    cond_ps[[i]] <- cond_test[[i]]$p
+    # cond_ps[[i]] <- cond_test[[i]]$p
     # batch_ps[[i]] <- batch_test[[i]]$p
 
-    cond_r2[[i]] <- batch_test[[i]]$r2_reduced
+    # cond_r2[[i]] <- batch_test[[i]]$r2_reduced
   }
 
   mod2 <- list.cbind(cond_mod)
@@ -73,13 +73,42 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
       }else{stop("A covariate is confounded with batch! Please choose different covariates.")}}
   }
 
-  batch_test <- batchqc_f.pvalue(se, mod2, cond_mod2, assay_name)
+  # batch_mod <- list()
+  # batch_mod2 <- matrix(nrow = nrow(mod2), ncol = 1)
+  for (i in 1:length(condition)) {
+    batch_mod2 <- matrix(nrow = nrow(mod2), ncol = 1)
+    if (length(condition) > 1) {
+      for (j in 1:length(condition)) {
+        if (i == j) next
+        batch_mod2 <- cbind(batch_mod2, cond_mod[[j]])
+        # all cond_mod except [[i]] and batch_mod
+      }
+    }
+    batch_mod2 <- cbind(batch_mod2,batch_mod)
+    idx <- which(duplicated(colnames(batch_mod2)) & colnames(batch_mod2) == "(Intercept)")
+    if (length(idx) > 0) {
+      batch_mod2 <- batch_mod2[,-idx]
+    }
+
+    batch_mod2 <- batch_mod2[,-1]
+
+    cond_test[[i]] <- batchqc_f.pvalue(se, mod2, batch_mod2, assay_name)
+    # mod2 = all; batch_mod = batch + condition[[i]]
+    # batch_test[[i]] <- batchqc_f.pvalue(se, mod2, cond_mod[[i]], assay_name)
+    # mod2 = all; cond_mod = condition[[i]]
+
+    cond_ps[[i]] <- cond_test[[i]]$p
+    cond_r2[[i]] <- cond_test[[i]]$r2_reduced
+    # cond_r2[[i]] <- batch_test[[i]]$r2_reduced
+  }
+
+  all_test <- batchqc_f.pvalue(se, mod2, cond_mod2, assay_name)
 
   # cond_ps <- cond_test$p
-  batch_ps <- batch_test$p
+  batch_ps <- all_test$p
 
-  r2_full <- batch_test$r2_full
-  batch_r2 <- batch_test$r2_reduced
+  r2_full <- all_test$r2_full
+  batch_r2 <- all_test$r2_reduced
 
   explained_variation <- round(cbind(r2_full, batch_r2, list.cbind(cond_r2)), 5) * 100
 

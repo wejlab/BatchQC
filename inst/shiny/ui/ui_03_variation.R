@@ -20,7 +20,7 @@ tabPanel(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),
-        actionButton('variation',label = 'Here we go!')
+        withBusyIndicatorUI(actionButton('variation',label = 'Here we go!'))
     ),
     mainPanel(
         tabsetPanel(

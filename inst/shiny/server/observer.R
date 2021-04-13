@@ -26,22 +26,26 @@ observeEvent( input$se, {
 
 ### Create summarized experiment object and set up plot options ###
 observeEvent( input$submit, {
-  if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
-    se = summarized_experiment(reactivevalue$counts_location,
-                              reactivevalue$metadata_location)
-    reactivevalue$se=se
-    reactivevalue$metadata=data.frame(colData(reactivevalue$se))
-  }
-  else if (!is.null(input$se$datapath)){
-    se = readRDS(reactivevalue$se_location)
-    se = se[rowSums(se@assays@data$counts)>0,]
-    reactivevalue$se=se
-    reactivevalue$metadata=data.frame(colData(reactivevalue$se))
-  }
-  # Display metadata table
-  output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
-  # Add options to input selections
-  setupSelections()
+
+  withBusyIndicatorServer("submit", {
+    if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
+      se = summarized_experiment(reactivevalue$counts_location,
+                                 reactivevalue$metadata_location)
+      reactivevalue$se=se
+      reactivevalue$metadata=data.frame(colData(reactivevalue$se))
+    }
+    else if (!is.null(input$se$datapath)){
+      se = readRDS(reactivevalue$se_location)
+      se = se[rowSums(se@assays@data$counts)>0,]
+      reactivevalue$se=se
+      reactivevalue$metadata=data.frame(colData(reactivevalue$se))
+    }
+    # Display metadata table
+    output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
+    # Add options to input selections
+    setupSelections()
+  })
+
 })
 
 
@@ -101,9 +105,6 @@ ev_plot_reactive <- eventReactive( input$variation, {
     print("At least one covariate is confounded with another! Please choose different covariates.")
   })
 })
-output$EV_show_plot <- renderPlot({
-  ev_plot_reactive()
-})
 # Update variation analysis table
 ev_table_reactive <- eventReactive( input$variation, {
   req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
@@ -115,10 +116,6 @@ ev_table_reactive <- eventReactive( input$variation, {
     showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
 })
-output$EV_show_table <- renderDataTable({
-  ev_table_reactive()
-})
-
 # Update pvalue summary table
 pvals_summary_reactive <- eventReactive( input$variation, {
   req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
@@ -130,16 +127,6 @@ pvals_summary_reactive <- eventReactive( input$variation, {
     showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
 })
-output$pval_summary <- renderTable({
-  pvals_summary_reactive()},
-  rownames= T,
-  striped = T,
-  bordered = T,
-  caption = "<b> <span style='color:#000000'> P-Value Summary Table </b>",
-  caption.placement = getOption("xtable.caption.placement","top"),
-
-)
-
 # Update batch pvalue boxplot
 batch_pvals_reactive <- eventReactive( input$variation, {
   req(input$variation_batch, input$variation_condition, input$variation_assay, reactivevalue$se)
@@ -150,9 +137,6 @@ batch_pvals_reactive <- eventReactive( input$variation, {
   }, error = function(err) {
     # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
-})
-output$batch_pval_plot <- renderPlot({
-  batch_pvals_reactive()
 })
 # Update covariate pvalue boxplot
 covariate_pvals_reactive <- eventReactive( input$variation, {
@@ -165,10 +149,35 @@ covariate_pvals_reactive <- eventReactive( input$variation, {
     # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
 })
-output$covariate_pval_plot <- renderPlot({
-  covariate_pvals_reactive()
-})
+# Display variation and p-value plots and tables
+observeEvent(input$variation, {
+  withBusyIndicatorServer("variation", {
+    output$EV_show_plot <- renderPlot({
+      ev_plot_reactive()
+    })
 
+    output$EV_show_table <- renderDataTable({
+      ev_table_reactive()
+    })
+
+    output$pval_summary <- renderTable({
+      pvals_summary_reactive()},
+      rownames= T,
+      striped = T,
+      bordered = T,
+      caption = "<b> <span style='color:#000000'> P-Value Summary Table </b>",
+      caption.placement = getOption("xtable.caption.placement","top"),
+    )
+
+    output$batch_pval_plot <- renderPlot({
+      batch_pvals_reactive()
+    })
+
+    output$covariate_pval_plot <- renderPlot({
+      covariate_pvals_reactive()
+    })
+  })
+})
 
 
 ### Setting global batch and covariate variables ###

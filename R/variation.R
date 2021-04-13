@@ -93,7 +93,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     batch_mod2 <- batch_mod2[,-1]
 
     cond_test[[i]] <- batchqc_f.pvalue(se, mod2, batch_mod2, assay_name)
-    # mod2 = all; batch_mod = batch + condition[[i]]
+    # mod2 = all; batch_mod2 = batch + condition[[i]]
     # batch_test[[i]] <- batchqc_f.pvalue(se, mod2, cond_mod[[i]], assay_name)
     # mod2 = all; cond_mod = condition[[i]]
 

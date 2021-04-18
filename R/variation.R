@@ -59,8 +59,8 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     options(error = NULL)
     if(ncol(mod2)==(nlb+1)){stop("A covariate is confounded with batch! Please choose different covariates.")}
     if(ncol(mod2)>(nlb+1)){
-      if((qr(mod2[,-c(1:nlb)])$rank<ncol(mod2[,-c(1:nlb)]))){stop('A covariate is confounded with batch! Please choose different covariates.')
-      }else{stop("A covariate is confounded with batch! Please choose different covariates.")}}
+      if((qr(mod2[,-c(1:nlb)])$rank<ncol(mod2[,-c(1:nlb)]))){stop('At least one covariate is confounded with another! Please choose different covariates.')
+      }else{stop("At least one covariate is confounded with another! Please choose different covariates.")}}
   }
 
   for (i in 1:length(condition)) {

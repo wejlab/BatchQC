@@ -101,8 +101,6 @@ ev_plot_reactive <- eventReactive( input$variation, {
   tryCatch({
     batchqc_ev_plot <- EV_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
     plot(batchqc_ev_plot$EV_boxplot)
-  }, error = function(err) {
-    print("At least one covariate is confounded with another! Please choose different covariates.")
   })
 })
 # Update variation analysis table
@@ -114,6 +112,7 @@ ev_table_reactive <- eventReactive( input$variation, {
     batchqc_ev_table$EV_table
   }, error = function(err) {
     showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
+    print("At least one covariate is confounded with another! Please choose different covariates.")
   })
 })
 # Update pvalue summary table
@@ -123,8 +122,6 @@ pvals_summary_reactive <- eventReactive( input$variation, {
   tryCatch({
     pval_summary_table <- pval_summary(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
     pval_summary_table$pval_table
-  }, error = function(err) {
-    showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
 })
 # Update batch pvalue boxplot
@@ -135,7 +132,6 @@ batch_pvals_reactive <- eventReactive( input$variation, {
     plot_batch_pvals <- batch_pval_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
     plot_batch_pvals$batch_boxplot
   }, error = function(err) {
-    # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
 })
 # Update covariate pvalue boxplot
@@ -146,7 +142,6 @@ covariate_pvals_reactive <- eventReactive( input$variation, {
     plot_covariate_pvals <- covariate_pval_plotter(reactivevalue$se, input$variation_batch, input$variation_condition, input$variation_assay)
     plot_covariate_pvals$covar_boxplot
   }, error = function(err) {
-    # showNotification("At least one covariate is confounded with another! Please choose different covariates.", type = "error")
   })
 })
 # Display variation and p-value plots and tables

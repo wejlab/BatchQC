@@ -123,11 +123,10 @@ setupSelections = function(){
   # Normalization
   updateSelectizeInput(session = session,inputId = 'Normalization_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
   # Batch Correction
-  updateSelectizeInput(session=session, inputId="Batch_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below'))
-
-  updateSelectizeInput(session=session, inputId="Group_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below'))
-  updateSelectizeInput(session = session,inputId = 'Correct_Assay',choices = (assayNames((reactivevalue$se))),selected = NULL,options=list(placeholder = 'Please select an option below'))
-  updateSelectizeInput(session=session, inputId="covariates_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below'))
+  updateSelectizeInput(session=session, inputId="Batch_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
+  updateSelectizeInput(session=session, inputId="Group_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
+  updateSelectizeInput(session = session,inputId = 'Correct_Assay',choices = (assayNames((reactivevalue$se))),selected = NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
+  updateSelectizeInput(session=session, inputId="covariates_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
 
   # Heatmap selections
   updateSelectizeInput(session = session,inputId = 'normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
@@ -199,7 +198,7 @@ output$EV_show_table <- renderDataTable({
 })
 
 
-### Setting global batch and covariate variables ###
+#### Setting global batch and covariate variables ####
 observeEvent(input$submit_variables, {
   req(input$submit_variables, reactivevalue$se, input$batch)
     reactivevalue$batch_Variable_Name = input$batch

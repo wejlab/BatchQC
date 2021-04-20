@@ -69,14 +69,30 @@ observe( if (!is.null(input$Correct_Assay)&
              !is.null(input$Batch_for_Batch)&
              !is.null(input$Correct_Method)) {
   if (!is.null(input$covariates_for_Batch)){
-  updateTextInput(session = session,inputId = 'Batch_Results_Name','Name for the corrected Assay',value = paste(input$Correct_Assay,
-                                                                                                                         input$Batch_for_Batch,input$Correct_Method,paste(input$covariates_for_Batch,collapse = '_'),
-                                                                                                                         sep = '_'))
+    if (!is.null(input$Group_for_Batch)) {
+      updateTextInput(session = session,inputId = 'Batch_Results_Name','Name for the corrected Assay',value = paste(input$Correct_Assay,
+                                                                                                                    input$Batch_for_Batch,input$Group_for_Batch,input$Correct_Method,paste(input$covariates_for_Batch,collapse = '_'),
+                                                                                                                    sep = '_'))
+    }
+    else {
+      updateTextInput(session = session,inputId = 'Batch_Results_Name','Name for the corrected Assay',value = paste(input$Correct_Assay,
+                                                                                                                    input$Batch_for_Batch,input$Correct_Method,paste(input$covariates_for_Batch,collapse = '_'),
+                                                                                                                    sep = '_'))
+    }
+
   }
   else {
+    if (!is.null(input$Group_for_Batch)) {
+
     updateTextInput(session = session,inputId = 'Batch_Results_Name','Name for the corrected Assay',value = paste(input$Correct_Assay,
-                                                                                                                  input$Batch_for_Batch,input$Correct_Method,
+                                                                                                                  input$Batch_for_Batch,input$Group_for_Batch,input$Correct_Method,
                                                                                                                   sep = '_'))
+    }
+    else {
+      updateTextInput(session = session,inputId = 'Batch_Results_Name','Name for the corrected Assay',value = paste(input$Correct_Assay,
+                                                                                                                    input$Batch_for_Batch,input$Correct_Method,
+                                                                                                                    sep = '_'))
+    }
   }
 })
 
@@ -107,11 +123,11 @@ setupSelections = function(){
   # Normalization
   updateSelectizeInput(session = session,inputId = 'Normalization_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
   # Batch Correction
-  updateSelectizeInput(session=session, inputId="Batch_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="Batch_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below'))
 
-  updateSelectizeInput(session=session, inputId="Group_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
-  updateSelectizeInput(session = session,inputId = 'Correct_Assay',choices = assayNames((reactivevalue$se)),selected = NULL)
-  updateSelectizeInput(session=session, inputId="covariates_for_Batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="Group_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below'))
+  updateSelectizeInput(session = session,inputId = 'Correct_Assay',choices = (assayNames((reactivevalue$se))),selected = NULL,options=list(placeholder = 'Please select an option below'))
+  updateSelectizeInput(session=session, inputId="covariates_for_Batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below'))
 
   # Heatmap selections
   updateSelectizeInput(session = session,inputId = 'normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)

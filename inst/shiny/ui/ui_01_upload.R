@@ -92,12 +92,12 @@ tabPanel("Upload Data",
 
                          ),
                 tabPanel('Batch effect Correction',
-                         selectizeInput('Correct_Method','Choose correct method',multiple=F,choices = c('ComBat-Seq','ComBat'),selected = NULL),
-                         selectizeInput('Correct_Assay','Choose the assay to do correction',multiple=F,choices = c(''),selected = NULL),
-                         selectizeInput('Batch_for_Batch','Choose batch variables for correction',multiple=F,choices = c(''),selected = NULL),
-                         selectizeInput('Group_for_Batch','Choose group variables for correction',multiple=F,choices = c(''),selected = NULL),
+                         selectizeInput('Correct_Method','Choose correct method',multiple=F,choices = c('ComBat-Seq','ComBat'),selected = NULL,options=list(placeholder = 'Please select an option below')),
+                         selectizeInput('Correct_Assay','Choose the assay to do correction',multiple=F,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below')),
+                         selectizeInput('Batch_for_Batch','Choose batch variables for correction',multiple=F,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below')),
+                         selectizeInput('Group_for_Batch','Choose group variables for correction',multiple=F,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below')),
 
-                         selectizeInput('covariates_for_Batch','Choose Covariate variables for correction',multiple=T,choices = c(''),selected = NULL),
+                         selectizeInput('covariates_for_Batch','Choose Covariate variables for correction',multiple=T,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below')),
 
                          textInput(inputId = 'Batch_Results_Name','Name for the corrected Assay'),
                          actionButton(inputId = 'Correct',label = 'Correct')

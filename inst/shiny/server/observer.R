@@ -54,6 +54,10 @@ observe( if (!is.null(input$Normalization_Method)&
 observeEvent( input$Normalize, if (!is.null(input$Normalization_Method)&
              !is.null(input$Normalization_Assay)
              &!is.null(input$Normalization_Results_Name)) {
+  msg <- sprintf('Normalizing')
+
+  withProgress(message=msg, {
+
   reactivevalue$se=NormalizateSE(reactivevalue$se,
                                  input$Normalization_Method,
                                  input$Normalization_Assay,
@@ -62,6 +66,9 @@ observeEvent( input$Normalize, if (!is.null(input$Normalization_Method)&
     reactivevalue$se@assays@data[[input$Normalization_Results_Name]]=log(reactivevalue$se@assays@data[[input$Normalization_Results_Name]])
   }
   setupSelections()
+  setProgress(1, 'Completed')
+
+  })
 })
 
 ### Batch Correction ###
@@ -101,10 +108,20 @@ observe( if (!is.null(input$Correct_Assay)&
 observeEvent( input$Correct, if (!is.null(input$Correct_Assay)&
                                    !is.null(input$Batch_for_Batch)
                                    &!is.null(input$Correct_Method)) {
-  tryCatch({{reactivevalue$se=BatchCorrect(reactivevalue$se,
+  tryCatch({{
+    msg <- sprintf('Start the batch correction process')
+
+    withProgress(message=msg, {
+      setProgress(0.5, 'Correcting...')
+
+    reactivevalue$se=BatchCorrect(reactivevalue$se,
                                 input$Correct_Method,
                                 input$Correct_Assay,input$Batch_for_Batch,input$Group_for_Batch,
-                                input$covariates_for_Batch,input$Batch_Results_Name)}},
+                                input$covariates_for_Batch,input$Batch_Results_Name)
+    setProgress(1, 'Complete!')
+
+    })
+    }},
            error = function(error) {
              showNotification('Confounding', type = "error")
              print(error)

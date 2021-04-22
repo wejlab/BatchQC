@@ -53,6 +53,7 @@ tabPanel("Upload Data",
             #                   placeholder = 'Please select an option below',
             #                   onInitialize = I('function() { this.setValue(""); }')
             #               )),
+
             withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Submit'))
 
         ),

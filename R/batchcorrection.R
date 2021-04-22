@@ -17,7 +17,7 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
   batch=data.frame(colData(se))[,batch]
   if (Method=='ComBat-Seq'){
   if (is.null(covar)) {
-      se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch)
+      se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch)
 
     }
     else {
@@ -28,10 +28,10 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         cov=as.matrix(cov)
         rownames(cov)=rownames(data.frame(colData(se)))
         if (!is.null(group)){
-        se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group,full_mod = T)
+        se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group,full_mod = T)
         }
         else {
-          se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group)
+          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group)
 
         }
       }
@@ -43,10 +43,10 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         }
 
         if (!is.null(group)){
-          se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group,full_mod = T)
+          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group,full_mod = T)
         }
         else {
-          se@assays@data[[output_assay_name]]=ComBat_seq(se@assays@data[[assaytouse]],batch = batch,covar_mod = cov,group = group)
+          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group)
 
         }
 

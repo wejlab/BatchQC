@@ -159,6 +159,11 @@ setupSelections = function(){
   # Variation Analysis selections
   updateSelectizeInput(session=session, inputId="variation_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
   updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+
+  # Differential expression analysis Assay
+  updateSelectizeInput(session=session, inputId="DE_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
+
+
 }
 
 

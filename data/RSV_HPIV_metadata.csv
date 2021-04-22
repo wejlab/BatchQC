@@ -1,0 +1,14 @@
+,Infection,Celltype,Modification,Batch,hours_after_treatment,strain,MOI,Instrument
+Series3_A549_Mock_1,Mock,A549,None,Series3,24,None,0,TruSeq RNA Library Prep Kit v2
+Series3_A549_Mock_2,Mock,A549,None,Series3,24,None,0,TruSeq RNA Library Prep Kit v2
+Series3_A549_RSV_1,RSV,A549,None,Series3,24,RSV_A2,15,TruSeq RNA Library Prep Kit v2
+Series3_A549_RSV_2,RSV,A549,None,Series3,24,RSV_A2,15,TruSeq RNA Library Prep Kit v2
+Series8_A549_Mock_1,Mock,A549,None,Series8,24,None,0,TruSeq RNA Library Prep Kit v2
+Series8_A549_Mock_2,Mock,A549,None,Series8,24,None,0,TruSeq RNA Library Prep Kit v2
+Series8_A549_Mock_3,Mock,A549,None,Series8,24,None,0,TruSeq RNA Library Prep Kit v2
+Series8_A549_RSV_1,RSV,A549,None,Series8,24,RSV_A2,2,TruSeq RNA Library Prep Kit v2
+Series8_A549_RSV_2,RSV,A549,None,Series8,24,RSV_A2,2,TruSeq RNA Library Prep Kit v2
+Series8_A549_RSV_3,RSV,A549,None,Series8,24,RSV_A2,2,TruSeq RNA Library Prep Kit v2
+Series8_A549_HPIV3_3,HPIV3,A549,None,Series8,24,HPIV_JS,3,TruSeq RNA Library Prep Kit v2
+Series8_A549_HPIV3_2,HPIV3,A549,None,Series8,24,HPIV_JS,3,TruSeq RNA Library Prep Kit v2
+Series8_A549_HPIV3_1,HPIV3,A549,None,Series8,24,HPIV_JS,3,TruSeq RNA Library Prep Kit v2

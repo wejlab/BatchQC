@@ -1,9 +1,10 @@
+#' This function allows you to Add batch corrected count matrix to the se object
 #' @param se SummarizeExperiment
 #' @param Method Normalization Method
 #' @param assaytouse Which assay use to do normalization
-#' @param batch The batch variable
+#' @param batch The batch
+#' @param group The group variable
 #' @param covar Covariate Matrix
-
 #' @param output_assay_name name of results assay
 #' @return a summarized experiment object with normalized assay appended.
 #' @import SummarizedExperiment

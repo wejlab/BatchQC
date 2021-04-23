@@ -70,8 +70,10 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         cov=as.numeric(cov)
         cov=as.matrix(cov)
         rownames(cov)=rownames(data.frame(colData(se)))
-        se@assays@data[[output_assay_name]]=ComBat(dat = se@assays@data[[assaytouse]],
-                                                   batch = batch,mod = cov)
+        results=ComBat(dat = se@assays@data[[assaytouse]],
+                       batch = batch,mod = cov)
+        results[is.na(results)] <- 0
+        se@assays@data[[output_assay_name]]=results
       }
       else {
         cov=data.frame(colData(se))[,covar]
@@ -80,8 +82,13 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
           cov[,i]=as.numeric(cov[,i])
         }
         cov=as.matrix(cov)
-        se@assays@data[[output_assay_name]]=ComBat(dat = se@assays@data[[assaytouse]],
-                                                   batch = batch,mod = cov)
+        rownames(cov)=rownames(data.frame(colData(se)))
+
+
+        results=ComBat(dat = se@assays@data[[assaytouse]],
+                       batch = batch,mod = cov)
+        results[is.na(results)] <- 0
+        se@assays@data[[output_assay_name]]=results
 
       }
     }

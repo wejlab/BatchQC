@@ -1,7 +1,7 @@
 #' This function allows you to Add batch corrected count matrix to the se object
 #' @param se SummarizeExperiment
-#' @param Method Normalization Method
-#' @param assaytouse Which assay use to do normalization
+#' @param method Normalization Method
+#' @param assay_to_normalize Which assay use to do normalization
 #' @param batch The batch
 #' @param group The group variable
 #' @param covar Covariate Matrix
@@ -13,14 +13,13 @@
 #' @import sva
 #'
 #' @export
-BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay_name) {
+batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,output_assay_name) {
   se=se
   batch=data.frame(colData(se))[,batch]
 
-  if (Method=='ComBat-Seq'){
+  if (method=='ComBat-Seq'){
   if (is.null(covar)) {
-      se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch)
-
+      se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch)
     }
     else {
       if (length(covar)==1) {
@@ -30,11 +29,10 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         cov=as.matrix(cov)
         rownames(cov)=rownames(data.frame(colData(se)))
         if (!is.null(group)){
-        se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group,full_mod = T)
+        se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group,full_mod = T)
         }
         else {
-          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group)
-
+          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group)
         }
       }
       else {
@@ -45,22 +43,18 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         }
 
         if (!is.null(group)){
-          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group,full_mod = T)
+          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group,full_mod = T)
         }
         else {
-          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch,covar_mod = cov,group = group)
+          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group)
 
         }
-
       }
-
     }
-
-
   }
-  else if (Method=='ComBat') {
+  else if (method=='ComBat') {
     if (is.null(covar)) {
-      se@assays@data[[output_assay_name]]=ComBat(dat = se@assays@data[[assaytouse]],
+      se@assays@data[[output_assay_name]]=ComBat(dat = se@assays@data[[assay_to_normalize]],
                                                  batch = batch)
 
     }
@@ -74,7 +68,7 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         rownames(cov)=rownames(data.frame(colData(se)))
 
         model=model.matrix(as.formula(paste0('~',colnames(cov))),data = cov)
-        results=ComBat(dat = se@assays@data[[assaytouse]],
+        results=ComBat(dat = se@assays@data[[assay_to_normalize]],
                        batch = batch,mod = model)
         results[is.na(results)] <- 0
         se@assays@data[[output_assay_name]]=results
@@ -91,7 +85,7 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         linearmodel=as.function(paste0('~',paste(colnames(cov),sep = '+')))
         model=model.matrix(linearmodel,data = cov)
 
-        results=ComBat(dat = se@assays@data[[assaytouse]],
+        results=ComBat(dat = se@assays@data[[assay_to_normalize]],
                        batch = batch,mod = model)
         results[is.na(results)] <- 0
         se@assays@data[[output_assay_name]]=results

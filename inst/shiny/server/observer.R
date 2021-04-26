@@ -120,7 +120,7 @@ observeEvent( input$Correct, if (!is.null(input$Correct_Assay)&
 
     reactivevalue$se=BatchCorrect(reactivevalue$se,
                                 input$Correct_Method,
-                                input$Correct_Assay,input$Batch_for_Batch,#input$Group_for_Batch,
+                                input$Correct_Assay,input$Batch_for_Batch,group=NULL,
                                 input$covariates_for_Batch,input$Batch_Results_Name)
     setProgress(1, 'Complete!')
 

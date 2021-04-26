@@ -16,6 +16,7 @@
 BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay_name) {
   se=se
   batch=data.frame(colData(se))[,batch]
+
   if (Method=='ComBat-Seq'){
   if (is.null(covar)) {
       se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assaytouse]]),batch = batch)
@@ -68,10 +69,15 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
         cov=data.frame(colData(se))[,covar]
         cov=as.factor(cov)
         cov=as.numeric(cov)
-        cov=as.matrix(cov)
+        cov=data.frame(cov)
+        colnames(cov)=covar
         rownames(cov)=rownames(data.frame(colData(se)))
-        se@assays@data[[output_assay_name]]=ComBat(dat = se@assays@data[[assaytouse]],
-                                                   batch = batch,mod = cov)
+
+        model=model.matrix(as.formula(paste0('~',colnames(cov))),data = cov)
+        results=ComBat(dat = se@assays@data[[assaytouse]],
+                       batch = batch,mod = model)
+        results[is.na(results)] <- 0
+        se@assays@data[[output_assay_name]]=results
       }
       else {
         cov=data.frame(colData(se))[,covar]
@@ -79,9 +85,16 @@ BatchCorrect = function(se,Method,assaytouse,batch,group=NULL,covar,output_assay
           cov[,i]=as.factor(cov[,i])
           cov[,i]=as.numeric(cov[,i])
         }
-        cov=as.matrix(cov)
-        se@assays@data[[output_assay_name]]=ComBat(dat = se@assays@data[[assaytouse]],
-                                                   batch = batch,mod = cov)
+        cov=data.frame(cov)
+        rownames(cov)=rownames(data.frame(colData(se)))
+        colnames(cov)=covar
+        linearmodel=as.function(paste0('~',paste(colnames(cov),sep = '+')))
+        model=model.matrix(linearmodel,data = cov)
+
+        results=ComBat(dat = se@assays@data[[assaytouse]],
+                       batch = batch,mod = model)
+        results[is.na(results)] <- 0
+        se@assays@data[[output_assay_name]]=results
 
       }
     }

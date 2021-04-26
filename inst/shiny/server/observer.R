@@ -2,37 +2,58 @@
 
 setupSelections = function(){
   # Experimental design
-  updateSelectizeInput(session=session, inputId="design_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
-  updateSelectizeInput(session=session, inputId="design_covariate", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="design_batch",
+                       choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="design_covariate",
+                       choices=names(colData(reactivevalue$se)),selected=NULL)
 
   # Normalization
-  updateSelectizeInput(session = session,inputId = 'normalization_assay',choices = assayNames((reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'normalization_assay',
+                       choices = assayNames((reactivevalue$se)),selected = NULL,
+                       options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
 
   # Batch Correction
-  updateSelectizeInput(session=session, inputId="correction_batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
-  #updateSelectizeInput(session=session, inputId="group_for_batch", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
-  updateSelectizeInput(session = session,inputId = 'correction_assay',choices = (assayNames((reactivevalue$se))),selected = NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
-  updateSelectizeInput(session=session, inputId="correction_covariates", choices=(names(colData(reactivevalue$se))),selected=NULL,options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
+  updateSelectizeInput(session=session, inputId="correction_batch",
+                       choices=(names(colData(reactivevalue$se))),selected=NULL,
+                       options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
+  updateSelectizeInput(session = session,inputId = 'correction_assay',
+                       choices = (assayNames((reactivevalue$se))),selected = NULL,
+                       options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
+  updateSelectizeInput(session=session, inputId="correction_covariates",
+                       choices=(names(colData(reactivevalue$se))),selected=NULL,
+                       options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }')))
 
   # Heatmap
-  updateSelectizeInput(session = session,inputId = 'normalization_method_heatmap',choices = assayNames((reactivevalue$se)),selected = NULL)
-  updateSelectInput(session = session,inputId = 'variates_to_display',choices = colnames(colData(reactivevalue$se)),selected = NULL)
-  updateNumericInput(session = session,inputId = 'top_n_heatmap',value = 500,min = 0,max = dim(reactivevalue$se)[1])
+  updateSelectizeInput(session = session,inputId = 'heatmap_assay_name',
+                       choices = assayNames((reactivevalue$se)),selected = NULL)
+  updateSelectInput(session = session,inputId = 'variates_to_display',
+                    choices = colnames(colData(reactivevalue$se)),selected = NULL)
+  updateNumericInput(session = session,inputId = 'top_n_heatmap',
+                     value = 500,min = 0,max = dim(reactivevalue$se)[1])
 
   # PCA
-  updateSelectizeInput(session = session,inputId = 'pca_assays',choices = assayNames((reactivevalue$se)), selected = NULL)
-  updateNumericInput(session = session,inputId = 'top_n_PCA',value = 500,min = 0,max = dim(reactivevalue$se)[1])
-  updateSelectizeInput(session = session,inputId = 'variates_shape',choices = colnames(colData(reactivevalue$se)),selected = NULL)
-  updateSelectizeInput(session = session,inputId = 'variates_color',choices = colnames(colData(reactivevalue$se)),selected = NULL)
-  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),selected = NULL)
-  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'pca_assays',
+                       choices = assayNames((reactivevalue$se)), selected = NULL)
+  updateNumericInput(session = session,inputId = 'top_n_PCA',
+                     value = 500,min = 0,max = dim(reactivevalue$se)[1])
+  updateSelectizeInput(session = session,inputId = 'variates_shape',
+                       choices = colnames(colData(reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session = session,inputId = 'variates_color',
+                       choices = colnames(colData(reactivevalue$se)),selected = NULL)
+  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),
+                       selected = NULL)
+  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),
+                       selected = NULL)
 
   # Variation Analysis
-  updateSelectizeInput(session=session, inputId="variation_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
-  updateSelectizeInput(session=session, inputId="variation_batch", choices=names(colData(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="variation_assay",
+                       choices=names(assays(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="variation_batch",
+                       choices=names(colData(reactivevalue$se)),selected=NULL)
 
   # Differential expression analysis
-  updateSelectizeInput(session=session, inputId="DE_assay", choices=names(assays(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session=session, inputId="DE_assay",
+                       choices=names(assays(reactivevalue$se)),selected=NULL)
 }
 
 
@@ -56,7 +77,7 @@ observeEvent( input$md, {
   reactivevalue$metadata = read.table(reactivevalue$metadata_location,header = T,row.names = 1,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
 })
 
-## Obtain count matrix and metadata from the rds summarized experiment
+## Obtain count matrix and metadata from the summarized experiment input
 observeEvent( input$se, {
   req(input$se)
   reactivevalue$se_location=input$se$datapath
@@ -86,12 +107,14 @@ observeEvent( input$submit, {
   })
 })
 
-## Normalization
+## Update normalized assay name
 observe({
   req(input$normalization_method, input$normalization_assay)
-  updateTextInput(session = session,inputId = 'normalized_assay_name','Name for the normalized Assay',value = paste(input$normalization_assay, input$normalization_method, sep = '_'))
+  updateTextInput(session = session,inputId = 'normalized_assay_name','Name for the normalized Assay',
+                  value = paste(input$normalization_assay, input$normalization_method, sep = '_'))
 })
 
+## Normalize a selected assay
 observeEvent( input$normalize, {
   req(input$normalization_method, input$normalization_assay, input$normalized_assay_name)
   withBusyIndicatorServer("normalize", {
@@ -106,31 +129,42 @@ observeEvent( input$normalize, {
   })
 })
 
-## Batch Effect Correction
+## Update batch effect corrected assay name
 observe( {
   req(input$correction_assay, input$correction_batch, input$correction_method)
   if (!is.null(input$correction_covariates)){
     if (!is.null(input$group_for_batch)) {
-      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',value = paste(input$correction_assay,input$correction_batch,input$group_for_batch,input$correction_method,paste(input$correction_covariates,collapse = '_'),sep = '_'))
+      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',
+                      value = paste(input$correction_assay,input$correction_batch,input$group_for_batch,input$correction_method,paste(input$correction_covariates,collapse = '_'),sep = '_'))
     }else {
-      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',value = paste(input$correction_assay,input$correction_batch,input$correction_method,paste(input$correction_covariates,collapse = '_'),sep = '_'))
+      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',
+                      value = paste(input$correction_assay,input$correction_batch,input$correction_method,paste(input$correction_covariates,collapse = '_'),sep = '_'))
     }
   }else {
     if (!is.null(input$group_for_batch)) {
-      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',value = paste(input$correction_assay,input$correction_batch,input$group_for_batch,input$correction_method,sep = '_'))
+      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',
+                      value = paste(input$correction_assay,input$correction_batch,input$group_for_batch,input$correction_method,sep = '_'))
     }else {
-      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',value = paste(input$correction_assay,input$correction_batch,input$correction_method,sep = '_'))
+      updateTextInput(session = session,inputId = 'corrected_assay_name','Name for the corrected assay',
+                      value = paste(input$correction_assay,input$correction_batch,input$correction_method,sep = '_'))
     }
   }
 })
 
+## Run batch effect correction
 observeEvent( input$correct, {
   req(input$correction_assay, input$correction_batch, input$correction_method)
   tryCatch({{
     msg <- sprintf('Start the batch correction process')
     withProgress(message=msg, {
       setProgress(0.5, 'Correcting...')
-      reactivevalue$se=batch_correct(reactivevalue$se,input$correction_method,input$correction_assay,input$correction_batch,group=NULL,input$correction_covariates,input$corrected_assay_name)
+      reactivevalue$se=batch_correct(reactivevalue$se,
+                                     input$correction_method,
+                                     input$correction_assay,
+                                     input$correction_batch,
+                                     group=NULL,
+                                     input$correction_covariates,
+                                     input$corrected_assay_name)
       setProgress(1, 'Complete!')
     })
   }},
@@ -167,7 +201,8 @@ observeEvent(input$design_batch, {
 observeEvent(input$variation_batch, {
   req(reactivevalue$se, input$variation_batch)
   covariate_choices <- covariates_not_confounded(reactivevalue$se,input$variation_batch)
-  updateSelectizeInput(session=session, inputId="variation_condition", choices=covariate_choices,selected=NULL)
+  updateSelectizeInput(session=session, inputId="variation_condition",
+                       choices=covariate_choices,selected=NULL)
 })
 
 ## Update variation analysis plot
@@ -256,32 +291,6 @@ observeEvent(input$variation, {
 })
 
 
-# #### Setting global batch and covariate variables ####
-# observeEvent(input$submit_variables, {
-#   req(input$submit_variables, reactivevalue$se, input$batch)
-#     reactivevalue$batch_Variable_Name = input$batch
-#     reactivevalue$group_variable_Name = input$group
-#     variable_overview=data.frame(table(reactivevalue$metadata[,reactivevalue$group_variable_Name],
-#                                        reactivevalue$metadata[,reactivevalue$batch_Variable_Name]))
-#     colnames(variable_overview)=c('Biological Group','Batch Group','Number of Samples')
-#     output$variable_overview=renderDataTable({variable_overview})
-# })
-
-
-# #### Organize the variables, ready the variable names for later analysis ####
-# observe({
-#   req(reactivevalue$group_variable_name, reactivevalue$batch_variable_name)
-#   if (reactivevalue$group_variable_name==reactivevalue$batch_variable_name) {
-#     reactivevalue$group_variable_name=NULL
-#     reactivevalue$batch_variable_name=NULL
-#     updateSelectizeInput(session,'batch',choices=colnames(reactivevalue$metadata),selected = NULL)
-#     updateSelectizeInput(session,'group',choices=colnames(reactivevalue$metadata),selected = NULL)
-#   }else {
-#     reactivevalue$covariates=colnames(reactivevalue$metadata)[!colnames(reactivevalue$metadata)%in%
-#                                                                 c(reactivevalue$group_variable_name,reactivevalue$batch_variable_name)]
-#     updateSelectInput(session = session,inputId = "covariate", choices = reactivevalue$covariates)
-#   }
-# })
 
 ### HEATMAP TAB ###
 
@@ -289,20 +298,24 @@ observeEvent(input$variation, {
 observeEvent( input$heatmap_plot, {
   req(reactivevalue$se)
   results=heatmap_plotter(reactivevalue$se,
-                          input$normalization_method_heatmap,
+                          input$heatmap_assay_name,
                           input$top_n_heatmap,
                           input$variates_to_display)
 
   output$correlation_heatmap=renderPlot({
     results$correlation_heatmap
-  }, height = function() {session$clientData$output_correlation_heatmap_width})
+  }, height = function() {session$clientData$output_correlation_heatmap_width
+  })
+
   output$topn_heatmap=renderPlot({
     results$topn_heatmap
-  }, height = function() {session$clientData$output_topn_heatmap_width})
+    }, height = function() {session$clientData$output_topn_heatmap_width
+  })
 
   output$dendrogram=renderPlot({
     plot(results$dendrogram)
-  }, height = function() {session$clientData$output_dendrogram_width})
+    }, height = function() {session$clientData$output_dendrogram_width
+  })
 })
 
 

@@ -98,6 +98,9 @@ PCA_preprocess <- function(se, assay, nfeature){
 
   return(PCA)
 }
+
+
+
 #' This function allows you to plot PCA
 #' @param se summarized experiment
 #' @param nfeature number of features
@@ -153,13 +156,12 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 #' @param se summarized experiment
 #' @param assay normalized or corrected assay
 #' @param nfeature number of features to display
-#' @param experiment_variable what is the experiment variable
 #' @param annotation_column choose column
 #' @import pheatmap
 #' @return heatmap plot
 #'
 #' @export
-heatmap_plotter <- function(se, assay, nfeature,experiment_variable,annotation_column) {
+heatmap_plotter <- function(se, assay, nfeature,annotation_column) {
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
   data <- apply(data,c(1,2),as.numeric)

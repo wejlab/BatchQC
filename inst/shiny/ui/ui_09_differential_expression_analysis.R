@@ -1,13 +1,13 @@
 
 
 tabPanel(
-  "Differential expression Analysis",
+  "Differential Expression Analysis",
 
   # Application title
-  titlePanel("Differential expression Analysis"),
+  titlePanel("Differential Expression Analysis"),
 
   sidebarLayout(sidebarPanel(
-    h3("Differential expression Analysis"),
+    h3("Differential Expression Analysis"),
     selectizeInput('DE_assay', 'Select Assay Name', choices = "",options = list(
       placeholder = 'Please select an option below',
       onInitialize = I('function() { this.setValue(""); }')
@@ -15,7 +15,7 @@ tabPanel(
   ),
   mainPanel(
     tabsetPanel(
-      tabPanel("Differential expression Analysis"
+      tabPanel("Differential Expression Analysis"
       ),
       tabPanel("P-Value Analysis"
       )

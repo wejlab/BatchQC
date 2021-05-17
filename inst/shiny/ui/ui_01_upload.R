@@ -43,18 +43,7 @@ tabPanel("Upload Data",
                 multiple = FALSE,
                 accept = accepted
             ),
-            #selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
-            #               options = list(
-            #                   placeholder = 'Please select an option below',
-            #                   onInitialize = I('function() { this.setValue(""); }')
-            #               )),
-            #selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
-            #               options = list(
-            #                   placeholder = 'Please select an option below',
-            #                   onInitialize = I('function() { this.setValue(""); }')
-            #               )),
-
-            withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Submit'))
+            withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Upload'))
 
         ),
 
@@ -64,49 +53,34 @@ tabPanel("Upload Data",
                 tabPanel('Input Summary',
                          tableOutput('counts_header'),
                          tableOutput('metadata_header')
-
-
                          ),
                 tabPanel('Full Metadata',
                          dataTableOutput('metadata')),
                 tabPanel('Normalization',
-                         selectizeInput('Normalization_Method','Choose Normalization Method',multiple=F,choices = c('CPM','DESeq'),selected = NULL),
-                         selectizeInput('Normalization_Assay','Choose the assay to do normalization',
+                         selectizeInput('normalization_method','Choose normalization method',
+                                        multiple=F,choices = c('CPM','DESeq'),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('normalization_assay','Choose the assay on which to do normalization',
                                         multiple=F,choices = c(''),selected = NULL),
-                         textInput(inputId = 'Normalization_Results_Name','Name for the normalized Assay',value = ''),
-                         checkboxInput('Log','Log Transform the results'),
-                         actionButton(inputId = 'Normalize',label = 'Normalize')
+                         textInput(inputId = 'normalized_assay_name','Name for the normalized assay',value = ''),
+                         checkboxInput('log','Log transform the results'),
+                         withBusyIndicatorUI(actionButton(inputId = 'normalize',label = 'Normalize'))
                          ),
-
-                tabPanel('Setting Variables',
-                         selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
-                                        options = list(
-                                            placeholder = 'Please select an option below',
-                                            onInitialize = I('function() { this.setValue(""); }')
-                                        )),
-                         selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
-                                        options = list(
-                                            placeholder = 'Please select an option below',
-                                            onInitialize = I('function() { this.setValue(""); }')
-                                        )),
-                         actionButton(inputId = 'submit_variables',label = 'Submit')
-
-                         ),
-                tabPanel('Batch effect Correction',
-                         selectizeInput('Correct_Method','Choose correct method',multiple=F,choices = c('ComBat-Seq','ComBat'),selected = NULL,options=list(placeholder = 'Please select an option below',
-                                                                                                                                                            onInitialize = I('function() { this.setValue(""); }'))),
-                         selectizeInput('Correct_Assay','Choose the assay to do correction',multiple=F,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below',
-                                                                                                                                                    onInitialize = I('function() { this.setValue(""); }'))),
-                         selectizeInput('Batch_for_Batch','Choose batch variables for correction',multiple=F,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below',
-                                                                                                                                                          onInitialize = I('function() { this.setValue(""); }'))),
-                         #selectizeInput('Group_for_Batch','Choose group variables for correction',multiple=F,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below',
-                         #                                                                                                                                 onInitialize = I('function() { this.setValue(""); }'))),
-
-                         selectizeInput('covariates_for_Batch','Choose Covariate variables for correction',multiple=T,choices = c(''),selected = NULL,options=list(placeholder = 'Please select an option below',
-                                                                                                                                                                   onInitialize = I('function() { this.setValue(""); }'))),
-
-                         textInput(inputId = 'Batch_Results_Name','Name for the corrected Assay'),
-                         actionButton(inputId = 'Correct',label = 'Correct')
+                tabPanel('Batch Effect Correction',
+                         selectizeInput('correction_method','Choose correction method',
+                                        multiple=F,choices = c('ComBat-Seq','ComBat'),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('correction_assay','Choose the assay on which to do correction',
+                                        multiple=F,choices = c(''),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('correction_batch','Choose batch variable for correction',
+                                        multiple=F,choices = c(''),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('correction_covariates','Choose covariate variable(s) for correction',
+                                        multiple=T,choices = c(''),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         textInput(inputId = 'corrected_assay_name','Name for the corrected assay'),
+                         actionButton(inputId = 'correct',label = 'Correct')
                 )
             )
         )

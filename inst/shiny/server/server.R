@@ -2,7 +2,7 @@
 ## reactive value: pre-determined name:
 options(shiny.maxRequestSize=600*1024^2)
 library(SummarizedExperiment)
-source("../../R/import.R")
+#source("../../R/import.R")
 
 reactivevalue=reactiveValues(counts=NULL,
                                counts_location=NULL,

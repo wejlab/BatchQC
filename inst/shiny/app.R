@@ -2,6 +2,7 @@ library(shiny)
 library(shinyjs)
 library(shinythemes)
 library(sva)
+library(DT)
 #require(SummarizedExperiment)
 #require(pheatmap)
 #require(ggplot2)
@@ -31,7 +32,8 @@ ui <- navbarPage(
   # source(file.path("ui", "ui_06_circular_dendogram.R"),  local = TRUE)$value,
   source(file.path("ui", "ui_07_pca.R"),  local = TRUE)$value,
   # source(file.path("ui", "ui_08_shape.R"),  local = TRUE)$value,
-  source(file.path("ui", "ui_09_differential_expression_analysis.R"),  local = TRUE)$value
+  source(file.path("ui", "ui_09_differential_expression_analysis.R"),  local = TRUE)$value,
+  source(file.path("ui", "ui_10_data_download.R"),  local = TRUE)$value
 )
 
 server <- function(input, output, session) {

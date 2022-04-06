@@ -158,6 +158,8 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 #' @param nfeature number of features to display
 #' @param annotation_column choose column
 #' @import pheatmap
+#' @import circlize
+#' @import dendextend
 #' @return heatmap plot
 #'
 #' @export
@@ -166,6 +168,7 @@ heatmap_plotter <- function(se, assay, nfeature,annotation_column) {
   data <- as.matrix(data)
   data <- apply(data,c(1,2),as.numeric)
   data <- data[rowSums(data)!=0,]
+  
   vargenes <- apply(data,1,var)
   vargenes <- vargenes[order(vargenes,decreasing = T)]
   vargenes <- vargenes[seq(1,nfeature)]
@@ -192,6 +195,8 @@ heatmap_plotter <- function(se, assay, nfeature,annotation_column) {
     topn_heatmap <- pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
 
     dendrogram <- topn_heatmap$tree_col
+    
+    circular_dendogram <- circlize_dendrogram(as.dendrogram(dendrogram))
 
   }
   else {
@@ -201,11 +206,13 @@ heatmap_plotter <- function(se, assay, nfeature,annotation_column) {
     topn_heatmap <- pheatmap(data,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
 
     dendrogram <- topn_heatmap$tree_col
+    
+    circular_dendogram <- circlize_dendrogram(as.dendrogram(dendrogram))
   }
-
-
+  
   return(list(correlation_heatmap=correlation_heatmap,
-              topn_heatmap=topn_heatmap,
+              topn_heatmap=topn_heatmap, 
+              circular_dendogram=circular_dendogram,
               dendrogram=dendrogram))
 }
 

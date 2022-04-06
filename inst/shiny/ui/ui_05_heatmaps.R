@@ -26,8 +26,11 @@ tabPanel("Heatmaps",
                ),
                tabPanel("Dendrogram",
                         plotOutput('dendrogram')
-               )
+               ),
+               tabPanel("Circular Dendrogram",
+                        plotOutput('circular_dendrogram')
              )
            )
+         )
          )
 )

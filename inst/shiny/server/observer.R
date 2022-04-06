@@ -63,18 +63,34 @@ setupSelections = function(){
 observeEvent( input$counts, {
   req(input$counts)
   reactivevalue$counts_location=input$counts$datapath
-  output$counts_header=renderTable((read.table(reactivevalue$counts_location,header = T,row.names = 1,
-                                               sep = get.delim(reactivevalue$counts_location,n = 10,delims = c('\t',',')),check.names = F))[seq(1,10),seq(1,3)])
+  counts_table <- read.table(reactivevalue$counts_location,header = T,row.names = 1,
+                             sep = get.delim(reactivevalue$counts_location,n = 10,delims = c('\t',',')),check.names = F)
+  output$counts_header=renderDT((datatable(counts_table)))
+  output$counts_dimensions=renderText(paste(dim(counts_table),c('observations and','samples')))
 })
 
 ## Obtain the metadata matrix and metadata table location
 observeEvent( input$md, {
   req(input$md)
   reactivevalue$metadata_location=input$md$datapath
-  output$metadata_header=renderTable(head(read.table(reactivevalue$metadata_location,header = T,row.names = 1,
-                                                     sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')),check.names = F)))
 
   reactivevalue$metadata = read.table(reactivevalue$metadata_location,header = T,row.names = 1,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
+  
+  metadata_tables <- apply(reactivevalue$metadata, 2, table)
+  full_metadata <- c()
+  Variable <- c()
+  count <- 1
+  for (i in metadata_tables){
+    full_metadata <- c(full_metadata,i)
+    variables <- rep(names(metadata_tables[count]),length(i))
+    Variable <- c(Variable, variables)
+    count <- count+1
+  }
+  Metadata <- names(full_metadata) 
+  Occurrence <- as.vector(full_metadata)
+  full_metadata <- abind(Metadata,Occurrence,Variable,along=2,make.names=TRUE)
+  
+  output$metadata_header=renderDT(datatable(full_metadata))
 })
 
 ## Obtain count matrix and metadata from the summarized experiment input
@@ -83,6 +99,25 @@ observeEvent( input$se, {
   reactivevalue$se_location=input$se$datapath
   se=readRDS(input$se$datapath)
   reactivevalue$se=se
+  output$se_counts=renderDT(datatable(assays(reactivevalue$se)$counts))
+  output$se_dimensions=renderText(paste(dim(reactivevalue$se),c('observations','samples')))
+  
+  metadata_table <- as.data.table(colData(reactivevalue$se))
+  metadata_list <- apply(metadata_table, 2, table)
+  se_metadata <- c()
+  Variable <- c()
+  count <- 1
+  for (i in metadata_list){
+    se_metadata <- c(se_metadata,i)
+    se_variables <- rep(names(metadata_list[count]),length(i))
+    Variable <- c(Variable, se_variables)
+    count <- count+1
+  }
+  Metadata <- names(se_metadata) 
+  Occurrence <- as.vector(se_metadata)
+  se_metadata <- abind(Metadata,Occurrence,Variable,along=2,make.names=TRUE)
+  
+  output$se_meta=renderDT(datatable(se_metadata))
 })
 
 ## Create summarized experiment object and set up plot options
@@ -91,6 +126,7 @@ observeEvent( input$submit, {
     if (!is.null(reactivevalue$counts_location) & !is.null(reactivevalue$metadata_location)) {
       se = summarized_experiment(reactivevalue$counts_location,
                                  reactivevalue$metadata_location)
+      se <- se[which(rownames(se)!='NA')]
       reactivevalue$se=se
       reactivevalue$metadata=data.frame(colData(reactivevalue$se))
     }
@@ -100,6 +136,17 @@ observeEvent( input$submit, {
       reactivevalue$se=se
       reactivevalue$metadata=data.frame(colData(reactivevalue$se))
     }
+    output$se_download=renderPrint(reactivevalue$se)
+    output$downloadData <- downloadHandler(
+      filename = function() {
+        paste("se", ".RDS", sep = "")
+      },
+      content = function(file) {
+        saveRDS(reactivevalue$se,file)
+      }
+    
+    )
+    
     # Display metadata table
     output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
     # Add options to input selections
@@ -316,6 +363,11 @@ observeEvent( input$heatmap_plot, {
     plot(results$dendrogram)
     }, height = function() {session$clientData$output_dendrogram_width
   })
+  
+  output$circular_dendrogram=renderPlot({
+    circlize_dendrogram(as.dendrogram(results$dendrogram))
+  }, height = function() {session$clientData$output_circular_dendrogram_width
+  })
 })
 
 
@@ -339,3 +391,5 @@ observeEvent( input$PCA_plot, {
     setProgress(1, 'Complete.')
   })
 })
+
+### DIFFERENTIAL EXPRESSION ANALYSIS TAB ###

@@ -1,0 +1,13 @@
+,Infection,Celltype,Modification,Batch,hours_after_treatment,strain,MOI,Instrument
+Series6_A549-ACE2_Mock_1,Mock,A549,transduce ACE2 vector,Series6,24,None,0,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_Mock_2,Mock,A549,transduce ACE2 vector,Series6,24,None,0,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_Mock_3,Mock,A549,transduce ACE2 vector,Series6,24,None,0,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_SARS-CoV-2_1,SARS_CoV_2,A549,transduce ACE2 vector,Series6,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_SARS-CoV-2_2,SARS_CoV_2,A549,transduce ACE2 vector,Series6,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series6_A549-ACE2_SARS-CoV-2_3,SARS_CoV_2,A549,transduce ACE2 vector,Series6,24,USA_WA1_2020,0.2,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_Mock_1,Mock,A549,transduce ACE2 vector,Series16,None,None,0,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_Mock_2,Mock,A549,transduce ACE2 vector,Series16,None,None,0,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_Mock_3,Mock,A549,transduce ACE2 vector,Series16,None,None,0,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_SARS-CoV-2_1,SARS_CoV_2,A549,transduce ACE2 vector,Series16,None,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_SARS-CoV-2_2,SARS_CoV_2,A549,transduce ACE2 vector,Series16,None,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2
+Series16_A549-ACE2_SARS-CoV-2_3,SARS_CoV_2,A549,transduce ACE2 vector,Series16,None,USA_WA1_2020,2,TruSeq RNA Library Prep Kit v2

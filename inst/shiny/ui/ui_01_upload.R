@@ -36,64 +36,51 @@ tabPanel("Upload Data",
             fileInput("md", "Metadata",
                       multiple = FALSE,
                       accept = accepted),
+            h4("-OR-"),
             fileInput(
                 "se",
                 "Summarized Experiment",
                 multiple = FALSE,
                 accept = accepted
             ),
-            #selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
-            #               options = list(
-            #                   placeholder = 'Please select an option below',
-            #                   onInitialize = I('function() { this.setValue(""); }')
-            #               )),
-            #selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
-            #               options = list(
-            #                   placeholder = 'Please select an option below',
-            #                   onInitialize = I('function() { this.setValue(""); }')
-            #               )),
-            actionButton(inputId = 'submit',label = 'Submit')
+            withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Upload'))
 
         ),
 
         # Show a table of the inputted data
         mainPanel(
             tabsetPanel(
-                tabPanel('Preview the first 10 lines of the input.',
+                tabPanel('Input Summary',
                          tableOutput('counts_header'),
                          tableOutput('metadata_header')
-
-
                          ),
-                tabPanel('Normalization',
-                         actionButton(inputId = 'DESEQ_normalization',label = 'DESEQ normalization'),
-                         actionButton(inputId = 'CPM_Normalization',label = 'CPM normalization')
-
-                ),
                 tabPanel('Full Metadata',
                          dataTableOutput('metadata')),
-                tabPanel('Setting Variables',
-                         selectizeInput('group','Biological setting Column',choices =c(),multiple = F,selected = NULL,
-                                        options = list(
-                                            placeholder = 'Please select an option below',
-                                            onInitialize = I('function() { this.setValue(""); }')
-                                        )),
-                         selectizeInput('batch','Batch Variable Column',choices =c(),multiple = F,selected = NULL,
-                                        options = list(
-                                            placeholder = 'Please select an option below',
-                                            onInitialize = I('function() { this.setValue(""); }')
-                                        )),
-                         actionButton(inputId = 'submit_variables',label = 'Submit'),
-                         dataTableOutput('variable_overview')
-
+                tabPanel('Normalization',
+                         selectizeInput('normalization_method','Choose normalization method',
+                                        multiple=F,choices = c('CPM','DESeq'),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('normalization_assay','Choose the assay on which to do normalization',
+                                        multiple=F,choices = c(''),selected = NULL),
+                         textInput(inputId = 'normalized_assay_name','Name for the normalized assay',value = ''),
+                         checkboxInput('log','Log transform the results'),
+                         withBusyIndicatorUI(actionButton(inputId = 'normalize',label = 'Normalize'))
                          ),
-                tabPanel(
-                    "Input",
-                    selectInput("covariate", "Select Covariate:", choices = ""),
-                ),
-                tabPanel("Confounding",
-                         textOutput("text"),
-                         tableOutput("confoundingTable")
+                tabPanel('Batch Effect Correction',
+                         selectizeInput('correction_method','Choose correction method',
+                                        multiple=F,choices = c('ComBat-Seq','ComBat'),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('correction_assay','Choose the assay on which to do correction',
+                                        multiple=F,choices = c(''),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('correction_batch','Choose batch variable for correction',
+                                        multiple=F,choices = c(''),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         selectizeInput('correction_covariates','Choose covariate variable(s) for correction',
+                                        multiple=T,choices = c(''),selected = NULL,
+                                        options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
+                         textInput(inputId = 'corrected_assay_name','Name for the corrected assay'),
+                         actionButton(inputId = 'correct',label = 'Correct')
                 )
             )
         )

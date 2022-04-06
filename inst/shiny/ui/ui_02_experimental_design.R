@@ -1,37 +1,29 @@
 
-tabPanel("Experimental Design",
+tabPanel(
+  "Experimental Design",
 
-         # Application title
-         titlePanel("Experimental Design"),
+  # Application title
+  titlePanel("Experimental Design"),
 
-         # Place for uploading data
-         sidebarLayout(
-           sidebarPanel(
-           ),
-
-           # Show a table of the inputted data
-           mainPanel(
-             tabsetPanel(
-               tabPanel("Summary",
-                 selectInput("covariate", "Select Covariate:", choices = "")
-               ),
-               tabPanel("Confounding",
-                        textOutput("text"),
-                        tableOutput("confoundingTable")
-               ),
-               tabPanel("ComBat"
-                        #selectInput("covariate", "Select Covariate:", choices = ""),
-               ),
-               tabPanel("ComBat-seq"
-                        #selectInput("covariate", "Select Covariate:", choices = ""),
-               ),
-               tabPanel("SVA"
-                        # selectInput("covariate", "Select Covariate:", choices = ""),
-               ),
-               tabPanel("RUV"
-                        #selectInput("covariate", "Select Covariate:", choices = ""),
-               )
-             )
-           )
-         )
+  sidebarLayout(sidebarPanel(
+    h3("Experimental Design"),
+    selectizeInput('design_batch', 'Select Batch Variable', choices = "",options = list(
+      placeholder = 'Please select an option below',
+      onInitialize = I('function() { this.setValue(""); }')
+    ))
+  ),
+  mainPanel(tabsetPanel(
+    tabPanel(
+      "Batch Design",
+      selectizeInput("design_covariate", "Select Covariate:", choices = "",options = list(
+        placeholder = 'Please select an option below',
+        onInitialize = I('function() { this.setValue(""); }')
+      )),
+      tableOutput('batch_design')
+    ),
+    tabPanel(
+      "Confounding Statistics",
+      tableOutput("confounding_table")
+    )
+  )))
 )

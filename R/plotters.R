@@ -209,10 +209,9 @@ heatmap_plotter <- function(se, assay, nfeature,annotation_column) {
     
     circular_dendogram <- circlize_dendrogram(as.dendrogram(dendrogram))
   }
-  
+
   return(list(correlation_heatmap=correlation_heatmap,
               topn_heatmap=topn_heatmap, 
               circular_dendogram=circular_dendogram,
               dendrogram=dendrogram))
 }
-

@@ -58,7 +58,6 @@ std_pearson_corr_coef <- function(bd) {
   return(r)
 }
 
-
 #' This function allows you to calculate cramer's V
 #' @param bd batch design
 #' @return cramer's V
@@ -70,7 +69,6 @@ cramers_v <- function(bd) {
   v <- sqrt(c$chi/(c$tablesum * (c$mmin - 1)))
   return(v)
 }
-
 
 #' This function allows you to combine std. pearson corr coef and cramer's V
 #' @param se summarized experiment

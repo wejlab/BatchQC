@@ -20,7 +20,6 @@ tabPanel("PCA Analysis",
              selectizeInput('pca_assays','Assays to plot', choices =c(), multiple = T),
 
              actionButton('PCA_plot', label = 'Here we go!')
-
            ),
 
            # Show a plot of the generated distribution

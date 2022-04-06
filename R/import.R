@@ -57,9 +57,9 @@ batch_design <- function(se, covariate){
 }
 
 
-#  out = list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
-#  return(out)
-#}
+  out = list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
+  return(out)
+}
 
 std_pearson_corr_coef <- function(bd) {
   #' Calculate standardized Pearson correlation coefficient

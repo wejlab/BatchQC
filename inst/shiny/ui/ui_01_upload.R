@@ -39,7 +39,7 @@ tabPanel("Upload Data",
             h4("-OR-"),
             fileInput(
                 "se",
-                "Summarized Experiment",
+                "Summarized Experiment", ".RDS"
                 multiple = FALSE,
                 accept = accepted
             ),
@@ -98,7 +98,7 @@ tabPanel("Upload Data",
                          textInput(inputId = 'corrected_assay_name','Name for the corrected assay'),
                          actionButton(inputId = 'correct',label = 'Correct')
                         )
-                
+
                 )
             )
         )

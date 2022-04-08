@@ -39,9 +39,9 @@ tabPanel("Upload Data",
             h4("-OR-"),
             fileInput(
                 "se",
-                "Summarized Experiment", ".RDS"
+                "Summarized Experiment",
                 multiple = FALSE,
-                accept = accepted
+                accept = c(accepted, ".RDS")
             ),
             withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Upload'
             ))

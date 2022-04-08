@@ -29,13 +29,13 @@ setupSelections = function(){
   updateSelectInput(session = session,inputId = 'variates_to_display',
                     choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_heatmap',
-                     value = 500,min = 0,max = dim(reactivevalue$se)[1])
+                     value = 0,min = 0,max = dim(reactivevalue$se)[1])
 
   # PCA
   updateSelectizeInput(session = session,inputId = 'pca_assays',
                        choices = assayNames((reactivevalue$se)), selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_PCA',
-                     value = 500,min = 0,max = dim(reactivevalue$se)[1])
+                     value = 0,min = 0,max = dim(reactivevalue$se)[1])
   updateSelectizeInput(session = session,inputId = 'variates_shape',
                        choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateSelectizeInput(session = session,inputId = 'variates_color',
@@ -75,7 +75,7 @@ observeEvent( input$md, {
   reactivevalue$metadata_location=input$md$datapath
 
   reactivevalue$metadata = read.table(reactivevalue$metadata_location,header = T,row.names = 1,sep = get.delim(reactivevalue$metadata_location,n = 10,delims = c('\t',',')))
-  
+
   metadata_tables <- apply(reactivevalue$metadata, 2, table)
   full_metadata <- c()
   Variable <- c()
@@ -86,10 +86,10 @@ observeEvent( input$md, {
     Variable <- c(Variable, variables)
     count <- count+1
   }
-  Metadata <- names(full_metadata) 
+  Metadata <- names(full_metadata)
   Occurrence <- as.vector(full_metadata)
   full_metadata <- abind(Metadata,Occurrence,Variable,along=2,make.names=TRUE)
-  
+
   output$metadata_header=renderDT(datatable(full_metadata))
 })
 
@@ -101,7 +101,7 @@ observeEvent( input$se, {
   reactivevalue$se=se
   output$se_counts=renderDT(datatable(assays(reactivevalue$se)$counts))
   output$se_dimensions=renderText(paste(dim(reactivevalue$se),c('observations','samples')))
-  
+
   metadata_table <- as.data.table(colData(reactivevalue$se))
   metadata_list <- apply(metadata_table, 2, table)
   se_metadata <- c()
@@ -113,10 +113,10 @@ observeEvent( input$se, {
     Variable <- c(Variable, se_variables)
     count <- count+1
   }
-  Metadata <- names(se_metadata) 
+  Metadata <- names(se_metadata)
   Occurrence <- as.vector(se_metadata)
   se_metadata <- abind(Metadata,Occurrence,Variable,along=2,make.names=TRUE)
-  
+
   output$se_meta=renderDT(datatable(se_metadata))
 })
 
@@ -144,9 +144,9 @@ observeEvent( input$submit, {
       content = function(file) {
         saveRDS(reactivevalue$se,file)
       }
-    
+
     )
-    
+
     # Display metadata table
     output$metadata=renderDataTable(data.table(data.frame(colData(reactivevalue$se)),keep.rownames = T))
     # Add options to input selections
@@ -363,7 +363,7 @@ observeEvent( input$heatmap_plot, {
     plot(results$dendrogram)
     }, height = function() {session$clientData$output_dendrogram_width
   })
-  
+
   output$circular_dendrogram=renderPlot({
     circlize_dendrogram(as.dendrogram(results$dendrogram))
   }, height = function() {session$clientData$output_circular_dendrogram_width

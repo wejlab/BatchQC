@@ -39,7 +39,7 @@ tabPanel("Upload Data",
             h4("-OR-"),
             fileInput(
                 "se",
-                "Summarized Experiment", ".RDS"
+                "Summarized Experiment", ".RDS",
                 multiple = FALSE,
                 accept = accepted
             ),

@@ -8,6 +8,7 @@ library(abind)
 library(DT)
 library(dendextend)
 library(circlize)
+library(scran)
 #source("../../R/import.R")
 
 reactivevalue=reactiveValues(counts=NULL,

@@ -7,6 +7,7 @@
 #' @import SummarizedExperiment
 #' @import reader
 #' @import EBSeq
+#' @import scater
 #'
 #' @export
 normalize_SE = function(se,method,assay_to_normalize,output_assay_name) {
@@ -18,7 +19,7 @@ normalize_SE = function(se,method,assay_to_normalize,output_assay_name) {
   else if (method=='DESeq') {
     se@assays@data[[output_assay_name]]=GetNormalizedMat(se@assays@data[[assay_to_normalize]],
                                                          MedianNorm(se@assays@data[[assay_to_normalize]]))
-
   }
+  
   return(se)
 }

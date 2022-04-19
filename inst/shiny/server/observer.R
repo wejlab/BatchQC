@@ -54,6 +54,8 @@ setupSelections = function(){
   # Differential expression analysis
   updateSelectizeInput(session=session, inputId="DE_assay",
                        choices=names(assays(reactivevalue$se)),selected=NULL)
+  updateSelectizeInput(session = session,inputId = 'DE_conditions',
+                       choices = colnames(colData(reactivevalue$se)),selected = NULL)
 }
 
 
@@ -393,3 +395,16 @@ observeEvent( input$PCA_plot, {
 })
 
 ### DIFFERENTIAL EXPRESSION ANALYSIS TAB ###
+observeEvent(input$analyze, {
+  req(reactivevalue$se, input$DE_method,input$DE_conditions, input$DE_assay,input$slider)
+  results <- analyze_SE(reactivevalue$se, input$DE_method, input$DE_conditions, input$DE_assay)
+  output$DE_results <- renderDT({results$res
+  })
+  output$volcano <- renderPlot({
+    volcano_plot(results$volcano,input$slider)
+  }, height = function() {session$clientData$output_volcano_width
+  })
+})
+
+
+

@@ -29,20 +29,20 @@ setupSelections = function(){
   updateSelectInput(session = session,inputId = 'variates_to_display',
                     choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_heatmap',
-                     value = 0,min = 0,max = dim(reactivevalue$se)[1])
+                     value = 2,min = 2,max = dim(reactivevalue$se)[1])
 
   # PCA
   updateSelectizeInput(session = session,inputId = 'pca_assays',
                        choices = assayNames((reactivevalue$se)), selected = NULL)
   updateNumericInput(session = session,inputId = 'top_n_PCA',
-                     value = 0,min = 0,max = dim(reactivevalue$se)[1])
+                     value = 2,min = 2,max = dim(reactivevalue$se)[1])
   updateSelectizeInput(session = session,inputId = 'variates_shape',
                        choices = colnames(colData(reactivevalue$se)),selected = NULL)
   updateSelectizeInput(session = session,inputId = 'variates_color',
                        choices = colnames(colData(reactivevalue$se)),selected = NULL)
-  updateSelectizeInput(session,'batch',choices=colnames(colData(reactivevalue$se)),
+  updateSelectizeInput(session,'batch',choices = colnames(colData(reactivevalue$se)),
                        selected = NULL)
-  updateSelectizeInput(session,'group',choices=colnames(colData(reactivevalue$se)),
+  updateSelectizeInput(session,'group',choices = colnames(colData(reactivevalue$se)),
                        selected = NULL)
 
   # Variation Analysis
@@ -342,29 +342,39 @@ observeEvent(input$variation, {
 ### HEATMAP TAB ###
 
 ## Plot heatmap
-observeEvent( input$heatmap_plot, {
+observeEvent(input$heatmap_plot, {
   req(reactivevalue$se)
-  results=heatmap_plotter(reactivevalue$se,
+  validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1] && input$top_n_heatmap > 1,
+                "Please select between 2 and the size of your data set variates to display"))
+  results = heatmap_plotter(reactivevalue$se,
                           input$heatmap_assay_name,
                           input$top_n_heatmap,
                           input$variates_to_display)
 
-  output$correlation_heatmap=renderPlot({
+  output$correlation_heatmap = renderPlot({
+    validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1] && input$top_n_heatmap > 1,
+                  "Please select between 2 and the size of your data set variates to display"))
     results$correlation_heatmap
   }, height = function() {session$clientData$output_correlation_heatmap_width
   })
 
-  output$topn_heatmap=renderPlot({
+  output$topn_heatmap = renderPlot({
+    validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
+                  "Value must be less than the dim of your data set"))
     results$topn_heatmap
     }, height = function() {session$clientData$output_topn_heatmap_width
   })
 
-  output$dendrogram=renderPlot({
+  output$dendrogram = renderPlot({
+    validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
+                  "Value must be less than the dim of your data set"))
     plot(results$dendrogram)
     }, height = function() {session$clientData$output_dendrogram_width
   })
 
-  output$circular_dendrogram=renderPlot({
+  output$circular_dendrogram = renderPlot({
+    validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
+                  "Value must be less than the dim of your data set"))
     circlize_dendrogram(as.dendrogram(results$dendrogram))
   }, height = function() {session$clientData$output_circular_dendrogram_width
   })
@@ -375,8 +385,10 @@ observeEvent( input$heatmap_plot, {
 ### PCA TAB ###
 
 ## Plot PCA
-observeEvent( input$PCA_plot, {
+observeEvent(input$PCA_plot, {
   req(reactivevalue$se)
+  validate(need(input$top_n_PCA <= dim(reactivevalue$se)[1] && input$top_n_PCA > 1,
+                "Please select a value for the top variable features to use that falls within 2 and the size of your dataset"))
   assays <- input$pca_assays
   msg <- sprintf('Generating plot for: %s...', paste(assays, collapse=', '))
   withProgress(message=msg, {
@@ -386,8 +398,11 @@ observeEvent( input$PCA_plot, {
                         input$variates_shape,
                         assays)
     setProgress(.8, 'Displaying figure...')
-    output$PCA=renderPlot(results$plot)
-    output$var_explained=renderTable(results$var_explained, rownames=T, digits=4)
+    output$PCA = renderPlot({validate(need(input$top_n_PCA <= dim(reactivevalue$se)[1] && input$top_n_PCA > 1,
+                                           "Please select a value for the top variable features to use that falls within 2 and the size of your dataset"))
+      results$plot})
+    output$var_explained=renderTable(
+      results$var_explained, rownames=T, digits=4)
     setProgress(1, 'Complete.')
   })
 })

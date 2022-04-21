@@ -10,22 +10,15 @@ library(dendextend)
 library(circlize)
 #source("../../R/import.R")
 
-reactivevalue=reactiveValues(counts=NULL,
-                               counts_location=NULL,
-                               metadata='',
-                               metadata_location=NULL,
-                               se_location=NULL,
-                               se=NULL)
+reactivevalue = reactiveValues(counts = NULL,
+                               counts_location = NULL,
+                               metadata = '',
+                               metadata_location = NULL,
+                               se_location = NULL,
+                               se = NULL)
 
 source('server/observer.R',local = T)
 
 #output$group_variable_Name=renderText({reactivevalue$group_variable_Name})
-output$confounding_table=NULL
-output$metadata=NULL
-
-
-
-
-
-
-
+output$confounding_table = NULL
+output$metadata = NULL

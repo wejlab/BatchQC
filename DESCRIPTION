@@ -30,7 +30,7 @@ Authors@R: c(person("Solaiappan", "Manimaran", , "manimaran_1975@hotmail.com", r
         person("Regan", "Conrad", , "rdconrad@bu.edu", role = c("ctb")),
         person("Zhaorong", "Li", , "zhaorong@bu.edu", role = c("ctb")),
         person("Evan", "Holmes", , "evanjh19@gmail.com", role = c("aut")),
-        person("Jessica", "McClintock", , "jessmcc@bu.edu", role = ("ctb")))
+        person("Jessica", "McClintock", , "jessmcc@bu.edu", role = ("aut")))
 Type: Package
 Date: 2020-10-11
 Maintainer: W. Evan Johnson <wej@bu.edu>

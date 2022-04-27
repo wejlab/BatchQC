@@ -82,7 +82,7 @@ PCA_preprocess <- function(se, assay, nfeature){
   data <- apply(data,c(1,2),as.numeric)
   data <- data[rowSums(data)!=0,]
   vargenes <- apply(data,1,stats::var)
-  vargenes <- vargenes[order(vargenes,decreasing = T)]
+  vargenes <- vargenes[order(vargenes,decreasing = TRUE)]
   vargenes <- vargenes[seq(1,nfeature)]
   data <- log(data+1)
   data <- data[names(vargenes),]
@@ -94,7 +94,7 @@ PCA_preprocess <- function(se, assay, nfeature){
   #   data[i,] <- (data[i,]-mean(data[i,]))/sd(data[i,])
   # }
   coldata <- data.frame(colData(se))
-  PCA <- stats::prcomp(t(centered), center=F)
+  PCA <- stats::prcomp(t(centered), center=FALSE)
 
   return(PCA)
 }
@@ -170,7 +170,7 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
   data <- data[rowSums(data)!=0,]
 
   vargenes <- apply(data, 1, stats::var)
-  vargenes <- vargenes[order(vargenes,decreasing = T)]
+  vargenes <- vargenes[order(vargenes,decreasing = TRUE)]
   vargenes <- vargenes[seq(1,nfeature)]
   data <- log(data+1)
   data <- data[names(vargenes),]
@@ -189,10 +189,10 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
     else {
       coldata <- coldata[,annotation_column]
     }
-    correlation_heatmap <- pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F
-                                 ,annotation_names_col = F,annotation_names_row = F,silent = T)
+    correlation_heatmap <- pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = FALSE,show_rownames = FALSE
+                                 ,annotation_names_col = FALSE,annotation_names_row = FALSE,silent = TRUE)
 
-    topn_heatmap <- pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+    topn_heatmap <- pheatmap(data,annotation_col = coldata,show_colnames = FALSE,annotation_names_col = FALSE,show_rownames = FALSE,silent = TRUE)
 
     dendrogram <- topn_heatmap$tree_col
 
@@ -200,10 +200,10 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
 
   }
   else {
-    correlation_heatmap <- pheatmap(cor,show_colnames = F,show_rownames = F
-                                 ,annotation_names_col = F,annotation_names_row = F,silent = T)
+    correlation_heatmap <- pheatmap(cor,show_colnames = FALSE,show_rownames = FALSE
+                                 ,annotation_names_col = FALSE,annotation_names_row = FALSE,silent = TRUE)
 
-    topn_heatmap <- pheatmap(data,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+    topn_heatmap <- pheatmap(data,show_colnames = FALSE,annotation_names_col = FALSE,show_rownames = FALSE,silent = TRUE)
 
     dendrogram <- topn_heatmap$tree_col
 

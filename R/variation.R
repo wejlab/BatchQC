@@ -164,7 +164,7 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
 #' @export
 EV_table <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
-  EV_table <- data.table(batchqc_ev$explained_variation[], keep.rownames = T)
+  EV_table <- data.table(batchqc_ev$explained_variation[], keep.rownames = TRUE)
   colnames(EV_table)[1] <- "Gene Name"
   return(list(EV_table=EV_table))
 }

@@ -33,12 +33,10 @@ Authors@R: c(person("Solaiappan", "Manimaran", , "manimaran_1975@hotmail.com", r
         person("Jessica", "McClintock", , "jessmcc@bu.edu", role = ("aut")))
 Type: Package
 Date: 2020-10-11
-Maintainer: W. Evan Johnson <wej@bu.edu>
 URL: https://github.com/compbiomed/BatchQC
 BugReports: https://github.com/compbiomed/BatchQC/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Imports:
     circlize,
     data.table,
@@ -59,6 +57,7 @@ Imports:
     SummarizedExperiment,
     sva,
     tidyr,
-    tidyverse
+    tidyverse,
+    utils
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

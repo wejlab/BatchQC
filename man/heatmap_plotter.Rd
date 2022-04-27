@@ -4,7 +4,7 @@
 \alias{heatmap_plotter}
 \title{This function allows you to plot a heatmap}
 \usage{
-heatmap_plotter(se, assay, nfeature, experiment_variable, annotation_column)
+heatmap_plotter(se, assay, nfeature, annotation_column)
 }
 \arguments{
 \item{se}{summarized experiment}
@@ -12,8 +12,6 @@ heatmap_plotter(se, assay, nfeature, experiment_variable, annotation_column)
 \item{assay}{normalized or corrected assay}
 
 \item{nfeature}{number of features to display}
-
-\item{experiment_variable}{what is the experiment variable}
 
 \item{annotation_column}{choose column}
 }

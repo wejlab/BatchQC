@@ -13,8 +13,8 @@ batch_design <- function(se, batch, covariate){
   design <- colData(se) %>% as_tibble %>%
     group_by_at(covariate) %>%
     dplyr::count(across(batch)) %>%
-    pivot_wider(names_from = batch, values_from = n) %>%
-    replace(is.na(.), 0)
+    pivot_wider(names_from = batch, values_from = n)
+  design <- replace(design, is.na(design), 0)
   return(design)
 }
 

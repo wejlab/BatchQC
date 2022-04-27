@@ -67,8 +67,8 @@ batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,out
         colnames(cov)=covar
         rownames(cov)=rownames(data.frame(colData(se)))
 
-        model=model.matrix(as.formula(paste0('~',colnames(cov))),data = cov)
-        results=ComBat(dat = se@assays@data[[assay_to_normalize]],
+        model = stats::model.matrix(stats::as.formula(paste0('~',colnames(cov))),data = cov)
+        results = ComBat(dat = se@assays@data[[assay_to_normalize]],
                        batch = batch,mod = model)
         results[is.na(results)] <- 0
         se@assays@data[[output_assay_name]]=results
@@ -83,9 +83,9 @@ batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,out
         rownames(cov)=rownames(data.frame(colData(se)))
         colnames(cov)=covar
         linearmodel=as.function(paste0('~',paste(colnames(cov),sep = '+')))
-        model=model.matrix(linearmodel,data = cov)
+        model = stats::model.matrix(linearmodel,data = cov)
 
-        results=ComBat(dat = se@assays@data[[assay_to_normalize]],
+        results = ComBat(dat = se@assays@data[[assay_to_normalize]],
                        batch = batch,mod = model)
         results[is.na(results)] <- 0
         se@assays@data[[output_assay_name]]=results

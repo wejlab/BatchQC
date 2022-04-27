@@ -1,9 +1,6 @@
 Package: BatchQC
-Type: Package
 Title: Batch Effects Quality Control Software
 Version: 2.0.0.9002
-Date: 2020-10-11
-Maintainer: W. Evan Johnson <wej@bu.edu>
 Description: Sequencing and microarray samples often are collected or
         processed in multiple batches or at different times. This often
         produces technical biases that can lead to incorrect results in
@@ -23,29 +20,45 @@ Description: Sequencing and microarray samples often are collected or
         following analysis groups: Summary, Differential Expression,
         Median Correlations, Heatmaps, Circular Dendrogram, PCA
         Analysis, Shape, ComBat and SVA.
-Authors: Solaiappan Manimaran <manimaran_1975@hotmail.com>, W. Evan
-        Johnson <wej@bu.edu>, Heather Selby <selbyh@bu.edu>, Claire
-        Ruberman <claireruberman@gmail.com>, Kwame Okrah
-        <kwame.okrah@gmail.com>, Hector Corrada Bravo
-        <hcorrada@gmail.com>, Evan Holmes <evanjh19@gmail.com>,
-        Jessica McClintock <jessmcc@bu.edu>
+Authors@R: c(person("Solaiappan", "Manimaran", , "manimaran_1975@hotmail.com", role = c("aut")),
+        person("W. Evan", "Johnson", , "wej@bu.edu", role = c("aut", "cre")),
+        person("Heather", "Selby", , "selbyh@bu.edu", role = c("ctb")),
+        person("Claire", "Ruberman", , "claireruberman@gmail.com", role = c("ctb")),
+        person("Kwame", "Okrah", , "kwame.okrah@gmail.com", role = c("ctb")),
+        person("Hector Corrada", "Bravo", , "hcorrada@gmail.com", role = c("ctb")),
+        person("Michael", "Silverstein", , "msilver4@bu.edu", role = c("ctb")),
+        person("Regan", "Conrad", , "rdconrad@bu.edu", role = c("ctb")),
+        person("Zhaorong", "Li", , "zhaorong@bu.edu", role = c("ctb")),
+        person("Evan", "Holmes", , "evanjh19@gmail.com", role = c("aut")),
+        person("Jessica", "McClintock", , "jessmcc@bu.edu", role = ("aut")))
+Type: Package
+Date: 2020-10-11
+Maintainer: W. Evan Johnson <wej@bu.edu>
 URL: https://github.com/compbiomed/BatchQC
 BugReports: https://github.com/compbiomed/BatchQC/issues
-License: use_gpl3_license()
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
+    circlize,
+    data.table,
+    dendextend,
+    dplyr,
+    EBSeq,
+    ggplot2,
+    matrixStats,
+    pheatmap,
+    plotly,
+    reader,
+    reshape2,
+    rlist,
+    scran,
     shiny,
     shinyjs,
     shinythemes,
     SummarizedExperiment,
-    pheatmap,
-    ggplot2,
-    plotly,
-    EBSeq,
-    data.table,
-    reader,
-    dplyr,
-    tidyr
+    sva,
+    tidyr,
+    tidyverse
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

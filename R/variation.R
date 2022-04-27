@@ -15,7 +15,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   if (nlb <=1) {
     batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
   } else {
-    batch_mod <- model.matrix(~df[[batch]])
+    batch_mod <- stats::model.matrix(~df[[batch]])
   }
 
   nlc <- rep(0,length(condition))
@@ -31,7 +31,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     if (nlc[i] <= 1) {
       cond_mod[[i]] <- matrix(rep(1, ncol(se)), ncol = 1)
     } else {
-      cond_mod[[i]] <- model.matrix(~df[[condition[i]]])
+      cond_mod[[i]] <- stats::model.matrix(~df[[condition[i]]])
     }
 
     mod[[i]] <- cbind(cond_mod[[i]], batch_mod[, -1])
@@ -147,7 +147,7 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
   p <- 1
   if (df1 > df0)  {
     fstats <- ((rss0 - rss1)/(df1 - df0))/(rss1/(n - df1))
-    p <- 1 - pf(fstats, df1 = (df1 - df0), df2 = (n - df1))
+    p <- 1 - stats::pf(fstats, df1 = (df1 - df0), df2 = (n - df1))
   }
   return(list(p = p, r2_full = r2_full, r2_reduced = r2_reduced))
 }
@@ -156,8 +156,8 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
 #' Returns table with percent variation explained for specified number of genes
 #'
 #' @param se Summarized experiment object
-#' @param mod mod
-#' @param batch_mod mod
+#' @param batch Batch Covariates
+#' @param condition  Condition covariate(s) of interest
 #' @param assay_name Name of chosen assay
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
@@ -191,8 +191,8 @@ covariates_not_confounded <- function(se, batch) {
 #' Returns summary table for p-values of explained variation
 #'
 #' @param se Summarized experiment object
-#' @param mod mod
-#' @param batch_mod mod
+#' @param batch Batch Covariate
+#' @param condition Condition covariate(s) of interest
 #' @param assay_name Name of chosen assay
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition

@@ -11,6 +11,7 @@
 #'     \item{Batch}{Batch Indicator}
 #'     \item{category}{Condition (Case vs Control) Indicator}
 #' }
+#' @usage data(protein_sample_info)
 #' @return Protein data sample info
 "protein_sample_info"
 
@@ -25,5 +26,6 @@
 #'     \item{Columns1-24}{Control and Case samples}
 #'     \item{rows1-39}{Proteins 1-39}
 #' }
+#' @usage data(protein_data)
 #' @return Protein data
 "protein_data"

@@ -70,7 +70,7 @@ cramers_v <- function(bd) {
   return(v)
 }
 
-#' Confound Metrics
+#'
 #' This function allows you to combine std. pearson corr coef and cramer's V
 #' @param se summarized experiment
 #' @param batch batch variable

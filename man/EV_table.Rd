@@ -2,7 +2,8 @@
 % Please edit documentation in R/variation.R
 \name{EV_table}
 \alias{EV_table}
-\title{Returns table with percent variation explained for specified number of genes}
+\title{EV Table
+Returns table with percent variation explained for specified number of genes}
 \usage{
 EV_table(se, batch, condition, assay_name)
 }
@@ -19,5 +20,6 @@ EV_table(se, batch, condition, assay_name)
 List of explained variation by batch and condition
 }
 \description{
+EV Table
 Returns table with percent variation explained for specified number of genes
 }

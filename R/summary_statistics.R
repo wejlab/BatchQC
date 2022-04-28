@@ -33,8 +33,8 @@ cor_props <- function(bd){
   colsums <- colSums(m)
   tablesum <- sum(rowsums)
   expected <- matrix(0, nrow(m), ncol(m))
-  for (i in 1:nrow(m)) {
-    for (j in 1:ncol(m)) {
+  for (i in seq_len(nrow(m))) {
+    for (j in seq_len(ncol(m))) {
       expected[i, j] <- rowsums[i] * colsums[j]/tablesum
     }
   }
@@ -70,6 +70,7 @@ cramers_v <- function(bd) {
   return(v)
 }
 
+#'
 #' This function allows you to combine std. pearson corr coef and cramer's V
 #' @param se summarized experiment
 #' @param batch batch variable
@@ -80,8 +81,10 @@ confound_metrics <- function(se, batch){
   # Covariates are non-batch
   cols <- names(colData(se))
   covs <- cols[cols != batch]
-  metrics <- list("Pearson Correlation Coefficient"=std_pearson_corr_coef, "Cramer's V"=cramers_v)
-  metric.mat <- matrix(nrow=length(covs), ncol=length(metrics), dimnames = list(covs, names(metrics)))
+  metrics <- list("Pearson Correlation Coefficient" = std_pearson_corr_coef,
+                  "Cramer's V" = cramers_v)
+  metric.mat <- matrix(nrow = length(covs), ncol = length(metrics),
+                       dimnames = list(covs, names(metrics)))
 
   for (c in covs){
     # Get batch design

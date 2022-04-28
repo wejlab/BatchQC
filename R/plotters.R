@@ -9,16 +9,19 @@
 #' @export
 EV_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
-  EV_boxplot <- ggplot(data = melt(as.data.frame(batchqc_ev$explained_variation), aes(x = variable, y = value, fill = variable), id.vars=NULL)) +
+  EV_boxplot <- ggplot(data=melt(as.data.frame(batchqc_ev$explained_variation),
+                                 id.vars = NULL),
+                                aes(x = variable, y = value, fill = variable)) +
     geom_boxplot() +
     scale_x_discrete(name = "") +
     scale_y_continuous(name = "Percent Explained Variation") +
-    labs(title="Percent of Variation Explained by Source") +
+    labs(title = "Percent of Variation Explained by Source") +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
   return(list(EV_boxplot=EV_boxplot))
 }
 
 
+#' Covariate P-value Plotter
 #' This function allows you to plot covariate pvalues of explained variation
 #' @param se Summarized experiment object
 #' @param batch Batch covariate
@@ -30,10 +33,13 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 #' @export
 covariate_pval_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
-  for (i in 1:length(condition)) {
+  for (i in seq_len(length(condition))) {
     names(batchqc_ev$cond_test[[i]])[1] <- condition[i]
   }
-  covar_boxplot <- ggplot(subset(melt(as.data.frame(batchqc_ev$cond_test),id.vars=NULL), variable %in% condition),aes(x = variable, y = value, fill = variable)) +
+  covar_boxplot <- ggplot(subset(melt(as.data.frame(batchqc_ev$cond_test),
+                                      id.vars = NULL),
+                                 variable %in% condition),
+                          aes(x = variable, y = value, fill = variable)) +
     geom_violin(width = 0.8) +
     geom_boxplot(width = 0.1) +
     coord_flip() +
@@ -41,7 +47,7 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
     scale_y_continuous(name = "P-Values")+
     labs(title="Distribution of Covariate Effects (P-Values) Across Genes") +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
-  return(list(covar_boxplot=covar_boxplot))
+  return(list(covar_boxplot = covar_boxplot))
 }
 
 
@@ -56,16 +62,18 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
 #' @export
 batch_pval_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
-  batch_boxplot <- ggplot(data = (melt(as.data.frame(batchqc_ev$batch_ps),id.vars=NULL)),aes(x = variable, y = value, fill = variable)) +
+  batch_boxplot <- ggplot(data = (melt(as.data.frame(batchqc_ev$batch_ps),
+                                       id.vars = NULL)),
+                          aes(x = variable, y = value, fill = variable)) +
     geom_violin(width = 0.8) +
     geom_boxplot(width = 0.1) +
     scale_color_manual(values = "#56B4E9", aesthetics = "fill") +
     coord_flip() +
-    scale_x_discrete(name = "",labels = "Batch") +
+    scale_x_discrete(name = "", labels = "Batch") +
     scale_y_continuous(name = "P-Values")+
     labs(title="Distribution of Batch Effect (P-Values) Across Genes") +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
-  return(list(batch_boxplot=batch_boxplot))
+  return(list(batch_boxplot = batch_boxplot))
 }
 
 
@@ -79,13 +87,13 @@ PCA_preprocess <- function(se, assay, nfeature){
 
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
-  data <- apply(data,c(1,2),as.numeric)
-  data <- data[rowSums(data)!=0,]
-  vargenes <- apply(data,1,stats::var)
-  vargenes <- vargenes[order(vargenes,decreasing = T)]
-  vargenes <- vargenes[seq(1,nfeature)]
+  data <- apply(data, c(1, 2), as.numeric)
+  data <- data[rowSums(data) != 0, ]
+  vargenes <- apply(data, 1, stats::var)
+  vargenes <- vargenes[order(vargenes, decreasing = TRUE)]
+  vargenes <- vargenes[seq(1, nfeature)]
   data <- log(data+1)
-  data <- data[names(vargenes),]
+  data <- data[names(vargenes), ]
   data <- data+1
 
   # Center
@@ -94,7 +102,7 @@ PCA_preprocess <- function(se, assay, nfeature){
   #   data[i,] <- (data[i,]-mean(data[i,]))/sd(data[i,])
   # }
   coldata <- data.frame(colData(se))
-  PCA <- stats::prcomp(t(centered), center=F)
+  PCA <- stats::prcomp(t(centered), center=FALSE)
 
   return(PCA)
 }
@@ -146,9 +154,14 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
     }
   }
   # Reorder data
-  pca_plot_data$assay <- factor(pca_plot_data$assay, levels=assays)
-  plot <- ggplot(pca_plot_data,aes_string(x='PC1',y='PC2',colour=color,shape=shape,sample = 'sample'))+geom_point(size=3) + facet_wrap(vars(assay), ncol = 2, scales = 'free')
-  return(list(PCA=pca_plot_data, var_explained=var_explained_data, plot=plot))
+  pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
+  plot <- ggplot(pca_plot_data,
+                 aes_string(x = 'PC1', y = 'PC2', colour = color,
+                            shape = shape, sample = 'sample'))+
+    geom_point(size = 3) + facet_wrap(vars(assay), ncol = 2, scales = 'free')
+  return(list(PCA = pca_plot_data,
+              var_explained = var_explained_data,
+              plot = plot))
 }
 
 
@@ -166,16 +179,16 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
-  data <- apply(data,c(1,2),as.numeric)
-  data <- data[rowSums(data)!=0,]
+  data <- apply(data, c(1, 2), as.numeric)
+  data <- data[rowSums(data) != 0,]
 
   vargenes <- apply(data, 1, stats::var)
-  vargenes <- vargenes[order(vargenes,decreasing = T)]
-  vargenes <- vargenes[seq(1,nfeature)]
+  vargenes <- vargenes[order(vargenes, decreasing = TRUE)]
+  vargenes <- vargenes[seq(1, nfeature)]
   data <- log(data+1)
   data <- data[names(vargenes),]
   data <- data+1
-  for (i in 1:nrow(data)) {
+  for (i in seq_len(nrow(data))) {
     data[i,] <- (data[i,]-mean(data[i,]))/stats::sd(data[i,])
   }
 
@@ -183,16 +196,26 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
 
   cor <- cor(data)
   if (!is.null(annotation_column)) {
-    if (length(annotation_column)==1) {
-      coldata <- data.frame(coldata[,annotation_column],row.names = rownames(coldata))
+    if (length(annotation_column) == 1) {
+      coldata <- data.frame(coldata[ , annotation_column],
+                            row.names = rownames(coldata))
     }
     else {
-      coldata <- coldata[,annotation_column]
+      coldata <- coldata[, annotation_column]
     }
-    correlation_heatmap <- pheatmap(cor,annotation_col = coldata,annotation_row = coldata,show_colnames = F,show_rownames = F
-                                 ,annotation_names_col = F,annotation_names_row = F,silent = T)
+    correlation_heatmap <- pheatmap(cor, annotation_col = coldata,
+                                    annotation_row = coldata,
+                                    show_colnames = FALSE,
+                                    show_rownames = FALSE,
+                                    annotation_names_col = FALSE,
+                                    annotation_names_row = FALSE,
+                                    silent = TRUE)
 
-    topn_heatmap <- pheatmap(data,annotation_col = coldata,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+    topn_heatmap <- pheatmap(data, annotation_col = coldata,
+                             show_colnames = FALSE,
+                             annotation_names_col = FALSE,
+                             show_rownames = FALSE,
+                             silent = TRUE)
 
     dendrogram <- topn_heatmap$tree_col
 
@@ -200,18 +223,24 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
 
   }
   else {
-    correlation_heatmap <- pheatmap(cor,show_colnames = F,show_rownames = F
-                                 ,annotation_names_col = F,annotation_names_row = F,silent = T)
+    correlation_heatmap <- pheatmap(cor, show_colnames = FALSE,
+                                    show_rownames = FALSE,
+                                    annotation_names_col = FALSE,
+                                    annotation_names_row = FALSE,
+                                    silent = TRUE)
 
-    topn_heatmap <- pheatmap(data,show_colnames = F,annotation_names_col = F,show_rownames = F,silent = T)
+    topn_heatmap <- pheatmap(data, show_colnames = FALSE,
+                             annotation_names_col = FALSE,
+                             show_rownames = FALSE,
+                             silent = TRUE)
 
     dendrogram <- topn_heatmap$tree_col
 
     circular_dendogram <- circlize_dendrogram(stats::as.dendrogram(dendrogram))
   }
 
-  return(list(correlation_heatmap=correlation_heatmap,
-              topn_heatmap=topn_heatmap,
-              circular_dendogram=circular_dendogram,
-              dendrogram=dendrogram))
+  return(list(correlation_heatmap = correlation_heatmap,
+              topn_heatmap = topn_heatmap,
+              circular_dendogram = circular_dendogram,
+              dendrogram = dendrogram))
 }

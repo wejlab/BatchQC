@@ -38,6 +38,10 @@ URL: https://github.com/compbiomed/BatchQC
 BugReports: https://github.com/compbiomed/BatchQC/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
+biocViews: BatchEffect, GraphAndNetwork, Microarray,
+        PrincipalComponent, Sequencing, Software, Visualization,
+        QualityControl, RNASeq, Preprocessing, DifferentialExpression,
+        ImmunoOncology
 Imports:
     circlize,
     data.table,
@@ -47,14 +51,11 @@ Imports:
     ggplot2,
     matrixStats,
     pheatmap,
-    plotly,
     reader,
     reshape2,
     rlist,
     scran,
     shiny,
-    shinyjs,
-    shinythemes,
     SummarizedExperiment,
     sva,
     tidyr,

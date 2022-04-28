@@ -25,7 +25,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   cond_r2 <- list()
   cond_ps <- list()
 
-  for (i in 1:length(condition)) {
+  for (i in seq_len(length(condition))) {
     nlc[i] <- n_distinct(as.data.frame(df[condition[i]]))
 
     if (nlc[i] <= 1) {
@@ -38,10 +38,17 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 
     if(qr(mod[[i]])$rank<ncol(mod[[i]])){
       options(error = NULL)
-      if(ncol(mod[[i]])==(nlb+1)){stop("A covariate is confounded with batch! Please choose different covariates.")}
+      if(ncol(mod[[i]]) == (nlb+1)){
+        stop("A covariate is confounded with batch!
+             Please choose different covariates.")
+        }
       if(ncol(mod[[i]])>(nlb+1)){
-        if((qr(mod[[i]][,-c(1:nlb)])$rank<ncol(mod[[i]][,-c(1:nlb)]))){stop('A covariate is confounded with batch! Please choose different covariates.')
-        }else{stop("A covariate is confounded with batch! Please choose different covariates.")}}
+        if((qr(mod[[i]][,-c(seq_len(nlb))])$rank<ncol(mod[[i]][,-c(seq_len(nlb))]))){
+          stop('A covariate is confounded with batch!
+               Please choose different covariates.')
+        }else{
+          stop("A covariate is confounded with batch!
+               Please choose different covariates.")}}
     }
   }
 
@@ -50,30 +57,39 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   cond_mod2 <- list.cbind(cond_mod)
   if (length(condition) > 1){
     idx <- which(duplicated(colnames(mod2)) & colnames(mod2) == "(Intercept)")
-    idx2 <- which(duplicated(colnames(cond_mod2)) & colnames(cond_mod2) == "(Intercept)")
+    idx2 <- which(duplicated(colnames(cond_mod2)) & colnames(cond_mod2) ==
+                    "(Intercept)")
     mod2 <- mod2[,-idx]
     cond_mod2 <- cond_mod2[,-idx2]
   }
 
   if(qr(mod2)$rank<ncol(mod2)){
     options(error = NULL)
-    if(ncol(mod2)==(nlb+1)){stop("A covariate is confounded with batch! Please choose different covariates.")}
+    if(ncol(mod2)==(nlb+1)){
+      stop("A covariate is confounded with batch!
+           Please choose different covariates.")
+      }
     if(ncol(mod2)>(nlb+1)){
-      if((qr(mod2[,-c(1:nlb)])$rank<ncol(mod2[,-c(1:nlb)]))){stop('At least one covariate is confounded with another! Please choose different covariates.')
-      }else{stop("At least one covariate is confounded with another! Please choose different covariates.")}}
+      if((qr(mod2[,-c(seq_len(nlb))])$rank<ncol(mod2[,-c(seq_len(nlb))]))){
+        stop('At least one covariate is confounded with another!
+             Please choose different covariates.')
+      }else{
+        stop("At least one covariate is confounded with another!
+             Please choose different covariates.")}}
   }
 
-  for (i in 1:length(condition)) {
+  for (i in seq_len(length(condition))) {
     batch_mod2 <- matrix(nrow = nrow(mod2), ncol = 1)
     if (length(condition) > 1) {
-      for (j in 1:length(condition)) {
+      for (j in seq_len(length(condition))) {
         if (i == j) next
         batch_mod2 <- cbind(batch_mod2, cond_mod[[j]])
       }
     }
 
     batch_mod2 <- cbind(batch_mod2,batch_mod)
-    idx <- which(duplicated(colnames(batch_mod2)) & colnames(batch_mod2) == "(Intercept)")
+    idx <- which(duplicated(colnames(batch_mod2)) & colnames(batch_mod2) ==
+                   "(Intercept)")
     if (length(idx) > 0) {
       batch_mod2 <- batch_mod2[,-idx]
     }
@@ -93,7 +109,9 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
   r2_full <- all_test$r2_full
   batch_r2 <- all_test$r2_reduced
 
-  explained_variation <- round(cbind(r2_full, batch_r2, list.cbind(cond_r2)), 5) * 100
+  explained_variation <- round(cbind(r2_full,
+                                     batch_r2,
+                                     list.cbind(cond_r2)), 5) * 100
 
   # Name columns according to batch and covariate names
   if (length(condition) == 1) {
@@ -102,7 +120,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     colnames(explained_variation)[1] <- "Full (Covariates + Batch)"
   }
   colnames(explained_variation)[2] <- "Batch"
-  for (i in 1:length(condition)) {
+  for (i in seq_len(length(condition))) {
     colnames(explained_variation)[i+2] <- condition[i]
   }
 
@@ -129,15 +147,24 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
   df0 <- dim(batch_mod)[2]
   p <- rep(0, m)
 
-  resid <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(se@assays@data[[assay_name]]) %*% mod %*% solve(t(mod) %*% mod) %*% t(mod)
+  resid <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(
+    se@assays@data[[assay_name]]) %*% mod %*% solve(t(mod) %*% mod) %*% t(mod)
   rss1 <- rowSums(resid * resid)
   rm(resid)
 
-  resid0 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(se@assays@data[[assay_name]]) %*% batch_mod %*% solve(t(batch_mod) %*% batch_mod) %*% t(batch_mod)
+  resid0 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(
+    se@assays@data[[assay_name]]) %*%
+    batch_mod %*%
+    solve(t(batch_mod) %*% batch_mod) %*%
+    t(batch_mod)
   rss0 <- rowSums(resid0 * resid0)
   rm(resid0)
 
-  resid00 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(se@assays@data[[assay_name]]) %*% mod00 %*% solve(t(mod00) %*% mod00) %*% t(mod00)
+  resid00 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(
+    se@assays@data[[assay_name]]) %*%
+    mod00 %*%
+    solve(t(mod00) %*% mod00) %*%
+    t(mod00)
   rss00 <- rowSums(resid00 * resid00)
   rm(resid00)
 
@@ -153,6 +180,7 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
 }
 
 
+#' EV Table
 #' Returns table with percent variation explained for specified number of genes
 #'
 #' @param se Summarized experiment object
@@ -179,9 +207,10 @@ EV_table <- function(se, batch, condition, assay_name) {
 covariates_not_confounded <- function(se, batch) {
   df <- confound_metrics(se,batch)
   covariate_options <- rownames(df)
-  for (i in 1:dim(df)[1]) {
+  for (i in seq_len(dim(df)[1])) {
     if (df[i]== 1 | is.na(df[i])) {
-      covariate_options <- covariate_options[!(covariate_options) %in% rownames(df)[i]]
+      covariate_options <- covariate_options[!(covariate_options) %in%
+                                               rownames(df)[i]]
     }
   }
   return(covariate_options)
@@ -202,7 +231,7 @@ pval_summary <- function(se, batch, condition, assay_name) {
 
   pval_table <- rbind(summary(batchqc_ev$batch_ps))
 
-  for (i in 1:length(condition)) {
+  for (i in seq_len(length(condition))) {
     pval_table <- rbind(pval_table, summary(batchqc_ev$cond_test[[i]]$p))
     rownames(pval_table)[i + 1] <- condition[i]
   }

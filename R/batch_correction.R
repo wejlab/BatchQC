@@ -1,3 +1,4 @@
+#' Batch Correct
 #' This function allows you to Add batch corrected count matrix to the se object
 #' @param se SummarizeExperiment
 #' @param method Normalization Method
@@ -13,13 +14,15 @@
 #' @import sva
 #'
 #' @export
-batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,output_assay_name) {
+batch_correct = function(se, method, assay_to_normalize, batch, group=NULL,
+                         covar, output_assay_name) {
   se=se
   batch=data.frame(colData(se))[,batch]
 
   if (method=='ComBat-Seq'){
   if (is.null(covar)) {
-      se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch)
+      se@assays@data[[output_assay_name]] = ComBat_seq(as.matrix(
+        se@assays@data[[assay_to_normalize]]), batch = batch)
     }
     else {
       if (length(covar)==1) {
@@ -29,24 +32,32 @@ batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,out
         cov=as.matrix(cov)
         rownames(cov)=rownames(data.frame(colData(se)))
         if (!is.null(group)){
-        se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group,full_mod = TRUE)
+        se@assays@data[[output_assay_name]] = ComBat_seq(as.matrix(
+          se@assays@data[[assay_to_normalize]]), batch = batch, covar_mod = cov,
+          group = group, full_mod = TRUE)
         }
         else {
-          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group)
+          se@assays@data[[output_assay_name]] = ComBat_seq(as.matrix(
+            se@assays@data[[assay_to_normalize]]), batch = batch,
+            covar_mod = cov, group = group)
         }
       }
       else {
         cov=data.frame(colData(se))[,covar]
-        for (i in 1:ncol(cov)) {
+        for (i in seq_len(ncol(cov))) {
           cov[,i]=as.factor(cov[,i])
           cov[,i]=as.numeric(cov[,i])
         }
 
         if (!is.null(group)){
-          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group,full_mod = TRUE)
+          se@assays@data[[output_assay_name]] = ComBat_seq(as.matrix(
+            se@assays@data[[assay_to_normalize]]), batch = batch,
+            covar_mod = cov, group = group, full_mod = TRUE)
         }
         else {
-          se@assays@data[[output_assay_name]]=ComBat_seq(as.matrix(se@assays@data[[assay_to_normalize]]),batch = batch,covar_mod = cov,group = group)
+          se@assays@data[[output_assay_name]] = ComBat_seq(as.matrix(
+            se@assays@data[[assay_to_normalize]]), batch = batch,
+            covar_mod = cov, group = group)
 
         }
       }
@@ -54,9 +65,8 @@ batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,out
   }
   else if (method=='ComBat') {
     if (is.null(covar)) {
-      se@assays@data[[output_assay_name]]=ComBat(dat = se@assays@data[[assay_to_normalize]],
-                                                 batch = batch)
-
+      se@assays@data[[output_assay_name]] =
+        ComBat(dat = se@assays@data[[assay_to_normalize]], batch = batch)
     }
     else {
       if (length(covar)==1) {
@@ -67,7 +77,8 @@ batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,out
         colnames(cov)=covar
         rownames(cov)=rownames(data.frame(colData(se)))
 
-        model = stats::model.matrix(stats::as.formula(paste0('~',colnames(cov))),data = cov)
+        model = stats::model.matrix(stats::as.formula(
+          paste0('~',colnames(cov))), data = cov)
         results = ComBat(dat = se@assays@data[[assay_to_normalize]],
                        batch = batch,mod = model)
         results[is.na(results)] <- 0
@@ -75,7 +86,7 @@ batch_correct = function(se,method,assay_to_normalize,batch,group=NULL,covar,out
       }
       else {
         cov=data.frame(colData(se))[,covar]
-        for (i in 1:ncol(cov)) {
+        for (i in seq_len(ncol(cov))) {
           cov[,i]=as.factor(cov[,i])
           cov[,i]=as.numeric(cov[,i])
         }

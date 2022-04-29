@@ -1,5 +1,5 @@
-#' This function allows you to Add normalized count matrix to the se object
-#' @param se SummarizeExperiment
+#' This function allows you to Add normalized count matrix to the SE object
+#' @param se SummarizedExperiment
 #' @param method Normalization Method
 #' @param assay_to_normalize Which assay use to do normalization
 #' @param output_assay_name name of results assay

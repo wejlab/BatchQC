@@ -3,7 +3,7 @@
 \name{covariate_pval_plotter}
 \alias{covariate_pval_plotter}
 \title{Covariate P-value Plotter
-This function allows you to plot covariate pvalues of explained variation}
+This function allows you to plot covariate p-values of explained variation}
 \usage{
 covariate_pval_plotter(se, batch, condition, assay_name)
 }
@@ -21,5 +21,5 @@ List of explained variation by batch and condition
 }
 \description{
 Covariate P-value Plotter
-This function allows you to plot covariate pvalues of explained variation
+This function allows you to plot covariate p-values of explained variation
 }

@@ -1,8 +1,6 @@
 tabPanel("Data Download",
-         
          # Application title
          titlePanel("Data Download"),
-
 mainPanel('Data Download',
          h5("Download Summarized Experiment"),
          verbatimTextOutput('se_download'),

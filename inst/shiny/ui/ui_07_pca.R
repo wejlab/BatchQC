@@ -8,16 +8,16 @@ tabPanel("PCA Analysis",
            sidebarPanel(
              # Options for both plots
              selectizeInput('variates_shape','Choose which variate to show as shape',choices =c(),
-                            multiple = F,selected = NULL,
+                            multiple = FALSE,selected = NULL,
                             options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
              numericInput('top_n_PCA','Choose how many top variable features to use',
                           value = 0,min = 0,max = 500),
              selectizeInput('variates_color','Choose which variate to show as color',
-                            choices =c(),multiple = F,selected = NULL,
+                            choices =c(),multiple = FALSE,selected = NULL,
                             options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
 
              # List of assays to plot from se
-             selectizeInput('pca_assays','Assays to plot', choices =c(), multiple = T),
+             selectizeInput('pca_assays','Assays to plot', choices =c(), multiple = TRUE),
 
              actionButton('PCA_plot', label = 'Here we go!')
            ),

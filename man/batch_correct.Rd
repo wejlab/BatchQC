@@ -3,7 +3,7 @@
 \name{batch_correct}
 \alias{batch_correct}
 \title{Batch Correct
-This function allows you to Add batch corrected count matrix to the se object}
+This function allows you to Add batch corrected count matrix to the SE object}
 \usage{
 batch_correct(
   se,
@@ -16,7 +16,7 @@ batch_correct(
 )
 }
 \arguments{
-\item{se}{SummarizeExperiment}
+\item{se}{SummarizedExperiment object}
 
 \item{method}{Normalization Method}
 
@@ -35,5 +35,5 @@ a summarized experiment object with normalized assay appended.
 }
 \description{
 Batch Correct
-This function allows you to Add batch corrected count matrix to the se object
+This function allows you to Add batch corrected count matrix to the SE object
 }

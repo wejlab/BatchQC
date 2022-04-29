@@ -43,8 +43,13 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
              Please choose different covariates.")
         }
       if(ncol(mod[[i]])>(nlb+1)){
+<<<<<<< HEAD
         if((qr(mod[[i]][,-c(seq_len(nlb))])$rank <
             ncol(mod[[i]][,-c(seq_len(nlb))]))){
+=======
+        if((qr(mod[[i]][,-c(seq_len(nlb))])$
+            rank<ncol(mod[[i]][,-c(seq_len(nlb))]))){
+>>>>>>> 954092c10bd74f301d458186e6cd9be34fc971cb
           stop('A covariate is confounded with batch!
                Please choose different covariates.')
         }else{

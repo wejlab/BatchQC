@@ -7,7 +7,7 @@
 PCA_plotter(se, nfeature, color, shape, assays)
 }
 \arguments{
-\item{se}{summarized experiment}
+\item{se}{SummarizedExperiment object}
 
 \item{nfeature}{number of features}
 

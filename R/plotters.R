@@ -1,3 +1,5 @@
+globalVariables(c("value", "variable"))
+
 #' This function allows you to plot explained variation
 #' @param se Summarized experiment object
 #' @param batch Batch covariate
@@ -22,7 +24,7 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 
 
 #' Covariate P-value Plotter
-#' This function allows you to plot covariate pvalues of explained variation
+#' This function allows you to plot covariate p-values of explained variation
 #' @param se Summarized experiment object
 #' @param batch Batch covariate
 #' @param condition Condition covariate of interest
@@ -51,7 +53,7 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
 }
 
 
-#' This function allows you to plot batch pvalues of explained variation
+#' This function allows you to plot batch p-values of explained variation
 #' @param se Summarized experiment object
 #' @param batch Batch covariate
 #' @param condition Condition covariate of interest
@@ -80,8 +82,9 @@ batch_pval_plotter <- function(se, batch, condition, assay_name) {
 
 #' Preprocess normalized count data for PCA
 #' @param se Summarized Experiment object
-#' @param assay Assay from summarized experiment object
+#' @param assay Assay from SummarizedExperiment object
 #' @param nfeature Number of variable features to use
+#' @return Returns a list with class "prcomp" (see ?stats::prcomp)
 #' @export
 PCA_preprocess <- function(se, assay, nfeature){
 
@@ -110,7 +113,7 @@ PCA_preprocess <- function(se, assay, nfeature){
 
 
 #' This function allows you to plot PCA
-#' @param se summarized experiment
+#' @param se SummarizedExperiment object
 #' @param nfeature number of features
 #' @param color choose a color
 #' @param shape choose a shape
@@ -166,7 +169,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 
 
 #' This function allows you to plot a heatmap
-#' @param se summarized experiment
+#' @param se SummarizedExperiment
 #' @param assay normalized or corrected assay
 #' @param nfeature number of features to display
 #' @param annotation_column choose column

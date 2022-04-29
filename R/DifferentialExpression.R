@@ -1,5 +1,7 @@
-#' This function allows you to Add normalized count matrix to the se object
-#' @param se SummarizeExperiment
+globalVariables(c("chosen"))
+
+#' This function allows you to Add normalized count matrix to the SE object
+#' @param se SummarizedExperiment
 #' @param method Differential Expression Analysis Method
 #' @param conditions Condition covariate of interest
 #' @param assay_to_analyze Which assay use to do DE analysis

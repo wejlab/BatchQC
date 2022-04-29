@@ -1,6 +1,6 @@
 #' Batch Correct
-#' This function allows you to Add batch corrected count matrix to the se object
-#' @param se SummarizeExperiment
+#' This function allows you to Add batch corrected count matrix to the SE object
+#' @param se SummarizedExperiment object
 #' @param method Normalization Method
 #' @param assay_to_normalize Which assay use to do normalization
 #' @param batch The batch

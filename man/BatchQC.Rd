@@ -7,7 +7,7 @@
 BatchQC(dev = FALSE)
 }
 \arguments{
-\item{dev}{Run the applicaiton in developer mode}
+\item{dev}{Run the application in developer mode}
 }
 \value{
 The shiny app will open

@@ -82,6 +82,7 @@ batch_pval_plotter <- function(se, batch, condition, assay_name) {
 #' @param se Summarized Experiment object
 #' @param assay Assay from summarized experiment object
 #' @param nfeature Number of variable features to use
+#' @return Preproccessed normalized count data for PCA
 #' @export
 PCA_preprocess <- function(se, assay, nfeature){
 

@@ -16,10 +16,10 @@
 #' @export
 batch_correct = function(se, method, assay_to_normalize, batch, group=NULL,
                          covar, output_assay_name) {
-  se=se
-  batch=data.frame(colData(se))[,batch]
+  se = se
+  batch = data.frame(colData(se))[,batch]
 
-  if (method=='ComBat-Seq'){
+  if (method == 'ComBat-Seq'){
   if (is.null(covar)) {
       se@assays@data[[output_assay_name]] = ComBat_seq(as.matrix(
         se@assays@data[[assay_to_normalize]]), batch = batch)

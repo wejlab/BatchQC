@@ -13,6 +13,9 @@ PCA_preprocess(se, assay, nfeature)
 
 \item{nfeature}{Number of variable features to use}
 }
+\value{
+Preproccessed normalized count data for PCA
+}
 \description{
 Preprocess normalized count data for PCA
 }

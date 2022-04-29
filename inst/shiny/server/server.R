@@ -17,7 +17,7 @@ reactivevalue = reactiveValues(counts = NULL,
                                se_location = NULL,
                                se = NULL)
 
-source('server/observer.R',local = T)
+source('server/observer.R', local = TRUE)
 
 #output$group_variable_Name=renderText({reactivevalue$group_variable_Name})
 output$confounding_table = NULL

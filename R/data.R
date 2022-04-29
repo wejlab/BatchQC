@@ -1,12 +1,9 @@
-globalVariables(c("protein_sample_info", "protein_data"))
-
 #' Batch and Condition indicator for protein expression data
 #'
 #' This data consists of two batches and two conditions
 #' corresponding to case and control for the protein expression data
 #'
-#' @name protein_sample_info
-#' @docType data
+#' @name protein_example_data
 #' @format A data frame with 24 rows and 4 variables:
 #' \describe{
 #'     \item{Arrayname}{Array Name}
@@ -14,21 +11,21 @@ globalVariables(c("protein_sample_info", "protein_data"))
 #'     \item{Batch}{Batch Indicator}
 #'     \item{category}{Condition (Case vs Control) Indicator}
 #' }
-#' @keywords datasets
-#' @examples
-#' data(protein_sample_info)
+#' @usage data(protein_sample_info)
+#' @return Protein data sample info
 "protein_sample_info"
 
 #' Protein data with 39 protein expression levels
 #'
 #' This data consists of two batches and two conditions
-#' corresponding to case and control. The columns are case/control
-#' samples, and the rows represent 39 different proteins.
+#' corresponding to case and control
 #'
-#' @name protein_data
-#' @docType data
-#' @format A data frame with 39 rows and 24 variables
-#' @keywords datasets
-#' @examples
-#' data(protein_data)
+#' @name protein_example_data
+#' @format A data frame with 39 rows and 24 variables:
+#' \describe{
+#'     \item{Columns1-24}{Control and Case samples}
+#'     \item{rows1-39}{Proteins 1-39}
+#' }
+#' @usage data(protein_data)
+#' @return Protein data
 "protein_data"

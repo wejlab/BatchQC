@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary_statistics.R
 \name{cramers_v}
 \alias{cramers_v}
-\title{This function allows you to calculate Cramer's V}
+\title{This function allows you to calculate cramer's V}
 \usage{
 cramers_v(bd)
 }
@@ -10,8 +10,8 @@ cramers_v(bd)
 \item{bd}{batch design}
 }
 \value{
-Cramer's V
+cramer's V
 }
 \description{
-This function allows you to calculate Cramer's V
+This function allows you to calculate cramer's V
 }

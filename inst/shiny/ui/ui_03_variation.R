@@ -15,7 +15,7 @@ tabPanel(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),
-        selectizeInput('variation_condition', 'Select Covariate', choices = "",multiple = TRUE, options = list(
+        selectizeInput('variation_condition', 'Select Covariate', choices = "",multiple = T, options = list(
             placeholder = 'Please select an option below',
             onInitialize = I('function() { this.setValue(""); }')
         )),

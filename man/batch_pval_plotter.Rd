@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotters.R
 \name{batch_pval_plotter}
 \alias{batch_pval_plotter}
-\title{This function allows you to plot batch p-values of explained variation}
+\title{This function allows you to plot batch pvalues of explained variation}
 \usage{
 batch_pval_plotter(se, batch, condition, assay_name)
 }
@@ -19,5 +19,5 @@ batch_pval_plotter(se, batch, condition, assay_name)
 List of explained variation by batch and condition
 }
 \description{
-This function allows you to plot batch p-values of explained variation
+This function allows you to plot batch pvalues of explained variation
 }

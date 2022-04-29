@@ -46,9 +46,9 @@ cor_props <- function(bd){
 }
 
 
-#' Calculate a standardized Pearson correlation coefficient
+#' This function allows you to calculate a standardized pearson corr coef
 #' @param bd batch design
-#' @return standardized Pearson correlation coefficient
+#' @return standardized pearson correlation coefficient
 #'
 #' @export
 std_pearson_corr_coef <- function(bd) {
@@ -58,9 +58,9 @@ std_pearson_corr_coef <- function(bd) {
   return(r)
 }
 
-#' This function allows you to calculate Cramer's V
+#' This function allows you to calculate cramer's V
 #' @param bd batch design
-#' @return Cramer's V
+#' @return cramer's V
 #'
 #' @export
 cramers_v <- function(bd) {
@@ -71,7 +71,7 @@ cramers_v <- function(bd) {
 }
 
 #'
-#' Combine std. Pearson correlation coefficient and Cramer's V
+#' This function combines std. pearson corr coef and cramer's V
 #' @param se summarized experiment
 #' @param batch batch variable
 #' @return metrics of confounding

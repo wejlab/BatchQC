@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary_statistics.R
 \name{std_pearson_corr_coef}
 \alias{std_pearson_corr_coef}
-\title{Calculate a standardized Pearson correlation coefficient}
+\title{This function allows you to calculate a standardized pearson corr coef}
 \usage{
 std_pearson_corr_coef(bd)
 }
@@ -10,8 +10,8 @@ std_pearson_corr_coef(bd)
 \item{bd}{batch design}
 }
 \value{
-standardized Pearson correlation coefficient
+standardized pearson correlation coefficient
 }
 \description{
-Calculate a standardized Pearson correlation coefficient
+This function allows you to calculate a standardized pearson corr coef
 }

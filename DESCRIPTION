@@ -1,43 +1,47 @@
-Type: Package
 Package: BatchQC
 Title: Batch Effects Quality Control Software
-Version: 1.99.00
-Date: 2020-10-11
-Authors@R: c(
-    person("Solaiappan", "Manimaran", , "manimaran_1975@hotmail.com", role = "aut"),
-    person("W. Evan", "Johnson", , "wej@bu.edu", role = c("aut", "cre")),
-    person("Heather", "Selby", , "selbyh@bu.edu", role = "ctb"),
-    person("Claire", "Ruberman", , "claireruberman@gmail.com", role = "ctb"),
-    person("Kwame", "Okrah", , "kwame.okrah@gmail.com", role = "ctb"),
-    person("Hector Corrada", "Bravo", , "hcorrada@gmail.com", role = "ctb"),
-    person("Michael", "Silverstein", , "msilver4@bu.edu", role = "ctb"),
-    person("Regan", "Conrad", , "rdconrad@bu.edu", role = "ctb"),
-    person("Zhaorong", "Li", , "zhaorong@bu.edu", role = "ctb"),
-    person("Evan", "Holmes", , "evanjh19@gmail.com", role = "aut"),
-    person("Jessica", "McClintock", , "jessmcc@bu.edu", role = "aut")
-  )
+Version: 2.0.0.9002
 Description: Sequencing and microarray samples often are collected or
-    processed in multiple batches or at different times. This often
-    produces technical biases that can lead to incorrect results in the
-    downstream analysis. BatchQC is a software tool that streamlines batch
-    preprocessing and evaluation by providing interactive diagnostics,
-    visualizations, and statistical analyses to explore the extent to
-    which batch variation impacts the data. BatchQC diagnostics help
-    determine whether batch adjustment needs to be done, and how
-    correction should be applied before proceeding with a downstream
-    analysis. Moreover, BatchQC interactively applies multiple common
-    batch effect approaches to the data, and the user can quickly see the
-    benefits of each method. BatchQC is developed as a Shiny App.  The
-    output is organized into multiple tabs, and each tab features an
-    important part of the batch effect analysis and visualization of the
-    data. The BatchQC interface has the following analysis groups:
-    Summary, Differential Expression, Median Correlations, Heatmaps,
-    Circular Dendrogram, PCA Analysis, Shape, ComBat and SVA.
-License: MIT + file LICENSE
+        processed in multiple batches or at different times. This often
+        produces technical biases that can lead to incorrect results in
+        the downstream analysis. BatchQC is a software tool that
+        streamlines batch preprocessing and evaluation by providing
+        interactive diagnostics, visualizations, and statistical
+        analyses to explore the extent to which batch variation impacts
+        the data. BatchQC diagnostics help determine whether batch
+        adjustment needs to be done, and how correction should be
+        applied before proceeding with a downstream analysis. Moreover,
+        BatchQC interactively applies multiple common batch effect
+        approaches to the data, and the user can quickly see the
+        benefits of each method. BatchQC is developed as a Shiny App.
+        The output is organized into multiple tabs, and each tab
+        features an important part of the batch effect analysis and
+        visualization of the data. The BatchQC interface has the
+        following analysis groups: Summary, Differential Expression,
+        Median Correlations, Heatmaps, Circular Dendrogram, PCA
+        Analysis, Shape, ComBat and SVA.
+Authors@R: c(
+    person("Solaiappan", "Manimaran", email = "manimaran_1975@hotmail.com", role = c("aut")),
+    person("W. Evan", "Johnson", email = "wej@bu.edu", role = c("aut", "cre")), 
+    person("Heather", "Selby", email = "selbyh@bu.edu", role = c("ctb")),
+    person("Claire", "Ruberman", email = "claireruberman@gmail.com", role = c("ctb")), 
+    person("Kwame", "Okrah", email = "kwame.okrah@gmail.com", role = c("ctb")), 
+    person("Hector Corrada", "Bravo", email = "hcorrada@gmail.com", role = c("ctb")), 
+    person("Michael", "Silverstein", email = "msilver4@bu.edu", role = c("ctb")),
+    person("Regan", "Conrad", email = "rdconrad@bu.edu", role = c("ctb")),
+    person("Zhaorong", "Li", email = "zhaorong@bu.edu", role = c("ctb")),
+    person("Evan", "Holmes", email = "evanjh19@gmail.com", role = c("aut")),
+    person("Jessica", "McClintock", email = "jessmcc@bu.edu", role = c("aut")))
+Type: Package
+Date: 2020-10-11
 URL: https://github.com/compbiomed/BatchQC
 BugReports: https://github.com/compbiomed/BatchQC/issues
-Depends:
-    R (>= 4.1.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+biocViews: BatchEffect, GraphAndNetwork, Microarray,
+        PrincipalComponent, Sequencing, Software, Visualization,
+        QualityControl, RNASeq, Preprocessing, DifferentialExpression,
+        ImmunoOncology
 Imports:
     circlize,
     data.table,
@@ -57,20 +61,5 @@ Imports:
     tidyr,
     tidyverse,
     utils
-Suggests:
-    spelling, 
-    testthat (>= 3.0.0),
-    knitr,
-    BiocStyle,
-    lintr
-VignetteBuilder: 
-    knitr
-biocViews: BatchEffect, GraphAndNetwork, Microarray, PrincipalComponent,
-    Sequencing, Software, Visualization, QualityControl, RNASeq,
-    Preprocessing, DifferentialExpression, ImmunoOncology
-Config/testthat/edition: 3
-Encoding: UTF-8
-Language: en-US
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

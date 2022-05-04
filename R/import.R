@@ -8,7 +8,7 @@
 #' @import utils
 #'
 #' @export
-summarized_experiment = function(counts_path,metadata_path) {
+summarized_experiment = function(counts_path, metadata_path) {
   coldata <- read.table(metadata_path, header = TRUE, row.names = 1,
                         check.names = FALSE, sep = get.delim(metadata_path,
                                                              n = 10,
@@ -19,7 +19,7 @@ summarized_experiment = function(counts_path,metadata_path) {
                                                             delims = c('\t',
                                                                        ',')))
   counts <- counts[rowSums(counts)>0,]
-  mutual_sample <- intersect(colnames(counts),rownames(coldata))
+  mutual_sample <- intersect(colnames(counts), rownames(coldata))
   counts <- counts[,mutual_sample]
   coldata <- coldata[mutual_sample,]
 

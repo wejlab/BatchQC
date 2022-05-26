@@ -23,26 +23,38 @@ tabPanel("Upload Data",
     # Place for uploading data
     sidebarLayout(
         sidebarPanel(
-            h3("Upload counts and metadata table"),
-            tags$div(tags$p(
-                'Metadata file must be a table with headers and sample names.'
-            )),
-            fileInput(
-                "counts",
-                "Counts table",
-                multiple = FALSE,
-                accept = accepted
-            ),
-            fileInput("md", "Metadata",
-                      multiple = FALSE,
-                      accept = accepted),
-            h4("-OR-"),
-            fileInput(
-                "se",
-                "Summarized Experiment",
-                multiple = FALSE,
-                accept = c(accepted, ".RDS")
-            ),
+            h4("Select the type of input you would like to provide:"),
+            radioButtons("uploadChoice", "",
+                         c("Count File and Metadata File" = "countFile",
+                           "Summarized Experiment Object" = "seObject",
+                           "Example Data" = "example"
+                         )),
+            #Only show panel if uploading count and metadata files
+            conditionalPanel(condition = "input.uploadChoice == 'countFile'",
+                             h4("Upload counts and metadata table"),
+                             tags$div(tags$p(
+                                 'Metadata file must be a table with headers and sample names.'
+                             )),
+                             fileInput(
+                                 "counts",
+                                 "Counts table",
+                                 multiple = FALSE,
+                                 accept = accepted
+                             ),
+                             fileInput("md", "Metadata",
+                                       multiple = FALSE,
+                                       accept = accepted)),
+            conditionalPanel(condition = "input.uploadChoice == 'seObject'",
+                             fileInput(
+                                 "se",
+                                 "Summarized Experiment",
+                                 multiple = FALSE,
+                                 accept = c(accepted, ".RDS")
+                             )),
+            conditionalPanel(condition = "input.uploadChoice == 'example'",
+                             selectInput("exampleData", "Example Data",
+                                         choices = c("proteinData"),
+                                         selected = NULL),),
             withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Upload'
             ))
         ),

@@ -1,24 +1,21 @@
+options(shiny.maxRequestSize=600*1024^2)
 library(shiny)
 library(shinyjs)
 library(shinythemes)
 library(sva)
+library(SummarizedExperiment)
+library(data.table)
+library(reader)
+library(abind)
 library(DT)
-#require(SummarizedExperiment)
-#require(pheatmap)
-#require(ggplot2)
-# require(plotly)
-#require(EBSeq)
-# require(data.table)
-#require(reader)
-# library(dplyr)
-# library(tidyr)
+library(dendextend)
+library(circlize)
 
 source(file.path("utils", "helpers.R"),  local = TRUE)
 
 ui <- navbarPage(
 
   # title = paste("BatchQC v", packageVersion("BatchQC"), sep = ""),
-
   title = "BatchQC",
   id="BatchQC",
   fluid=TRUE,
@@ -37,7 +34,21 @@ ui <- navbarPage(
 )
 
 server <- function(input, output, session) {
-  source(file.path("server/", "server.R"),  local = TRUE)$value
+    reactivevalue = reactiveValues(counts = NULL,
+                                   counts_location = NULL,
+                                   metadata = '',
+                                   metadata_location = NULL,
+                                   se_location = NULL,
+                                   se = NULL)
+    output$confounding_table = NULL
+    output$metadata = NULL
+    #source(file.path("server/", "server.R"),  local = TRUE)$value
+    source(file.path("server/", "server_01_upload.R"), local = TRUE)$value
+    source(file.path("server/", "server_02_experimentalDesign.R"), local = TRUE)$value
+    source(file.path("server/", "server_03_variationAnalysis.R"), local = TRUE)$value
+    source(file.path("server/", "server_04_heatmap.R"), local = TRUE)$value
+    source(file.path("server/", "server_05_pca.R"), local = TRUE)$value
+    source(file.path("server/", "server_06_differentialExpression.R"), local = TRUE)$value
 }
 
 shinyApp(ui = ui, server = server)

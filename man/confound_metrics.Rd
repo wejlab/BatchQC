@@ -15,9 +15,5 @@ confound_metrics(se, batch)
 metrics of confounding
 }
 \description{
-<<<<<<< HEAD
-This function combines std. pearson corr coef and cramer's V
-=======
 Combine std. Pearson correlation coefficient and Cramer's V
->>>>>>> 954092c10bd74f301d458186e6cd9be34fc971cb
 }

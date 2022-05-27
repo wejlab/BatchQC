@@ -30,14 +30,14 @@ observeEvent(input$heatmap_plot, {
     output$dendrogram = renderPlot({
         validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
                       "Value must be less than the dim of your data set"))
-        plot(results$dendrogram)
+        results$dendrogram
     }, height = function() {session$clientData$output_dendrogram_width
     })
 
     output$circular_dendrogram = renderPlot({
         validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
                       "Value must be less than the dim of your data set"))
-        circlize_dendrogram(as.dendrogram(results$dendrogram))
+        results$circular_dendrogram
     }, height = function() {session$clientData$output_circular_dendrogram_width
     })
 })

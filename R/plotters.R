@@ -13,7 +13,7 @@ EV_plotter <- function(se, batch, condition, assay_name) {
   batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
   EV_boxplot <- ggplot(data=melt(as.data.frame(batchqc_ev$explained_variation),
                                  id.vars = NULL),
-                                aes(x = variable, y = value, fill = variable)) +
+                       aes(x = variable, y = value, fill = variable)) +
     geom_boxplot() +
     scale_x_discrete(name = "") +
     scale_y_continuous(name = "Percent Explained Variation") +
@@ -87,7 +87,7 @@ batch_pval_plotter <- function(se, batch, condition, assay_name) {
 #' @return Returns a list with class "prcomp" (see ?stats::prcomp)
 #' @export
 PCA_preprocess <- function(se, assay, nfeature){
-
+  
   data <- se@assays@data[[assay]]
   data <- as.matrix(data)
   data <- apply(data, c(1, 2), as.numeric)
@@ -98,7 +98,7 @@ PCA_preprocess <- function(se, assay, nfeature){
   data <- log(data+1)
   data <- data[names(vargenes), ]
   data <- data+1
-
+  
   # Center
   centered <- data - rowMeans(data)/matrixStats::rowSds(data)
   # for (i in 1:nrow(data)) {
@@ -106,7 +106,7 @@ PCA_preprocess <- function(se, assay, nfeature){
   # }
   coldata <- data.frame(colData(se))
   PCA <- stats::prcomp(t(centered), center=FALSE)
-
+  
   return(PCA)
 }
 
@@ -143,8 +143,8 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
       else{
         var_explained_data <- cbind(var_explained_data, var_explained_df)
       }
-
-
+      
+      
       # Extract PC data
       pca_data <- as.data.frame(pca$x)
       # Annotate with assay name
@@ -174,8 +174,11 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 #' @param nfeature number of features to display
 #' @param annotation_column choose column
 #' @import pheatmap
-#' @import circlize
-#' @import dendextend
+#' @import tibble
+#' @import ggdendro
+#' @import RColorBrewer
+#' @import plotly
+#' @import dplyr
 #' @return heatmap plot
 #'
 #' @export
@@ -184,7 +187,7 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
   data <- as.matrix(data)
   data <- apply(data, c(1, 2), as.numeric)
   data <- data[rowSums(data) != 0,]
-
+  
   vargenes <- apply(data, 1, stats::var)
   vargenes <- vargenes[order(vargenes, decreasing = TRUE)]
   vargenes <- vargenes[seq(1, nfeature)]
@@ -194,9 +197,9 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
   for (i in seq_len(nrow(data))) {
     data[i,] <- (data[i,]-mean(data[i,]))/stats::sd(data[i,])
   }
-
+  
   coldata <- data.frame(colData(se))
-
+  
   cor <- cor(data)
   if (!is.null(annotation_column)) {
     if (length(annotation_column) == 1) {
@@ -213,17 +216,82 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
                                     annotation_names_col = FALSE,
                                     annotation_names_row = FALSE,
                                     silent = TRUE)
-
+    
     topn_heatmap <- pheatmap(data, annotation_col = coldata,
                              show_colnames = FALSE,
                              annotation_names_col = FALSE,
                              show_rownames = FALSE,
                              silent = TRUE)
-
-    dendrogram <- topn_heatmap$tree_col
-
-    circular_dendogram <- circlize_dendrogram(stats::as.dendrogram(dendrogram))
-
+    
+    data <- se@assays@data[[assay]]
+    
+    data <- t(data)
+    
+    dat <- as.data.frame(data) %>%
+      mutate(sample_name = paste("sample", seq(1:nrow(data)), sep = "_")) # create unique sample ID\
+    
+    rownames(dat) <- dat$sample_name
+    
+    sample_name <- dat$sample_name
+    
+    metadata <- cbind(as.data.frame(colData(se)),sample_name)
+    
+    metadata[] <- lapply(metadata, as.character)
+    
+    numeric_data <- dat 
+    
+    dist_matrix <- dist(numeric_data, method = "euclidean")
+    dendrogram <- as.dendrogram(hclust(dist_matrix, method = "complete"))
+    
+    dendrogram_data <- dendro_data(dendrogram)
+    dendrogram_segments <- dendrogram_data$segments
+    
+    dendrogram_ends <- dendrogram_segments %>%
+      filter(yend == 0) %>% 
+      left_join(dendrogram_data$labels, by = "x") %>% 
+      rename(sample_name = label) %>%
+      left_join(metadata, by = "sample_name") 
+    
+    unique_vars <- levels(factor(dendrogram_ends[,annotation_column])) %>% 
+      as.data.frame() %>% rownames_to_column("row_id") 
+    
+    color_count <- length(unique(unique_vars$.))
+    
+    get_palette <- colorRampPalette(brewer.pal(n = length(unique(dendrogram_ends[,annotation_column])), name = "Paired"))
+    
+    palette <- get_palette(color_count) %>% 
+      as.data.frame() %>%
+      rename("color" = ".") %>%
+      rownames_to_column(var = "row_id")
+    color_list <- left_join(unique_vars, palette, by = "row_id") %>%
+      select(-row_id)
+    annotation_color <- as.character(color_list$color)
+    names(annotation_color) <- color_list$.
+    
+    circular_dendrogram <- ggplot() +
+      geom_segment(data = dendrogram_segments, 
+                   aes(x=x, y=y, xend=xend, yend=yend)) +
+      geom_segment(data = dendrogram_ends,
+                   aes(x=x, y=y.x, xend=xend, yend=yend, color = dendrogram_ends[,annotation_column])) +
+      scale_color_manual(values = annotation_color) +
+      scale_y_reverse() +
+      coord_polar(theta="x") + theme(
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+      theme_bw() + ylab("Distance") 
+    
+    dendrogram <- ggplot() +
+      geom_segment(data = dendrogram_segments, 
+                   aes(x=x, y=y, xend=xend, yend=yend)) +
+      geom_segment(data = dendrogram_ends,
+                   aes(x=x, y=y.x, xend=xend, yend=yend, color = dendrogram_ends[,annotation_column])) +
+      scale_color_manual(values = annotation_color) +
+      scale_y_reverse() +
+      coord_flip() + theme(
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+      theme_bw() + ylab("Distance") 
+    
   }
   else {
     correlation_heatmap <- pheatmap(cor, show_colnames = FALSE,
@@ -231,19 +299,85 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
                                     annotation_names_col = FALSE,
                                     annotation_names_row = FALSE,
                                     silent = TRUE)
-
+    
     topn_heatmap <- pheatmap(data, show_colnames = FALSE,
                              annotation_names_col = FALSE,
                              show_rownames = FALSE,
                              silent = TRUE)
-
-    dendrogram <- topn_heatmap$tree_col
-
-    circular_dendogram <- circlize_dendrogram(stats::as.dendrogram(dendrogram))
+    
+    data <- se@assays@data[[assay]]
+    
+    data <- t(data)
+    
+    dat <- as.data.frame(data) %>%
+      mutate(sample_name = paste("sample", seq(1:nrow(data)), sep = "_")) # create unique sample ID\
+    
+    rownames(dat) <- dat$sample_name
+    
+    sample_name <- dat$sample_name
+    
+    metadata <- cbind(as.data.frame(colData(se)),sample_name)
+    
+    metadata[] <- lapply(metadata, as.character)
+    
+    numeric_data <- dat 
+    
+    dist_matrix <- dist(numeric_data, method = "euclidean")
+    dendrogram <- as.dendrogram(hclust(dist_matrix, method = "complete"))
+    
+    dendrogram_data <- dendro_data(dendrogram)
+    dendrogram_segments <- dendrogram_data$segments 
+    
+    dendrogram_ends <- dendrogram_segments %>%
+      filter(yend == 0) %>% 
+      left_join(dendrogram_data$labels, by = "x") %>% 
+      rename(sample_name = label) %>%
+      left_join(metadata, by = "sample_name") 
+    
+    unique_vars <- levels(factor(dendrogram_ends[,annotation_column])) %>% 
+      as.data.frame() %>% rownames_to_column("row_id") 
+    
+    color_count <- length(unique(unique_vars$.))
+    
+    get_palette <- colorRampPalette(brewer.pal(n = length(unique(dendrogram_ends[,annotation_column])), name = "Paired"))
+    
+    palette <- get_palette(color_count) %>% 
+      as.data.frame() %>%
+      rename("color" = ".") %>%
+      rownames_to_column(var = "row_id")
+    color_list <- left_join(unique_vars, palette, by = "row_id") %>%
+      select(-row_id)
+    annotation_color <- as.character(color_list$color)
+    names(annotation_color) <- color_list$.
+    
+    circular_dendrogram <- ggplot() +
+      geom_segment(data = dendrogram_segments, 
+                   aes(x=x, y=y, xend=xend, yend=yend)) +
+      geom_segment(data = dendrogram_ends,
+                   aes(x=x, y=y.x, xend=xend, yend=yend, color = dendrogram_ends[,annotation_column])) +
+      scale_color_manual(values = annotation_color) +
+      scale_y_reverse() +
+      coord_polar(theta="x") + theme(
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+      theme_bw() + ylab("Distance") 
+    
+    dendrogram <- ggplot() +
+      geom_segment(data = dendrogram_segments, 
+                   aes(x=x, y=y, xend=xend, yend=yend)) +
+      geom_segment(data = dendrogram_ends,
+                   aes(x=x, y=y.x, xend=xend, yend=yend, color = dendrogram_ends[,annotation_column])) +
+      scale_color_manual(values = annotation_color) +
+      scale_y_reverse() +
+      coord_flip() + theme(
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+      theme_bw() + ylab("Distance") 
+    
   }
-
+  
   return(list(correlation_heatmap = correlation_heatmap,
               topn_heatmap = topn_heatmap,
-              circular_dendogram = circular_dendogram,
+              circular_dendrogram = circular_dendrogram,
               dendrogram = dendrogram))
 }

@@ -9,11 +9,11 @@ pval_summary(se, batch, condition, assay_name)
 \arguments{
 \item{se}{Summarized experiment object}
 
+\item{batch}{Batch Covariate}
+
+\item{condition}{Condition covariate(s) of interest}
+
 \item{assay_name}{Name of chosen assay}
-
-\item{mod}{mod}
-
-\item{batch_mod}{mod}
 }
 \value{
 List of explained variation by batch and condition

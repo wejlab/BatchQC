@@ -2,7 +2,7 @@
 #'
 #' @return The shiny app will open
 #'
-#' @param dev Run the applicaiton in developer mode
+#' @param dev Run the application in developer mode
 #'
 #' @examples
 #' \dontrun{

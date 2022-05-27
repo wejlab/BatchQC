@@ -2,22 +2,24 @@
 % Please edit documentation in R/variation.R
 \name{EV_table}
 \alias{EV_table}
-\title{Returns table with percent variation explained for specified number of genes}
+\title{EV Table
+Returns table with percent variation explained for specified number of genes}
 \usage{
 EV_table(se, batch, condition, assay_name)
 }
 \arguments{
 \item{se}{Summarized experiment object}
 
+\item{batch}{Batch Covariates}
+
+\item{condition}{Condition covariate(s) of interest}
+
 \item{assay_name}{Name of chosen assay}
-
-\item{mod}{mod}
-
-\item{batch_mod}{mod}
 }
 \value{
 List of explained variation by batch and condition
 }
 \description{
+EV Table
 Returns table with percent variation explained for specified number of genes
 }

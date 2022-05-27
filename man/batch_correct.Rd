@@ -2,7 +2,8 @@
 % Please edit documentation in R/batch_correction.R
 \name{batch_correct}
 \alias{batch_correct}
-\title{This function allows you to Add batch corrected count matrix to the se object}
+\title{Batch Correct
+This function allows you to Add batch corrected count matrix to the SE object}
 \usage{
 batch_correct(
   se,
@@ -15,7 +16,7 @@ batch_correct(
 )
 }
 \arguments{
-\item{se}{SummarizeExperiment}
+\item{se}{SummarizedExperiment object}
 
 \item{method}{Normalization Method}
 
@@ -33,5 +34,6 @@ batch_correct(
 a summarized experiment object with normalized assay appended.
 }
 \description{
-This function allows you to Add batch corrected count matrix to the se object
+Batch Correct
+This function allows you to Add batch corrected count matrix to the SE object
 }

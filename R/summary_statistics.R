@@ -13,8 +13,8 @@ batch_design <- function(se, batch, covariate){
   design <- colData(se) %>% as_tibble %>%
     group_by_at(covariate) %>%
     dplyr::count(across(batch)) %>%
-    pivot_wider(names_from = batch, values_from = n) %>%
-    replace(is.na(.), 0)
+    pivot_wider(names_from = batch, values_from = n)
+  design <- replace(design, is.na(design), 0)
   return(design)
 }
 
@@ -33,8 +33,8 @@ cor_props <- function(bd){
   colsums <- colSums(m)
   tablesum <- sum(rowsums)
   expected <- matrix(0, nrow(m), ncol(m))
-  for (i in 1:nrow(m)) {
-    for (j in 1:ncol(m)) {
+  for (i in seq_len(nrow(m))) {
+    for (j in seq_len(ncol(m))) {
       expected[i, j] <- rowsums[i] * colsums[j]/tablesum
     }
   }
@@ -46,9 +46,9 @@ cor_props <- function(bd){
 }
 
 
-#' This function allows you to calculate a standardized pearson corr coef
+#' Calculate a standardized Pearson correlation coefficient
 #' @param bd batch design
-#' @return standardized pearson correlation coefficient
+#' @return standardized Pearson correlation coefficient
 #'
 #' @export
 std_pearson_corr_coef <- function(bd) {
@@ -58,9 +58,9 @@ std_pearson_corr_coef <- function(bd) {
   return(r)
 }
 
-#' This function allows you to calculate cramer's V
+#' This function allows you to calculate Cramer's V
 #' @param bd batch design
-#' @return cramer's V
+#' @return Cramer's V
 #'
 #' @export
 cramers_v <- function(bd) {
@@ -70,7 +70,8 @@ cramers_v <- function(bd) {
   return(v)
 }
 
-#' This function allows you to combine std. pearson corr coef and cramer's V
+#'
+#' Combine std. Pearson correlation coefficient and Cramer's V
 #' @param se summarized experiment
 #' @param batch batch variable
 #' @return metrics of confounding
@@ -80,8 +81,10 @@ confound_metrics <- function(se, batch){
   # Covariates are non-batch
   cols <- names(colData(se))
   covs <- cols[cols != batch]
-  metrics <- list("Pearson Correlation Coefficient"=std_pearson_corr_coef, "Cramer's V"=cramers_v)
-  metric.mat <- matrix(nrow=length(covs), ncol=length(metrics), dimnames = list(covs, names(metrics)))
+  metrics <- list("Pearson Correlation Coefficient" = std_pearson_corr_coef,
+                  "Cramer's V" = cramers_v)
+  metric.mat <- matrix(nrow = length(covs), ncol = length(metrics),
+                       dimnames = list(covs, names(metrics)))
 
   for (c in covs){
     # Get batch design

@@ -2,22 +2,24 @@
 % Please edit documentation in R/DifferentialExpression.R
 \name{analyze_SE}
 \alias{analyze_SE}
-\title{This function allows you to run differential expression analysis on a count matrix in the se object}
+\title{This function allows you to Add normalized count matrix to the SE object}
 \usage{
-analyze_SE(se, method, conditons, assay_to_analyze)
+analyze_SE(se, method, conditions, assay_to_analyze, output_assay_name)
 }
 \arguments{
-\item{se}{SummarizeExperiment}
+\item{se}{SummarizedExperiment}
 
 \item{method}{Differential Expression Analysis Method}
 
-\item{assay_to_analyze}{Which assay to do DE analysis with}
+\item{conditions}{Condition covariate of interest}
 
-\item{conditions}{DE analysis experimental design}
+\item{assay_to_analyze}{Which assay use to do DE analysis}
+
+\item{output_assay_name}{name of results assay}
 }
 \value{
-a data table of DE analysis results
+a summarized experiment object with normalized assay appended.
 }
 \description{
-This function allows you to run differential expression analysis on a count matrix in the se object
+This function allows you to Add normalized count matrix to the SE object
 }

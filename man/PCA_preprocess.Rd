@@ -9,9 +9,12 @@ PCA_preprocess(se, assay, nfeature)
 \arguments{
 \item{se}{Summarized Experiment object}
 
-\item{assay}{Assay from summarized experiment object}
+\item{assay}{Assay from SummarizedExperiment object}
 
 \item{nfeature}{Number of variable features to use}
+}
+\value{
+Returns a list with class "prcomp" (see ?stats::prcomp)
 }
 \description{
 Preprocess normalized count data for PCA

@@ -1,4 +1,4 @@
-#' This function allows you to create a summarized experiment object
+ #' This function allows you to create a summarized experiment object
 #' @param counts_path path to counts file
 #' @param metadata_path path to metadata file
 #' @return a summarized experiment object

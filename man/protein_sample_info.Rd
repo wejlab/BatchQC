@@ -14,13 +14,10 @@ A data frame with 24 rows and 4 variables:
 }
 }
 \usage{
-protein_sample_info
+data(protein_sample_info)
 }
 \description{
 This data consists of two batches and two conditions
 corresponding to case and control for the protein expression data
-}
-\examples{
-data(protein_sample_info)
 }
 \keyword{datasets}

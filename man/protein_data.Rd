@@ -8,14 +8,11 @@
 A data frame with 39 rows and 24 variables
 }
 \usage{
-protein_data
+data(protein_data)
 }
 \description{
 This data consists of two batches and two conditions
 corresponding to case and control. The columns are case/control
 samples, and the rows represent 39 different proteins.
-}
-\examples{
-data(protein_data)
 }
 \keyword{datasets}

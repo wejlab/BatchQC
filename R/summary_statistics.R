@@ -84,7 +84,7 @@ confound_metrics <- function(se, batch){
     metrics <- list("Pearson Correlation Coefficient" = std_pearson_corr_coef,
                     "Cramer's V" = cramers_v)
     metric.mat <- matrix(nrow = length(covs), ncol = length(metrics),
-                         dimnames = list(covs, names(metrics)))
+                            dimnames = list(covs, names(metrics)))
 
     for (c in covs){
         # Get batch design

@@ -12,9 +12,9 @@ globalVariables(c("value", "variable"))
 EV_plotter <- function(se, batch, condition, assay_name) {
     batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
     EV_boxplot <- ggplot(data =
-                             melt(as.data.frame(batchqc_ev$explained_variation),
-                                  id.vars = NULL),
-                         aes(x = variable, y = value, fill = variable)) +
+                            melt(as.data.frame(batchqc_ev$explained_variation),
+                                id.vars = NULL),
+                        aes(x = variable, y = value, fill = variable)) +
         geom_boxplot() +
         scale_x_discrete(name = "") +
         scale_y_continuous(name = "Percent Explained Variation") +
@@ -41,7 +41,7 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
     }
     covar_boxplot <- ggplot(subset(melt(as.data.frame(batchqc_ev$cond_test),
                                         id.vars = NULL),
-                                   variable %in% condition),
+                                    variable %in% condition),
                             aes(x = variable, y = value, fill = variable)) +
         geom_violin(width = 0.8) +
         geom_boxplot(width = 0.1) +
@@ -66,7 +66,7 @@ covariate_pval_plotter <- function(se, batch, condition, assay_name) {
 batch_pval_plotter <- function(se, batch, condition, assay_name) {
     batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
     batch_boxplot <- ggplot(data = (melt(as.data.frame(batchqc_ev$batch_ps),
-                                         id.vars = NULL)),
+                                        id.vars = NULL)),
                             aes(x = variable, y = value, fill = variable)) +
         geom_violin(width = 0.8) +
         geom_boxplot(width = 0.1) +
@@ -162,8 +162,8 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
     # Reorder data
     pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
     plot <- ggplot(pca_plot_data,
-                   aes_string(x = 'PC1', y = 'PC2', colour = color,
-                              shape = shape, sample = 'sample'))+
+                    aes_string(x = 'PC1', y = 'PC2', colour = color,
+                                shape = shape, sample = 'sample'))+
         geom_point(size = 3) +
         facet_wrap(vars(assay), ncol = 2, scales = 'free')
 
@@ -208,7 +208,7 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
     if (!is.null(annotation_column)) {
         if (length(annotation_column) == 1) {
             coldata <- data.frame(coldata[ , annotation_column],
-                                  row.names = rownames(coldata))
+                                    row.names = rownames(coldata))
         }
         else {
             coldata <- coldata[, annotation_column]
@@ -222,10 +222,10 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
                                         silent = TRUE)
 
         topn_heatmap <- pheatmap(data, annotation_col = coldata,
-                                 show_colnames = FALSE,
-                                 annotation_names_col = FALSE,
-                                 show_rownames = FALSE,
-                                 silent = TRUE)
+                                show_colnames = FALSE,
+                                annotation_names_col = FALSE,
+                                show_rownames = FALSE,
+                                silent = TRUE)
 
         dendrogram <- topn_heatmap$tree_col
 
@@ -241,9 +241,9 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
                                         silent = TRUE)
 
         topn_heatmap <- pheatmap(data, show_colnames = FALSE,
-                                 annotation_names_col = FALSE,
-                                 show_rownames = FALSE,
-                                 silent = TRUE)
+                                annotation_names_col = FALSE,
+                                show_rownames = FALSE,
+                                silent = TRUE)
 
         dendrogram <- topn_heatmap$tree_col
 

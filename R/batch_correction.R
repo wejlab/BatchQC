@@ -15,7 +15,7 @@
 #'
 #' @export
 batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
-                          covar, output_assay_name) {
+                            covar, output_assay_name) {
     se <- se
     batch <- data.frame(colData(se))[,batch] #why? We passed in batch in theory
 
@@ -85,8 +85,8 @@ batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
                 model <- stats::model.matrix(stats::as.formula(
                     paste0('~', colnames(cov))), data = cov)
                 results <- ComBat(dat = se@assays@data[[assay_to_normalize]],
-                                  batch = batch,
-                                  mod = model)
+                                    batch = batch,
+                                    mod = model)
                 results[is.na(results)] <- 0
                 se@assays@data[[output_assay_name]] <- results
             } else {
@@ -101,13 +101,13 @@ batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
                 rownames(cov) <- rownames(data.frame(colData(se)))
                 colnames(cov) <- covar
                 linearmodel <- as.function(paste0('~',
-                                                  paste(colnames(cov),
+                                                    paste(colnames(cov),
                                                         sep = '+')))
                 model <- stats::model.matrix(linearmodel, data = cov)
 
                 results <- ComBat(dat = se@assays@data[[assay_to_normalize]],
-                                  batch = batch,
-                                  mod = model)
+                                    batch = batch,
+                                    mod = model)
                 results[is.na(results)] <- 0
                 se@assays@data[[output_assay_name]] <- results
 

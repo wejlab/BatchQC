@@ -13,7 +13,7 @@ globalVariables(c("chosen"))
 #'
 #' @export
 analyze_SE <- function(se, method, conditions, assay_to_analyze,
-                       output_assay_name) {
+                        output_assay_name) {
     se <- se
     if (method=='wilcox') {
         output_assay_name <- scran::findMarkers(se, se@colData@data$conditions,

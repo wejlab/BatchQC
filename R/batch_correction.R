@@ -14,66 +14,65 @@
 #' @import sva
 #'
 #' @export
-batch_correct = function(se, method, assay_to_normalize, batch, group = NULL,
-                         covar, output_assay_name) {
+batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
+                          covar, output_assay_name) {
     se <- se
     batch <- data.frame(colData(se))[,batch] #why? We passed in batch in theory
 
     if (method == 'ComBat-Seq'){
         if (is.null(covar)) {
-          se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-              se@assays@data[[assay_to_normalize]]), batch = batch)
+            se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
+                se@assays@data[[assay_to_normalize]]), batch = batch)
         } else {
-          if (length(covar) == 1) {
-              cov <- data.frame(colData(se))[,covar]
-              cov <- as.factor(cov)
-              cov <- as.numeric(cov)
-              cov <- as.matrix(cov)
-              rownames(cov) <- rownames(data.frame(colData(se)))
+            if (length(covar) == 1) {
+                cov <- data.frame(colData(se))[,covar]
+                cov <- as.factor(cov)
+                cov <- as.numeric(cov)
+                cov <- as.matrix(cov)
+                rownames(cov) <- rownames(data.frame(colData(se)))
 
-              if (!is.null(group)){
-                  se@assays@data[[output_assay_name]] <- ComBat_seq(
-                      as.matrix(se@assays@data[[assay_to_normalize]]),
-                      batch = batch,
-                      covar_mod = cov,
-                      group = group,
-                      full_mod = TRUE)
+                if (!is.null(group)){
+                    se@assays@data[[output_assay_name]] <- ComBat_seq(
+                        as.matrix(se@assays@data[[assay_to_normalize]]),
+                        batch = batch,
+                        covar_mod = cov,
+                        group = group,
+                        full_mod = TRUE)
                 } else {
-                  se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-                  se@assays@data[[assay_to_normalize]]),
-                  batch = batch,
-                  covar_mod = cov,
-                  group = group)
+                    se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
+                        se@assays@data[[assay_to_normalize]]),
+                        batch = batch,
+                        covar_mod = cov,
+                        group = group)
                 }
-          } else {
-            cov <- data.frame(colData(se))[,covar]
-            for (i in seq_len(ncol(cov))) {
-            cov[,i] <- as.factor(cov[,i])
-            cov[,i] <- as.numeric(cov[,i])
-            }
-
-            if (!is.null(group)){
-                se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-                    se@assays@data[[assay_to_normalize]]),
-                    batch = batch,
-                    covar_mod = cov,
-                    group = group,
-                    full_mod = TRUE)
             } else {
-                se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-                    se@assays@data[[assay_to_normalize]]),
-                    batch = batch,
-                    covar_mod = cov,
-                    group = group)
+                cov <- data.frame(colData(se))[,covar]
+                for (i in seq_len(ncol(cov))) {
+                    cov[,i] <- as.factor(cov[,i])
+                    cov[,i] <- as.numeric(cov[,i])
+                }
 
+                if (!is.null(group)){
+                    se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
+                        se@assays@data[[assay_to_normalize]]),
+                        batch = batch,
+                        covar_mod = cov,
+                        group = group,
+                        full_mod = TRUE)
+                } else {
+                    se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
+                        se@assays@data[[assay_to_normalize]]),
+                        batch = batch,
+                        covar_mod = cov,
+                        group = group)
+
+                }
             }
         }
-      }
     } else if (method == 'ComBat') {
         if (is.null(covar)) {
             se@assays@data[[output_assay_name]] <-
-                ComBat(dat = se@assays@data[[assay_to_normalize]],
-                       batch = batch)
+                ComBat(dat = se@assays@data[[assay_to_normalize]],batch = batch)
         } else {
             if (length(covar) == 1) {
                 cov <- data.frame(colData(se))[,covar]
@@ -86,31 +85,31 @@ batch_correct = function(se, method, assay_to_normalize, batch, group = NULL,
                 model <- stats::model.matrix(stats::as.formula(
                     paste0('~', colnames(cov))), data = cov)
                 results <- ComBat(dat = se@assays@data[[assay_to_normalize]],
-                                batch = batch,
-                                mod = model)
+                                  batch = batch,
+                                  mod = model)
                 results[is.na(results)] <- 0
                 se@assays@data[[output_assay_name]] <- results
             } else {
-              cov <- data.frame(colData(se))[,covar]
+                cov <- data.frame(colData(se))[,covar]
 
-              for (i in seq_len(ncol(cov))) {
-              cov[,i] <- as.factor(cov[,i])
-              cov[,i] <- as.numeric(cov[,i])
-              }
+                for (i in seq_len(ncol(cov))) {
+                    cov[,i] <- as.factor(cov[,i])
+                    cov[,i] <- as.numeric(cov[,i])
+                }
 
-              cov <- data.frame(cov)
-              rownames(cov) <- rownames(data.frame(colData(se)))
-              colnames(cov) <- covar
-              linearmodel <- as.function(paste0('~',
-                                                paste(colnames(cov),
-                                                sep = '+')))
-              model <- stats::model.matrix(linearmodel, data = cov)
+                cov <- data.frame(cov)
+                rownames(cov) <- rownames(data.frame(colData(se)))
+                colnames(cov) <- covar
+                linearmodel <- as.function(paste0('~',
+                                                  paste(colnames(cov),
+                                                        sep = '+')))
+                model <- stats::model.matrix(linearmodel, data = cov)
 
-              results <- ComBat(dat = se@assays@data[[assay_to_normalize]],
-                                batch = batch,
-                                mod = model)
-              results[is.na(results)] <- 0
-              se@assays@data[[output_assay_name]] <- results
+                results <- ComBat(dat = se@assays@data[[assay_to_normalize]],
+                                  batch = batch,
+                                  mod = model)
+                results[is.na(results)] <- 0
+                se@assays@data[[output_assay_name]] <- results
 
             }
         }

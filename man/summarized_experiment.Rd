@@ -4,12 +4,12 @@
 \alias{summarized_experiment}
 \title{This function allows you to create a summarized experiment object}
 \usage{
-summarized_experiment(counts_path, metadata_path)
+summarized_experiment(counts, columndata)
 }
 \arguments{
-\item{counts_path}{path to counts file}
+\item{counts}{counts dataframe}
 
-\item{metadata_path}{path to metadata file}
+\item{columndata}{metadata dataframe}
 }
 \value{
 a summarized experiment object

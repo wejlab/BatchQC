@@ -16,7 +16,7 @@ globalVariables(c("protein_sample_info", "protein_data"))
 #' }
 #' @keywords datasets
 #' @examples
-#' data(protein_sample_info)
+#' @usage data(protein_sample_info)
 "protein_sample_info"
 
 #' Protein data with 39 protein expression levels
@@ -30,5 +30,5 @@ globalVariables(c("protein_sample_info", "protein_data"))
 #' @format A data frame with 39 rows and 24 variables
 #' @keywords datasets
 #' @examples
-#' data(protein_data)
+#' @usage data(protein_data)
 "protein_data"

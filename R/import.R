@@ -1,6 +1,6 @@
-#' This function allows you to create a summarized experiment object
-#' @param counts_path path to counts file
-#' @param metadata_path path to metadata file
+ #' This function allows you to create a summarized experiment object
+#' @param counts counts dataframe
+#' @param columndata metadata dataframe
 #' @return a summarized experiment object
 #' @import SummarizedExperiment
 #' @import reader
@@ -8,20 +8,21 @@
 #' @import utils
 #'
 #' @export
-summarized_experiment = function(counts_path, metadata_path) {
-  coldata <- read.table(metadata_path, header = TRUE, row.names = 1,
-                        check.names = FALSE, sep = get.delim(metadata_path,
-                                                             n = 10,
-                                                             delims = c('\t',
-                                                                        ',')))
-  counts <- read.table(counts_path, header = TRUE, row.names = 1,
-                       check.names = FALSE, sep = get.delim(counts_path, n = 10,
-                                                            delims = c('\t',
-                                                                       ',')))
+summarized_experiment = function(counts, columndata){ #counts_path, metadata_path) {
+  # coldata <- read.table(metadata_path, header = TRUE, row.names = 1,
+  #                       check.names = FALSE, sep = get.delim(metadata_path,
+  #                                                            n = 10,
+  #                                                            delims = c('\t',
+  #                                                                       ',')))
+  # counts <- read.table(counts_path, header = TRUE, row.names = 1,
+  #                      check.names = FALSE, sep = get.delim(counts_path, n = 10,
+  #                                                           delims = c('\t',
+  #                                                                      ',')))
+
   counts <- counts[rowSums(counts)>0,]
-  mutual_sample <- intersect(colnames(counts), rownames(coldata))
+  mutual_sample <- intersect(colnames(counts), rownames(columndata))
   counts <- counts[,mutual_sample]
-  coldata <- coldata[mutual_sample,]
+  columndata <- columndata[mutual_sample,]
 
   # Normalize data
   #DESEQ_normalization <- GetNormalizedMat(counts, MedianNorm(counts))
@@ -31,9 +32,9 @@ summarized_experiment = function(counts_path, metadata_path) {
                                     #DESEQ_normalization = DESEQ_normalization,
                                     #CPM_Normalization = CPM_Normalization
                                         ),
-                                        colData = coldata)
+                                        colData = columndata)
 
   # Add library size
-  colData(se)$library_size <- colSums(se@assays@data$counts)
+  #colData(se)$library_size <- colSums(se@assays@data$counts)
   return(se)
 }

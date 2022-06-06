@@ -80,141 +80,94 @@ setupSelections = function(){
                          selected=NULL)
 }
 
+observeEvent(input$uploadChoice, {
+    ##When it changes, set all reactive values to null
+})
 ## Obtain the counts matrix and count table location
 observeEvent(input$counts, {
     req(input$counts)
-    reactivevalue$counts_location = input$counts$datapath
-    counts_table <- read.table(reactivevalue$counts_location, header = TRUE,
+    reactivevalue$counts_location <- input$counts$datapath
+    reactivevalue$counts <- read.table(reactivevalue$counts_location, header = TRUE,
                                row.names = 1,
                                sep = get.delim(reactivevalue$counts_location,
                                                n = 10,
                                                delims = c('\t',',')),
                                check.names = FALSE)
-    output$counts_header = renderDT((datatable(counts_table)))
-    output$counts_dimensions = renderText(paste(dim(counts_table),
+    output$counts_header <- renderDT((datatable(reactivevalue$counts)))
+    output$counts_dimensions <- renderText(paste(dim(reactivevalue$counts),
                                                 c('observations and','samples')))
 })
 
 ## Obtain the metadata matrix and metadata table location
 observeEvent(input$md, {
     req(input$md)
-    reactivevalue$metadata_location = input$md$datapath
+    reactivevalue$metadata_location <- input$md$datapath
 
-    reactivevalue$metadata = read.table(reactivevalue$metadata_location,
+    reactivevalue$metadata <- read.table(reactivevalue$metadata_location,
                                         header = TRUE, row.names = 1,
                                         sep = get.delim(reactivevalue$metadata_location,
                                                         n = 10,
                                                         delims = c('\t',',')))
 
-    metadata_tables <- apply(reactivevalue$metadata, 2, table)
-    full_metadata <- c()
-    Variable <- c()
-    count <- 1
-    for (i in metadata_tables){
-        full_metadata <- c(full_metadata, i)
-        variables <- rep(names(metadata_tables[count]), length(i))
-        Variable <- c(Variable, variables)
-        count <- count + 1
-    }
-    Metadata <- names(full_metadata)
-    Occurrence <- as.vector(full_metadata)
-    full_metadata <- abind(Metadata, Occurrence, Variable, along = 2,
-                           make.names = TRUE)
-
-    output$metadata_header = renderDT(datatable(full_metadata))
+    output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
 })
 
 ## Obtain count matrix and metadata from the summarized experiment input
 observeEvent(input$se, {
     req(input$se)
-    reactivevalue$se_location = input$se$datapath
-    se = readRDS(input$se$datapath)
-    reactivevalue$se = se
-    output$se_counts = renderDT(datatable(assays(reactivevalue$se)$counts))
-    output$se_dimensions = renderText(paste(dim(reactivevalue$se),
-                                            c('observations', 'samples')))
+    reactivevalue$se_location <- input$se$datapath
+    se <- readRDS(input$se$datapath)
+    reactivevalue$se <- se
+    output$se_counts <- renderDT(datatable(assays(reactivevalue$se)$counts))
+    output$se_dimensions <- renderText(paste(dim(reactivevalue$se),
+                                            c('observations and', 'samples')))
 
     metadata_table <- as.data.table(colData(reactivevalue$se))
-    metadata_list <- apply(metadata_table, 2, table)
-    se_metadata <- c()
-    Variable <- c()
-    count <- 1
-    for (i in metadata_list){
-        se_metadata <- c(se_metadata,i)
-        se_variables <- rep(names(metadata_list[count]), length(i))
-        Variable <- c(Variable, se_variables)
-        count <- count+1
-    }
-    Metadata <- names(se_metadata)
-    Occurrence <- as.vector(se_metadata)
-    se_metadata <- abind(Metadata, Occurrence, Variable, along = 2,
-                         make.names = TRUE)
-
-    output$se_meta = renderDT(datatable(se_metadata))
+    output$se_meta <- renderDT(datatable(metadata_table))
 })
 
 ## Obtain count matrix and count location for example data
 observeEvent(input$exampleData, {
     req(input$exampleData)
-    # if(input$exampleData == "proteinData"){
-    #     reactivevalue$counts_location <- system.file("data/protein_data.rda",
-    #                                                  package = "BatchQC")
-    #     reactivevalue$metadata_location <- system.file("data/protein_sample_info.rda",
-    #                                                    package = "BatchQC")
-    # }
-    # counts_table <- read.table(reactivevalue$counts_location, header = TRUE,
-    #                            row.names = 1,
-    #                            sep = get.delim(reactivevalue$counts_location,
-    #                                            n = 10,
-    #                                            delims = c('\t',',')),
-    #                            check.names = FALSE)
-    # output$counts_header = renderDT((datatable(counts_table)))
-    # output$counts_dimensions = renderText(paste(dim(counts_table),
-    #                                             c('observations and','samples')))
-    #
-    #
-    # reactivevalue$metadata = read.table(reactivevalue$metadata_location,
-    #                                     header = TRUE, row.names = 1,
-    #                                     sep = get.delim(reactivevalue$metadata_location,
-    #                                                     n = 10,
-    #                                                     delims = c('\t',',')))
-    #
-    # metadata_tables <- apply(reactivevalue$metadata, 2, table)
-    # full_metadata <- c()
-    # Variable <- c()
-    # count <- 1
-    # for (i in metadata_tables){
-    #     full_metadata <- c(full_metadata, i)
-    #     variables <- rep(names(metadata_tables[count]), length(i))
-    #     Variable <- c(Variable, variables)
-    #     count <- count + 1
-    # }
-    # Metadata <- names(full_metadata)
-    # Occurrence <- as.vector(full_metadata)
-    # full_metadata <- abind(Metadata, Occurrence, Variable, along = 2,
-    #                        make.names = TRUE)
-    #
-    # output$metadata_header = renderDT(datatable(full_metadata))
+    if(input$exampleData == "proteinData"){
+
+        data(protein_data)
+        reactivevalue$counts <- protein_data
+        output$counts_header <- renderDT(datatable(reactivevalue$counts))
+        output$counts_dimensions <- renderText(paste(dim(reactivevalue$counts),
+                                                     c('observations and', 'samples')))
+
+        data(protein_sample_info)
+        rownames(protein_sample_info) <- paste0("X", protein_sample_info$Arrayname)
+        reactivevalue$metadata <- protein_sample_info[2:4]
+        output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
+    }
 })
 
 ## Create summarized experiment object and set up plot options
 observeEvent(input$submit, {
     withBusyIndicatorServer("submit", {
-        if (!is.null(reactivevalue$counts_location) & !is.null(
-            reactivevalue$metadata_location)) {
-            se = summarized_experiment(reactivevalue$counts_location,
-                                       reactivevalue$metadata_location)
+        #need to clear all previous selections
+        if(input$uploadChoice == "countFile" &
+           !is.null(reactivevalue$counts_location) &
+           !is.null(reactivevalue$metadata_location)){
+            se <- summarized_experiment(reactivevalue$counts, reactivevalue$metadata) #reactivevalue$counts_location,
+                                        #reactivevalue$metadata_location)
+
             se <- se[which(rownames(se) !='NA')]
-            reactivevalue$se = se
-            reactivevalue$metadata = data.frame(colData(reactivevalue$se))
+
+        }else if(input$uploadChoice == "seObject" &
+                 !is.null(input$se$datapath)){
+            se <- readRDS(reactivevalue$se_location)
+            se <- se[rowSums(se@assays@data$counts)>0,]
+        }else if(input$uploadChoice == "example"){
+            se <- summarized_experiment(reactivevalue$counts, reactivevalue$metadata)
+            se <- se[which(rownames(se) !='NA')]
         }
-        else if (!is.null(input$se$datapath)){
-            se = readRDS(reactivevalue$se_location)
-            se = se[rowSums(se@assays@data$counts)>0,]
-            reactivevalue$se = se
-            reactivevalue$metadata = data.frame(colData(reactivevalue$se))
-        }
-        output$se_download = renderPrint(reactivevalue$se)
+
+        reactivevalue$se <- se
+        reactivevalue$metadata <- data.frame(colData(reactivevalue$se))
+        output$se_download <- renderPrint(reactivevalue$se)
         output$downloadData <- downloadHandler(
             filename = function() {
                 paste("se", ".RDS", sep = "")
@@ -226,8 +179,10 @@ observeEvent(input$submit, {
         )
 
         # Display metadata table
-        output$metadata = renderDataTable(data.table(data.frame(
-            colData(reactivevalue$se)), keep.rownames = TRUE))
+        output$metadata <- renderDataTable(data.table(data.frame(
+            colData(reactivevalue$se)),
+            keep.rownames = TRUE))
+
         # Add options to input selections
         setupSelections()
     })
@@ -243,7 +198,7 @@ observe({
 })
 
 ## Normalize a selected assay
-observeEvent( input$normalize, {
+observeEvent(input$normalize, {
     req(input$normalization_method, input$normalization_assay,
         input$normalized_assay_name)
     withBusyIndicatorServer("normalize", {

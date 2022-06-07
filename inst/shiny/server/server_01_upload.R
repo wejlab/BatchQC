@@ -2,7 +2,7 @@
 
 ### UPDATING SELECTIONS ###
 
-setupSelections = function(){
+setupSelections <- function(){
     # Experimental design
     updateSelectizeInput(session = session, inputId = "design_batch",
                          choices = names(colData(reactivevalue$se)),
@@ -21,21 +21,30 @@ setupSelections = function(){
                                                        this.setValue(""); }')))
 
     # Batch Correction
-    updateSelectizeInput(session = session, inputId = "correction_batch",
+    updateSelectizeInput(session = session,
+                         inputId = "correction_batch",
                          choices = (names(colData(reactivevalue$se))),
-                         selected = NULL, options = list(placeholder =
-                                                             'Please select an option below',
-                                                         onInitialize = I('function() { this.setValue(""); }')))
-    updateSelectizeInput(session = session, inputId = 'correction_assay',
+                         selected = NULL,
+                         options = list(placeholder =
+                                        'Please select an option below',
+                                        onInitialize =
+                                        I('function() { this.setValue(""); }')))
+    updateSelectizeInput(session = session,
+                         inputId = 'correction_assay',
                          choices = (assayNames((reactivevalue$se))),
-                         selected = NULL, options = list(placeholder =
-                                                             'Please select an option below',
-                                                         onInitialize = I('function() { this.setValue(""); }')))
-    updateSelectizeInput(session = session, inputId = "correction_covariates",
+                         selected = NULL,
+                         options = list(placeholder =
+                                        'Please select an option below',
+                                        onInitialize =
+                                        I('function() { this.setValue(""); }')))
+    updateSelectizeInput(session = session,
+                         inputId = "correction_covariates",
                          choices = (names(colData(reactivevalue$se))),
-                         selected = NULL, options = list(placeholder =
-                                                             'Please select an option below',
-                                                         onInitialize = I('function() { this.setValue(""); }')))
+                         selected = NULL,
+                         options = list(placeholder =
+                                        'Please select an option below',
+                                        onInitialize =
+                                        I('function() { this.setValue(""); }')))
 
     # Heatmap
     updateSelectizeInput(session = session, inputId = 'heatmap_assay_name',
@@ -69,15 +78,15 @@ setupSelections = function(){
     # Variation Analysis
     updateSelectizeInput(session = session, inputId = "variation_assay",
                          choices = names(assays(reactivevalue$se)),
-                         selected=NULL)
+                         selected = NULL)
     updateSelectizeInput(session = session, inputId = "variation_batch",
                          choices = names(colData(reactivevalue$se)),
-                         selected=NULL)
+                         selected = NULL)
 
     # Differential expression analysis
     updateSelectizeInput(session = session, inputId="DE_assay",
                          choices = names(assays(reactivevalue$se)),
-                         selected=NULL)
+                         selected = NULL)
 }
 
 observeEvent(input$uploadChoice, {
@@ -202,12 +211,12 @@ observeEvent(input$normalize, {
     req(input$normalization_method, input$normalization_assay,
         input$normalized_assay_name)
     withBusyIndicatorServer("normalize", {
-        reactivevalue$se = normalize_SE(reactivevalue$se,
+        reactivevalue$se <- normalize_SE(reactivevalue$se,
                                         input$normalization_method,
                                         input$normalization_assay,
                                         input$normalized_assay_name)
         if (input$log) {
-            reactivevalue$se@assays@data[[input$normalized_assay_name]] =
+            reactivevalue$se@assays@data[[input$normalized_assay_name]] <-
                 log(reactivevalue$se@assays@data[[input$normalized_assay_name]])
         }
         setupSelections()

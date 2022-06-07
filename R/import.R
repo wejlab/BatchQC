@@ -1,4 +1,4 @@
- #' This function allows you to create a summarized experiment object
+#' This function allows you to create a summarized experiment object
 #' @param counts counts dataframe
 #' @param columndata metadata dataframe
 #' @return a summarized experiment object
@@ -8,33 +8,17 @@
 #' @import utils
 #'
 #' @export
-summarized_experiment = function(counts, columndata){ #counts_path, metadata_path) {
-  # coldata <- read.table(metadata_path, header = TRUE, row.names = 1,
-  #                       check.names = FALSE, sep = get.delim(metadata_path,
-  #                                                            n = 10,
-  #                                                            delims = c('\t',
-  #                                                                       ',')))
-  # counts <- read.table(counts_path, header = TRUE, row.names = 1,
-  #                      check.names = FALSE, sep = get.delim(counts_path, n = 10,
-  #                                                           delims = c('\t',
-  #                                                                      ',')))
+summarized_experiment <- function(counts, columndata){
 
-  counts <- counts[rowSums(counts)>0,]
-  mutual_sample <- intersect(colnames(counts), rownames(columndata))
-  counts <- counts[,mutual_sample]
-  columndata <- columndata[mutual_sample,]
+    counts <- counts[rowSums(counts)>0,]
+    mutual_sample <- intersect(colnames(counts), rownames(columndata))
+    counts <- counts[,mutual_sample]
+    columndata <- columndata[mutual_sample,]
 
-  # Normalize data
-  #DESEQ_normalization <- GetNormalizedMat(counts, MedianNorm(counts))
-  #CPM_Normalization <- (counts+1) / counts *(10^6)
+    se <- SummarizedExperiment(assays = list(counts = counts),
+                                colData = columndata)
 
-  se <- SummarizedExperiment(assays = list(counts = counts #,
-                                    #DESEQ_normalization = DESEQ_normalization,
-                                    #CPM_Normalization = CPM_Normalization
-                                        ),
-                                        colData = columndata)
-
-  # Add library size
-  #colData(se)$library_size <- colSums(se@assays@data$counts)
-  return(se)
+    # Add library size
+    #colData(se)$library_size <- colSums(se@assays@data$counts)
+    return(se)
 }

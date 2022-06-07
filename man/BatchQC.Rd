@@ -16,7 +16,7 @@ The shiny app will open
 Run BatchQC shiny app
 }
 \examples{
-\donttest{
+\dontrun{
 BatchQC()
 }
 }

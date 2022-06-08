@@ -2,18 +2,20 @@
 % Please edit documentation in R/import.R
 \name{summarized_experiment}
 \alias{summarized_experiment}
-\title{This function allows you to create a summarized experiment object}
+\title{This function creates a summarized experiment object from count
+and metadata files uploaded by the user}
 \usage{
-summarized_experiment(counts_path, metadata_path)
+summarized_experiment(counts, columndata)
 }
 \arguments{
-\item{counts_path}{path to counts file}
+\item{counts}{counts dataframe}
 
-\item{metadata_path}{path to metadata file}
+\item{columndata}{metadata dataframe}
 }
 \value{
 a summarized experiment object
 }
 \description{
-This function allows you to create a summarized experiment object
+This function creates a summarized experiment object from count
+and metadata files uploaded by the user
 }

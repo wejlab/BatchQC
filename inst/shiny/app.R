@@ -34,14 +34,14 @@ ui <- navbarPage(
 )
 
 server <- function(input, output, session) {
-    reactivevalue = reactiveValues(counts = NULL,
+    reactivevalue <- reactiveValues(counts = NULL,
                                    counts_location = NULL,
                                    metadata = '',
                                    metadata_location = NULL,
                                    se_location = NULL,
                                    se = NULL)
-    output$confounding_table = NULL
-    output$metadata = NULL
+    output$confounding_table <- NULL
+    output$metadata <- NULL
     #source(file.path("server/", "server.R"),  local = TRUE)$value
     source(file.path("server/", "server_01_upload.R"), local = TRUE)$value
     source(file.path("server/", "server_02_experimentalDesign.R"), local = TRUE)$value

@@ -2,22 +2,22 @@
 % Please edit documentation in R/Normalization.R
 \name{normalize_SE}
 \alias{normalize_SE}
-\title{This function allows you to Add normalized count matrix to the SE object}
+\title{This function allows you to add normalized count matrix to the SE object}
 \usage{
 normalize_SE(se, method, assay_to_normalize, output_assay_name)
 }
 \arguments{
-\item{se}{SummarizedExperiment}
+\item{se}{SummarizedExperiment Object}
 
-\item{method}{Normalization Method}
+\item{method}{Normalization Method, either 'CPM' or 'DESeq'}
 
-\item{assay_to_normalize}{Which assay use to do normalization}
+\item{assay_to_normalize}{Which SE assay to do normalization on}
 
-\item{output_assay_name}{name of results assay}
+\item{output_assay_name}{name for the resulting normalized assay}
 }
 \value{
-a summarized experiment object with normalized assay appended.
+the original SE object with normalized assay appended
 }
 \description{
-This function allows you to Add normalized count matrix to the SE object
+This function allows you to add normalized count matrix to the SE object
 }

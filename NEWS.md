@@ -4,7 +4,7 @@
 * Fixed various errors for the Bioconductor build
 
 ## Major Changes
-* updates here
+* Added Example Data Functionality
 
 ## Minor Changes
 * Added a `NEWS.md` file to track changes to the package.

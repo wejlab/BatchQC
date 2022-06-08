@@ -53,8 +53,8 @@ tabPanel("Upload Data",
                              )),
             conditionalPanel(condition = "input.uploadChoice == 'example'",
                              selectInput("exampleData", "Example Data",
-                                         choices = c("proteinData"),
-                                         selected = NULL),),
+                                         choices = c("", "proteinData", "No Selection"),
+                                         selected = ""),),
             withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Upload'
             ))
         ),

@@ -79,15 +79,13 @@ batch_pval_plotter <- function(se, batch, condition, assay_name) {
     return(list(batch_boxplot = batch_boxplot))
 }
 
-
-
-#' Preprocess normalized count data for PCA
+#' Preprocess normalized count data
 #' @param se Summarized Experiment object
 #' @param assay Assay from SummarizedExperiment object
 #' @param nfeature Number of variable features to use
-#' @return Returns a list with class "prcomp" (see ?stats::prcomp)
-#' @export
-PCA_preprocess <- function(se, assay, nfeature){
+#' @return Returns processed data
+
+preprocess <- function(se, assay, nfeature){
 
     data <- se@assays@data[[assay]]
     data <- as.matrix(data)
@@ -100,18 +98,8 @@ PCA_preprocess <- function(se, assay, nfeature){
     data <- data[names(vargenes), ]
     data <- data+1
 
-    # Center
-    centered <- data - rowMeans(data)/matrixStats::rowSds(data)
-    # for (i in 1:nrow(data)) {
-    #   data[i,] <- (data[i,]-mean(data[i,]))/sd(data[i,])
-    # }
-    coldata <- data.frame(colData(se))
-    PCA <- stats::prcomp(t(centered), center=FALSE)
-
-    return(PCA)
+    return(data)
 }
-
-
 
 #' This function allows you to plot PCA
 #' @param se SummarizedExperiment object
@@ -134,7 +122,13 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
         }
         else {
             # Preprocess data
-            pca <- PCA_preprocess(se, assay, nfeature)
+            data <- preprocess(se, assay, nfeature)
+
+            # Center
+            centered <- data - rowMeans(data)/matrixStats::rowSds(data)
+            coldata <- data.frame(colData(se))
+            pca <- stats::prcomp(t(centered), center=FALSE)
+
             # Get variance explained
             var_explained <- summary(pca)$importance["Proportion of Variance",]
             var_explained_df <- stats::setNames(as.data.frame(var_explained),
@@ -146,7 +140,6 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
                 var_explained_data <- cbind(var_explained_data,
                                             var_explained_df)
             }
-
 
             # Extract PC data
             pca_data <- as.data.frame(pca$x)
@@ -185,18 +178,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 #'
 #' @export
 heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
-    data <- se@assays@data[[assay]]
-    data <- as.matrix(data)
-    data <- apply(data, c(1, 2), as.numeric)
-    data <- data[rowSums(data) != 0,]
-
-    vargenes <- apply(data, 1, stats::var)
-    vargenes <- vargenes[order(vargenes, decreasing = TRUE)]
-    vargenes <- vargenes[seq(1, nfeature)]
-
-    data <- log(data+1)
-    data <- data[names(vargenes),]
-    data <- data+1
+    data <- preprocess(se, assay, nfeature)
 
     for (i in seq_len(nrow(data))) {
         data[i,] <- (data[i,]-mean(data[i,]))/stats::sd(data[i,])
@@ -226,12 +208,6 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
                                 annotation_names_col = FALSE,
                                 show_rownames = FALSE,
                                 silent = TRUE)
-
-        dendrogram <- topn_heatmap$tree_col
-
-        circular_dendogram <-
-            circlize_dendrogram(stats::as.dendrogram(dendrogram))
-
     }
     else {
         correlation_heatmap <- pheatmap(cor, show_colnames = FALSE,
@@ -244,12 +220,12 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
                                 annotation_names_col = FALSE,
                                 show_rownames = FALSE,
                                 silent = TRUE)
-
-        dendrogram <- topn_heatmap$tree_col
-
-        circular_dendogram <-
-            circlize_dendrogram(stats::as.dendrogram(dendrogram))
     }
+
+    dendrogram <- topn_heatmap$tree_col
+
+    circular_dendogram <-
+        circlize_dendrogram(stats::as.dendrogram(dendrogram))
 
     return(list(correlation_heatmap = correlation_heatmap,
                 topn_heatmap = topn_heatmap,

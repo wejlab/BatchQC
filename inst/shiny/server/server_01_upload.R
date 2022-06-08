@@ -92,6 +92,7 @@ setupSelections <- function(){
 observeEvent(input$uploadChoice, {
     ##When it changes, set all reactive values to null
 })
+
 ## Obtain the counts matrix and count table location
 observeEvent(input$counts, {
     req(input$counts)
@@ -127,12 +128,12 @@ observeEvent(input$se, {
     reactivevalue$se_location <- input$se$datapath
     se <- readRDS(input$se$datapath)
     reactivevalue$se <- se
-    output$se_counts <- renderDT(datatable(assays(reactivevalue$se)$counts))
-    output$se_dimensions <- renderText(paste(dim(reactivevalue$se),
-                                            c('observations and', 'samples')))
+    output$counts <- renderDT(datatable(assays(reactivevalue$se)$counts))
+    output$counts_dimensions <- renderText(paste(dim(reactivevalue$se),
+                                             c('observations and', 'samples')))
 
-    metadata_table <- as.data.table(colData(reactivevalue$se))
-    output$se_meta <- renderDT(datatable(metadata_table))
+    reactivevalue$metadata <- as.data.table(colData(reactivevalue$se))
+    output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
 })
 
 ## Obtain count matrix and count location for example data

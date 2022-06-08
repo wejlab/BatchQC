@@ -1,9 +1,9 @@
-#' This function allows you to Add normalized count matrix to the SE object
-#' @param se SummarizedExperiment
-#' @param method Normalization Method
-#' @param assay_to_normalize Which assay use to do normalization
-#' @param output_assay_name name of results assay
-#' @return a summarized experiment object with normalized assay appended.
+#' This function allows you to add normalized count matrix to the SE object
+#' @param se SummarizedExperiment Object
+#' @param method Normalization Method, either 'CPM' or 'DESeq'
+#' @param assay_to_normalize Which SE assay to do normalization on
+#' @param output_assay_name name for the resulting normalized assay
+#' @return the original SE object with normalized assay appended
 #' @import SummarizedExperiment
 #' @import reader
 #' @import EBSeq

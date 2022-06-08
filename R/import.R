@@ -1,4 +1,5 @@
-#' This function allows you to create a summarized experiment object
+#' This function creates a summarized experiment object from count
+#' and metadata files uploaded by the user
 #' @param counts counts dataframe
 #' @param columndata metadata dataframe
 #' @return a summarized experiment object
@@ -7,7 +8,7 @@
 #' @import EBSeq
 #' @import utils
 #'
-#' @export
+
 summarized_experiment <- function(counts, columndata){
 
     counts <- counts[rowSums(counts)>0,]

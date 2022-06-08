@@ -2,7 +2,8 @@
 % Please edit documentation in R/import.R
 \name{summarized_experiment}
 \alias{summarized_experiment}
-\title{This function allows you to create a summarized experiment object}
+\title{This function creates a summarized experiment object from count
+and metadata files uploaded by the user}
 \usage{
 summarized_experiment(counts, columndata)
 }
@@ -15,5 +16,6 @@ summarized_experiment(counts, columndata)
 a summarized experiment object
 }
 \description{
-This function allows you to create a summarized experiment object
+This function creates a summarized experiment object from count
+and metadata files uploaded by the user
 }

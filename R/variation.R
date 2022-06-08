@@ -12,13 +12,13 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     df <- se@colData
 
     nlb <- n_distinct(as.data.frame(df[batch]))
-    if (nlb <=1) {
+    if (nlb <= 1) {
         batch_mod <- matrix(rep(1, ncol(se)), ncol = 1)
     } else {
         batch_mod <- stats::model.matrix(~df[[batch]])
     }
 
-    nlc <- rep(0,length(condition))
+    nlc <- rep(0, length(condition))
     cond_mod <- list()
     mod <- list()
     cond_test <- list()
@@ -36,15 +36,15 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 
         mod[[i]] <- cbind(cond_mod[[i]], batch_mod[, -1])
 
-        if(qr(mod[[i]])$rank<ncol(mod[[i]])){
+        if(qr(mod[[i]])$rank < ncol(mod[[i]])){
             options(error = NULL)
             if(ncol(mod[[i]]) == (nlb+1)){
                 stop("A covariate is confounded with batch!
                         Please choose different covariates.")
             }
-            if(ncol(mod[[i]])>(nlb+1)){
-                if((qr(mod[[i]][,-c(seq_len(nlb))])$
-                    rank<ncol(mod[[i]][,-c(seq_len(nlb))]))){
+            if(ncol(mod[[i]]) > (nlb + 1)){
+                if((qr(mod[[i]][,-c(seq_len(nlb))])$rank <
+                    ncol(mod[[i]][,-c(seq_len(nlb))]))){
                     stop('A covariate is confounded with batch!
                             Please choose different covariates.')
                 }else{
@@ -65,13 +65,13 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
         cond_mod2 <- cond_mod2[,-idx2]
     }
 
-    if(qr(mod2)$rank<ncol(mod2)){
+    if(qr(mod2)$rank < ncol(mod2)){
         options(error = NULL)
-        if(ncol(mod2)==(nlb+1)){
+        if(ncol(mod2) == (nlb + 1)){
             stop("A covariate is confounded with batch!
                     Please choose different covariates.")
         }
-        if(ncol(mod2)>(nlb+1)){
+        if(ncol(mod2) > (nlb + 1)){
             if((qr(mod2[,-c(seq_len(nlb))])$rank <
                 ncol(mod2[,-c(seq_len(nlb))]))){
                 stop('At least one covariate is confounded with another!
@@ -90,7 +90,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
             }
         }
 
-        batch_mod2 <- cbind(batch_mod2,batch_mod)
+        batch_mod2 <- cbind(batch_mod2, batch_mod)
         idx <- which(duplicated(colnames(batch_mod2)) &
                                 colnames(batch_mod2) == "(Intercept)")
         if (length(idx) > 0) {
@@ -122,7 +122,9 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     } else {
         colnames(explained_variation)[1] <- "Full (Covariates + Batch)"
     }
+
     colnames(explained_variation)[2] <- "Batch"
+
     for (i in seq_len(length(condition))) {
         colnames(explained_variation)[i+2] <- condition[i]
     }

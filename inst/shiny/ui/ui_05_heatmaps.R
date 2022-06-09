@@ -1,7 +1,7 @@
-tabPanel("Sample Correlation & Cluster Analysis",
+tabPanel("Heatmaps",
 
          # Application title
-         titlePanel("Sample Correlation & Cluster Analysis"),
+         titlePanel("Heatmaps"),
 
          # Sidebar with a slider input for number of bins
          sidebarLayout(

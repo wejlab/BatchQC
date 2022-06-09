@@ -7,7 +7,7 @@
 #' @import reader
 #' @import EBSeq
 #' @import utils
-#'
+#' @export
 
 summarized_experiment <- function(counts, columndata){
 

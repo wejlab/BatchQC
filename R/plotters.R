@@ -94,9 +94,9 @@ preprocess <- function(se, assay, nfeature){
     vargenes <- apply(data, 1, stats::var)
     vargenes <- vargenes[order(vargenes, decreasing = TRUE)]
     vargenes <- vargenes[seq(1, nfeature)]
-    data <- log(data+1)
+    data <- log(data + 1)
     data <- data[names(vargenes), ]
-    data <- data+1
+    data <- data + 1
 
     return(data)
 }
@@ -107,11 +107,13 @@ preprocess <- function(se, assay, nfeature){
 #' @param color choose a color
 #' @param shape choose a shape
 #' @param assays array of assay names from `se`
+#' @param xaxisPC the PC to plot as the x axis
+#' @param yaxisPC the PC to plot as the y axis
 #' @import ggplot2
 #' @return PCA plot
 #'
 #' @export
-PCA_plotter <- function(se, nfeature, color, shape, assays) {
+PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
     pca_plot_data <- data.frame()
     var_explained_data <- NULL
     coldata <- data.frame(colData(se))
@@ -131,15 +133,6 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
 
             # Get variance explained
             var_explained <- summary(pca)$importance["Proportion of Variance",]
-            var_explained_df <- stats::setNames(as.data.frame(var_explained),
-                                                assay)
-            if (is.null(var_explained_data)){
-                var_explained_data <- var_explained_df
-            }
-            else{
-                var_explained_data <- cbind(var_explained_data,
-                                            var_explained_df)
-            }
 
             # Extract PC data
             pca_data <- as.data.frame(pca$x)
@@ -154,14 +147,24 @@ PCA_plotter <- function(se, nfeature, color, shape, assays) {
     }
     # Reorder data
     pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
+
+    xaxisPC <- paste0('PC', xaxisPC)
+    yaxisPC <- paste0('PC', yaxisPC)
+    xaxis_var_exp <- var_explained[xaxisPC] * 100
+    yaxis_var_exp <- var_explained[yaxisPC] * 100
+    xlabel <- paste0(xaxisPC, " (", xaxis_var_exp,  "% explained variance)")
+    ylabel <- paste0(yaxisPC, " (", yaxis_var_exp, "% explained variance)")
+
     plot <- ggplot(pca_plot_data,
-                    aes_string(x = 'PC1', y = 'PC2', colour = color,
-                                shape = shape, sample = 'sample'))+
-        geom_point(size = 3) +
-        facet_wrap(vars(assay), ncol = 2, scales = 'free')
+                    aes_string(x = xaxisPC, y = yaxisPC, colour = color,
+                                shape = shape, sample = 'sample')) +
+            geom_point(size = 3) +
+            facet_wrap(vars(assay), ncol = 2, scales = 'free') +
+            xlab(xlabel) +
+            ylab(ylabel)
 
     return(list(PCA = pca_plot_data,
-                var_explained = var_explained_data,
+                var_explained = var_explained,
                 plot = plot))
 }
 

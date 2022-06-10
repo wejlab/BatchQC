@@ -4,7 +4,7 @@
 \alias{PCA_plotter}
 \title{This function allows you to plot PCA}
 \usage{
-PCA_plotter(se, nfeature, color, shape, assays)
+PCA_plotter(se, nfeature, color, shape, assays, xaxisPC, yaxisPC)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
@@ -16,6 +16,10 @@ PCA_plotter(se, nfeature, color, shape, assays)
 \item{shape}{choose a shape}
 
 \item{assays}{array of assay names from \code{se}}
+
+\item{xaxisPC}{the PC to plot as the x axis}
+
+\item{yaxisPC}{the PC to plot as the y axis}
 }
 \value{
 PCA plot

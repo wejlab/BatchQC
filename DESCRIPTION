@@ -56,7 +56,8 @@ Imports:
     sva,
     tidyr,
     tidyverse,
-    utils
+    utils,
+    DESeq2
 Suggests:
     spelling, 
     testthat (>= 3.0.0),

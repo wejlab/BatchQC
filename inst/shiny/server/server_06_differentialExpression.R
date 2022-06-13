@@ -2,7 +2,7 @@
 observeEvent(input$DE_analyze, {
     req(reactivevalue$se, input$DE_analyze)
     
-    results <- DE_analyze(reactivevalue$se, input$DE_method, 
+    results <- analyze_SE(reactivevalue$se, input$DE_method, 
                           input$DE_conditions, input$DE_assay)
     output$DE_results <- renderDT({results$res
     })

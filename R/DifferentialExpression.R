@@ -22,9 +22,9 @@ volcano_plot <- function(volcano_data,slider) {
                                             slider_factor ~ "FALSE",
                                         TRUE ~ 'NA'))
     
-    p <- ggplot(data=volcano_data, aes(x=volcano_data[,1],
-                                        y=-log10(volcano_data[,2]),
-                                        color=slider_cond)) + 
+    p <- ggplot(data = volcano_data, aes(x = volcano_data[,1],
+                                        y = -log10(volcano_data[,2]),
+                                        color = slider_cond)) + 
         geom_point() +
         scale_color_manual(values = c('FALSE' = 'red', 'TRUE' = 'orange',
                                         'NA'='black')) + 
@@ -57,25 +57,31 @@ DE_analyze <- function(se, method, conditions, assay_to_analyze) {
     analysis_design <- as.data.frame(se@colData[conditions])
     con <- paste("~ ",colnames(analysis_design))
     
-    if (method=='t') {
-        res <- findMarkers(data, analysis_design[,1],
-                            test.type=method, pval.type="all", lfc=1)
+    if (method == 't') {
+        res <- findMarkers(data, 
+                           analysis_design[,1],
+                           test.type  = method,
+                           pval.type = "all", 
+                           lfc = 1)
         res <- as.matrix(res[[1]])
         pvalue <- res[,2]
         log2FC <- res[,4]
-        res <- res[order(res[,1],decreasing=FALSE),]
-        to_plot <- cbind(log2FC,pvalue)
+        res <- res[order(res[,1], decreasing = FALSE), ]
+        to_plot <- cbind(log2FC, pvalue)
     }
-    else if (method=='wilcox') {
-        res <- findMarkers(data, analysis_design[,1],
-                            test.type=method, pval.type="all", lfc=1)
+    else if (method == 'wilcox') {
+        res <- findMarkers(data, 
+                           analysis_design[,1],
+                           test.type = method, 
+                           pval.type = "all", 
+                           lfc=1)
         res <- as.matrix(res[[1]])
         pvalue <- res[,2]
         AUC <- res[,3]
-        res <- res[order(res[,1],decreasing=FALSE),]
-        to_plot <- cbind(AUC,pvalue)
+        res <- res[order(res[,1], decreasing=FALSE), ]
+        to_plot <- cbind(AUC, pvalue)
     }
-    else if (method=='DESeq2') {
+    else if (method == 'DESeq2') {
         colnames(data) <- rownames(analysis_design)
         data[is.na(data)] <- 0
         dds <- DESeqDataSetFromMatrix(countData = abs(round(data)),
@@ -86,9 +92,9 @@ DE_analyze <- function(se, method, conditions, assay_to_analyze) {
         pvalue <- res$pvalue
         log2FC <- res$log2FoldChange
         res <- as.matrix(res)
-        res <- res[order(res[,6],decreasing=FALSE),]
-        to_plot <- cbind(log2FC,pvalue)
+        res <- res[order(res[,6], decreasing = FALSE), ]
+        to_plot <- cbind(log2FC, pvalue)
     }
-    return(list(res=res,
-                volcano=to_plot))
+    return(list(res = res,
+                volcano = to_plot))
 }

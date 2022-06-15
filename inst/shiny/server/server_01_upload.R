@@ -87,6 +87,9 @@ setupSelections <- function(){
     updateSelectizeInput(session = session, inputId="DE_assay",
                          choices = names(assays(reactivevalue$se)),
                          selected = NULL)
+    updateSelectizeInput(session = session,inputId = 'DE_conditions',
+                         choices = colnames(colData(reactivevalue$se)),
+                         selected = NULL)
 }
 
 observeEvent(input$uploadChoice, {

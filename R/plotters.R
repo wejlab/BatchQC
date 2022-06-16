@@ -133,6 +133,16 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
 
             # Get variance explained
             var_explained <- summary(pca)$importance["Proportion of Variance",]
+            var_explained_df <- stats::setNames(as.data.frame(var_explained),
+                                                assay)
+
+            if (is.null(var_explained_data)){
+                var_explained_data <- var_explained_df
+            }
+            else{
+                var_explained_data <- cbind(var_explained_data,
+                                            var_explained_df)
+            }
 
             # Extract PC data
             pca_data <- as.data.frame(pca$x)
@@ -150,21 +160,21 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
 
     xaxisPC <- paste0('PC', xaxisPC)
     yaxisPC <- paste0('PC', yaxisPC)
-    xaxis_var_exp <- var_explained[xaxisPC] * 100
-    yaxis_var_exp <- var_explained[yaxisPC] * 100
-    xlabel <- paste0(xaxisPC, " (", xaxis_var_exp,  "% explained variance)")
-    ylabel <- paste0(yaxisPC, " (", yaxis_var_exp, "% explained variance)")
+    # xaxis_var_exp <- var_explained[xaxisPC] * 100
+    # yaxis_var_exp <- var_explained[yaxisPC] * 100
+    # xlabel <- paste0(xaxisPC, " (", xaxis_var_exp,  "% explained variance)")
+    # ylabel <- paste0(yaxisPC, " (", yaxis_var_exp, "% explained variance)")
 
     plot <- ggplot(pca_plot_data,
                     aes_string(x = xaxisPC, y = yaxisPC, colour = color,
                                 shape = shape, sample = 'sample')) +
             geom_point(size = 3) +
-            facet_wrap(vars(assay), ncol = 2, scales = 'free') +
-            xlab(xlabel) +
-            ylab(ylabel)
+            facet_wrap(vars(assay), ncol = 2, scales = 'free') #+
+            # xlab(xlabel) +
+            # ylab(ylabel)
 
     return(list(PCA = pca_plot_data,
-                var_explained = var_explained,
+                var_explained = var_explained_data,
                 plot = plot))
 }
 

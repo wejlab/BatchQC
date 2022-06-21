@@ -125,17 +125,14 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
         else {
             # Preprocess data
             data <- preprocess(se, assay, nfeature)
-
-            # Center
             centered <- data - rowMeans(data)/matrixStats::rowSds(data)
             coldata <- data.frame(colData(se))
-            pca <- stats::prcomp(t(centered), center=FALSE)
-
+            pca <- stats::prcomp(t(centered), center = FALSE)
             # Get variance explained
             var_explained <- summary(pca)$importance["Proportion of Variance",]
             var_explained_df <- stats::setNames(as.data.frame(var_explained),
                                                 assay)
-
+            #print(head(var_explained_df))
             if (is.null(var_explained_data)){
                 var_explained_data <- var_explained_df
             }
@@ -143,7 +140,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
                 var_explained_data <- cbind(var_explained_data,
                                             var_explained_df)
             }
-
+            #print(head(var_explained_data))
             # Extract PC data
             pca_data <- as.data.frame(pca$x)
             # Annotate with assay name
@@ -155,24 +152,27 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
             pca_plot_data <- rbind(pca_plot_data, pca_md)
         }
     }
+#    print(head(var_explained_data))
     # Reorder data
     pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
+    # row1 <- var_explained_data[xaxisPC, ]
+    # row2 <- var_explained_data[yaxisPC, ]
+    print(xaxisPC)
+    print(yaxisPC)
+
+    var_explained_data <- var_explained_data[c(xaxisPC, yaxisPC), ]
+        #rbind(var_explained_data[xaxisPC, ], var_explained_data[yaxisPC, ])
 
     xaxisPC <- paste0('PC', xaxisPC)
     yaxisPC <- paste0('PC', yaxisPC)
-    # xaxis_var_exp <- var_explained[xaxisPC] * 100
-    # yaxis_var_exp <- var_explained[yaxisPC] * 100
-    # xlabel <- paste0(xaxisPC, " (", xaxis_var_exp,  "% explained variance)")
-    # ylabel <- paste0(yaxisPC, " (", yaxis_var_exp, "% explained variance)")
+    print(head(var_explained_data))
+
 
     plot <- ggplot(pca_plot_data,
-                    aes_string(x = xaxisPC, y = yaxisPC, colour = color,
+                    aes_string(x = xaxisPC, y = yaxisPC, color = color,
                                 shape = shape, sample = 'sample')) +
             geom_point(size = 3) +
-            facet_wrap(vars(assay), ncol = 2, scales = 'free') #+
-            # xlab(xlabel) +
-            # ylab(ylabel)
-
+            facet_wrap(vars(assay), ncol = 2, scales = 'free')
     return(list(PCA = pca_plot_data,
                 var_explained = var_explained_data,
                 plot = plot))

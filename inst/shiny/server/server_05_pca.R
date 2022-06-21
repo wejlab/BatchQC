@@ -26,8 +26,8 @@ observeEvent(input$PCA_plot, {
                                            within 2 and the size of your
                                            dataset"))
                                 results$plot})
-        #output$var_explained <- renderTable(
-         #   results$var_explained, rownames = TRUE, digits = 4)
+        output$var_explained <- renderTable(
+            results$var_explained, rownames = TRUE, digits = 4)
         setProgress(1, 'Complete.')
     })
 })

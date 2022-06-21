@@ -131,13 +131,15 @@ observeEvent(input$se, {
     reactivevalue$se_location <- input$se$datapath
     se <- readRDS(input$se$datapath)
     reactivevalue$se <- se
-    output$counts <- renderDT(datatable(assays(reactivevalue$se)$counts))
+    output$counts_header <- renderDT(datatable(assays(reactivevalue$se)$counts))
+    #output$counts_header <- renderDT((datatable(reactivevalue$counts)))
     output$counts_dimensions <- renderText(paste(dim(reactivevalue$se),
                                              c('observations and', 'samples')))
 
     reactivevalue$metadata <- as.data.table(colData(reactivevalue$se))
     output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
-})
+    print("Made it")
+    })
 
 ## Obtain count matrix and count location for example data
 observeEvent(input$exampleData, {

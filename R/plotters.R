@@ -140,7 +140,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
                 var_explained_data <- cbind(var_explained_data,
                                             var_explained_df)
             }
-            #print(head(var_explained_data))
+
             # Extract PC data
             pca_data <- as.data.frame(pca$x)
             # Annotate with assay name
@@ -152,20 +152,19 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
             pca_plot_data <- rbind(pca_plot_data, pca_md)
         }
     }
-#    print(head(var_explained_data))
     # Reorder data
     pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
     # row1 <- var_explained_data[xaxisPC, ]
     # row2 <- var_explained_data[yaxisPC, ]
-    print(xaxisPC)
-    print(yaxisPC)
+    #print(xaxisPC)
+    #print(yaxisPC)
 
     var_explained_data <- var_explained_data[c(xaxisPC, yaxisPC), ]
         #rbind(var_explained_data[xaxisPC, ], var_explained_data[yaxisPC, ])
 
     xaxisPC <- paste0('PC', xaxisPC)
     yaxisPC <- paste0('PC', yaxisPC)
-    print(head(var_explained_data))
+    #print(head(var_explained_data))
 
 
     plot <- ggplot(pca_plot_data,

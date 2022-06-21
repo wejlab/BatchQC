@@ -50,7 +50,7 @@ tabPanel("PCA Analysis",
            # Show a plot of the generated distribution
            mainPanel(
              plotOutput('PCA'),
-             h3('Variance Explained'),
+             h4('Variance Explained'),
              tableOutput('var_explained')
            )
          )

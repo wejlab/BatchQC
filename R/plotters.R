@@ -121,8 +121,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
         if (! assay %in%  names(se@assays)){
             warning(sprintf('"%s" is not an available assay', assay))
             next
-        }
-        else {
+        }else {
             # Preprocess data
             data <- preprocess(se, assay, nfeature)
             centered <- data - rowMeans(data)/matrixStats::rowSds(data)
@@ -155,7 +154,6 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
     var_explained_data <- var_explained_data[c(xaxisPC, yaxisPC), , drop=FALSE]
     xaxisPC <- paste0('PC', xaxisPC)
     yaxisPC <- paste0('PC', yaxisPC)
-
     plot <- ggplot(pca_plot_data,
                     aes_string(x = xaxisPC, y = yaxisPC, color = color,
                                 shape = shape, sample = 'sample')) +

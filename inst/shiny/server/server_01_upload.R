@@ -138,7 +138,6 @@ observeEvent(input$se, {
 
     reactivevalue$metadata <- as.data.table(colData(reactivevalue$se))
     output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
-    print("Made it")
     })
 
 ## Obtain count matrix and count location for example data

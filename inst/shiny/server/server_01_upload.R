@@ -153,7 +153,7 @@ observeEvent(input$exampleData, {
 
         data(protein_sample_info)
         rownames(protein_sample_info) <- paste0("X", protein_sample_info$Arrayname)
-        reactivevalue$metadata <- protein_sample_info[2:4]
+        reactivevalue$metadata <- protein_sample_info[3:4]
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }
 })

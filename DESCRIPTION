@@ -39,15 +39,15 @@ BugReports: https://github.com/compbiomed/BatchQC/issues
 Depends:
     R (>= 4.2.0)
 Imports:
-    circlize,
     data.table,
-    dendextend,
     DESeq2,
     dplyr,
     EBSeq,
+    ggdendro,
     ggplot2,
     matrixStats,
     pheatmap,
+    RColorBrewer,
     reader,
     reshape2,
     rlist,
@@ -55,6 +55,7 @@ Imports:
     shiny,
     SummarizedExperiment,
     sva,
+    tibble,
     tidyr,
     tidyverse,
     utils

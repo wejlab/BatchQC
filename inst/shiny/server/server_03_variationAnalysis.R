@@ -42,49 +42,6 @@ ev_table_reactive <- eventReactive(input$variation, {
     })
 })
 
-## Update pvalue summary table
-pvals_summary_reactive <- eventReactive(input$variation, {
-    req(input$variation_batch, input$variation_condition, input$variation_assay,
-        reactivevalue$se)
-    # Create boxplot for batch pvals
-    tryCatch({
-        pval_summary_table <- pval_summary(reactivevalue$se, input$variation_batch,
-                                           input$variation_condition,
-                                           input$variation_assay)
-        pval_summary_table$pval_table
-    })
-})
-
-## Update batch pvalue boxplot
-batch_pvals_reactive <- eventReactive(input$variation, {
-    req(input$variation_batch, input$variation_condition, input$variation_assay,
-        reactivevalue$se)
-    # Create boxplot for batch pvals
-    tryCatch({
-        plot_batch_pvals <- batch_pval_plotter(reactivevalue$se,
-                                               input$variation_batch,
-                                               input$variation_condition,
-                                               input$variation_assay)
-        plot_batch_pvals$batch_boxplot
-    }, error = function(err) {
-    })
-})
-
-## Update covariate pvalue boxplot
-covariate_pvals_reactive <- eventReactive(input$variation, {
-    req(input$variation_batch, input$variation_condition, input$variation_assay,
-        reactivevalue$se)
-    # Create boxplot for batch pvals
-    tryCatch({
-        plot_covariate_pvals <- covariate_pval_plotter(reactivevalue$se,
-                                                       input$variation_batch,
-                                                       input$variation_condition,
-                                                       input$variation_assay)
-        plot_covariate_pvals$covar_boxplot
-    }, error = function(err) {
-    })
-})
-
 ## Display variation and p-value plots and tables
 observeEvent(input$variation, {
     withBusyIndicatorServer("variation", {
@@ -94,23 +51,6 @@ observeEvent(input$variation, {
 
         output$EV_show_table <- renderDataTable({
             ev_table_reactive()
-        })
-
-        output$pval_summary <- renderTable({
-            pvals_summary_reactive()},
-            rownames = TRUE,
-            striped = TRUE,
-            bordered = TRUE,
-            caption = "<b> <span style='color:#000000'> P-Value Summary Table </b>",
-            caption.placement = getOption("xtable.caption.placement","top"),
-        )
-
-        output$batch_pval_plot <- renderPlot({
-            batch_pvals_reactive()
-        })
-
-        output$covariate_pval_plot <- renderPlot({
-            covariate_pvals_reactive()
         })
     })
 })

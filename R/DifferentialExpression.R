@@ -26,11 +26,11 @@ volcano_plot <- function(volcano_data,slider) {
                                         y = -log10(volcano_data[,2]),
                                         color = slider_cond)) +
         geom_point() +
-        scale_color_manual(values = c('FALSE' = 'red', 'TRUE' = 'orange',
+        scale_color_manual(values = c('FALSE' = 'red', 'TRUE' = 'blue',
                                         'NA'='black')) +
-        xlab("Change in Expression") +
-        ylab("Signifigance Value") +
-        theme(legend.position="bottom")
+        xlab("Change in Expression (log2 fold change or AUC)") +
+        ylab("Signifigance Value (-log10 p-value)") +
+        theme(legend.position = "bottom")
 
     return(p)
 }

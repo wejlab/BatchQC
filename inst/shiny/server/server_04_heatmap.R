@@ -26,22 +26,4 @@ observeEvent(input$heatmap_plot, {
         results$topn_heatmap
     }, height = function() {session$clientData$output_topn_heatmap_width
     })
-
-    output$dendrogram <- renderPlot({
-        validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
-                      "Value must be less than the dim of your data set"))
-        plot(dendrogram_plotter(reactivevalue$se,
-                                input$heatmap_assay_name,
-                                input$variates_to_display)$dendrogram)
-    }, height = function() {session$clientData$output_dendrogram_width
-    })
-    
-    output$circular_dendrogram <- renderPlot({
-        validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
-                      "Value must be less than the dim of your data set"))
-        plot(dendrogram_plotter(reactivevalue$se,
-                                input$heatmap_assay_name,
-                                input$variates_to_display)$circular_dendrogram)
-    }, height = function() {session$clientData$output_circular_dendrogram_width
-    })
 })

@@ -23,13 +23,7 @@ tabPanel("Heatmaps",
                ),
                tabPanel("Heatmap",
                         plotOutput('topn_heatmap')
-               ),
-               tabPanel("Dendrogram",
-                        plotOutput('dendrogram')
-               ),
-               tabPanel("Circular Dendrogram",
-                        plotOutput('circular_dendrogram')
-             )
+               )
            )
          )
          )

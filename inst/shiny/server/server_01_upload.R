@@ -55,6 +55,14 @@ setupSelections <- function(){
                       selected = NULL)
     updateNumericInput(session = session, inputId = 'top_n_heatmap',
                        value = 2, min = 2, max = dim(reactivevalue$se)[1])
+    
+    # Dendrogram
+    updateSelectizeInput(session = session, inputId = 'dend_assay_name',
+                         choices = assayNames((reactivevalue$se)),
+                         selected = NULL)
+    updateSelectInput(session = session, inputId = 'dend_variates_to_display',
+                      choices = colnames(colData(reactivevalue$se)),
+                      selected = NULL)
 
     # PCA
     updateSelectizeInput(session = session, inputId = 'pca_assays',

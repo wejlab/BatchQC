@@ -100,7 +100,8 @@ batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
                 cov <- data.frame(cov)
                 rownames(cov) <- rownames(data.frame(colData(se)))
                 colnames(cov) <- covar
-                linearmodel <- as.function(paste0('~',
+
+                linearmodel <- stats::as.formula(paste0('~',
                                                     paste(colnames(cov),
                                                         sep = '+')))
                 model <- stats::model.matrix(linearmodel, data = cov)

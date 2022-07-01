@@ -17,7 +17,8 @@ summarized_experiment <- function(counts, columndata){
     columndata <- columndata[mutual_sample,]
 
     se <- SummarizedExperiment(assays = list(counts = counts),
-                                colData = columndata)
+                                colData = columndata,
+                                metadata = list(metadata = columndata))
 
     # Add library size
     #colData(se)$library_size <- colSums(se@assays@data$counts)

@@ -197,7 +197,6 @@ observeEvent(input$submit, {
             content = function(file) {
                 saveRDS(reactivevalue$se,file)
             }
-
         )
 
         # Display metadata table

@@ -79,6 +79,15 @@ observeEvent(input$DE_analyze, {
     }, height = function() {session$clientData$output_volcano_width
     })
     
+    output$downloadDEData <- downloadHandler(
+        filename = function() {
+            paste("DE_results", ".csv", sep = "")
+        },
+        content = function(file) {
+            write.csv(results$res,file)
+        }
+    )
+    
 })
 
 

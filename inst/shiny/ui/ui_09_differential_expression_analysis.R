@@ -34,7 +34,9 @@ tabPanel("Differential Expression Analysis",
            mainPanel(
              tabsetPanel(
                tabPanel("Results Table",
-                        DTOutput('DE_results')
+                        DTOutput('DE_results'),
+                        conditionalPanel(condition = "output.DE_results",
+                                         downloadButton("downloadDEData", "Download"))
                ),
                tabPanel("P-Value Analysis",
                         tableOutput('pval_summary'),

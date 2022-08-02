@@ -7,75 +7,38 @@ observeEvent(input$DE_batch, {
                          choices = DE_covariate_choices, selected = NULL)
 })
 
-## Update pvalue summary table
-pvals_summary_reactive <- eventReactive(input$DE_analyze, {
-    req(input$DE_batch, input$DE_conditions, input$DE_assay,
-        reactivevalue$se)
-    # Create boxplot for batch pvals
-    tryCatch({
-        pval_summary_table <- pval_summary(reactivevalue$se, input$DE_batch,
-                                           input$DE_conditions,
-                                           input$DE_assay)
-        pval_summary_table$pval_table
-    })
-})
-
-## Update batch pvalue boxplot
-batch_pvals_reactive <- eventReactive(input$DE_analyze, {
-    req(input$DE_batch, input$DE_conditions, input$DE_assay,
-        reactivevalue$se)
-    # Create boxplot for batch pvals
-    tryCatch({
-        plot_batch_pvals <- batch_pval_plotter(reactivevalue$se,
-                                               input$DE_batch,
-                                               input$DE_conditions,
-                                               input$DE_assay)
-        plot_batch_pvals$batch_boxplot
-    }, error = function(err) {
-    })
-})
-
-## Update covariate pvalue boxplot
-covariate_pvals_reactive <- eventReactive(input$DE_analyze, {
-    req(input$DE_batch, input$DE_conditions, input$DE_assay,
-        reactivevalue$se)
-    # Create boxplot for batch pvals
-    tryCatch({
-        plot_covariate_pvals <- covariate_pval_plotter(reactivevalue$se,
-                                                       input$DE_batch,
-                                                       input$DE_conditions,
-                                                       input$DE_assay)
-        plot_covariate_pvals$covar_boxplot
-    }, error = function(err) {
-    })
-})
-
-output$pval_summary <- renderTable({
-    pvals_summary_reactive()},
-    rownames = TRUE,
-    striped = TRUE,
-    bordered = TRUE,
-    caption = "<b> <span style='color:#000000'> P-Value Summary Table </b>",
-    caption.placement = getOption("xtable.caption.placement","top"),
-)
-
-output$batch_pval_plot <- renderPlot({
-    batch_pvals_reactive()
-})
-
-output$covariate_pval_plot <- renderPlot({
-    covariate_pvals_reactive()
-})
-
 observeEvent(input$DE_analyze, {
     req(reactivevalue$se, input$DE_analyze)
     
-    results <- DE_analyze(reactivevalue$se, input$DE_method, 
-                          input$DE_conditions, input$DE_assay)
-    output$DE_results <- renderDT({results$res
+    reactivevalue$DE_results <- DE_analyze(reactivevalue$se, input$DE_method, 
+                          input$DE_batch, input$DE_conditions, input$DE_assay)
+    display_covariate <- DESeq2::resultsNames(reactivevalue$DE_results$dds)[length(DESeq2::resultsNames(reactivevalue$DE_results$dds))]
+    pval_summary_table <- pval_summary(reactivevalue$DE_results)
+    volcano <- cbind(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$log2FoldChange,
+                     DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$pvalue)
+    results_tab <- as.data.frame(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate))
+    output$DE_results <- renderDT({ results_tab
     })
+    
+    output$pval_summary <- renderTable({
+        pval_summary_table$pval_table},
+        rownames = TRUE,
+        striped = TRUE,
+        bordered = TRUE,
+        caption = "<b> <span style='color:#000000'> P-Value Summary Table </b>",
+        caption.placement = getOption("xtable.caption.placement","top"),
+    )
+    
+    output$covariate_pval_plot <- renderPlot({
+        covariate_pval_plotter(reactivevalue$DE_results)
+    })
+    
+    output$batch_pval_plot <- renderPlot({
+        batch_pval_plotter(reactivevalue$DE_results)
+    })
+    
     output$volcano <- renderPlot({
-        volcano_plot(results$volcano,input$slider)
+        volcano_plot(volcano,input$pslider,input$fcslider)
     }, height = function() {session$clientData$output_volcano_width
     })
     
@@ -84,10 +47,47 @@ observeEvent(input$DE_analyze, {
             paste("DE_results", ".csv", sep = "")
         },
         content = function(file) {
-            write.csv(results$res,file)
+            write.csv(results_tab,file)
         }
     )
+  
+    updateSelectizeInput(session = session, inputId = "DE_res_selected",
+                         choices = DESeq2::resultsNames(reactivevalue$DE_results$dds)[2:length(DESeq2::resultsNames(reactivevalue$DE_results$dds))], 
+                         selected = DESeq2::resultsNames(reactivevalue$DE_results$dds)
+                         [length(DESeq2::resultsNames(reactivevalue$DE_results$dds))])
+    updateSliderInput(session = session, inputId = "fcslider",
+                      min=round(min(abs(volcano[,1]))), max=round(max(abs(volcano[,1]))), value=(max(abs(volcano[,1])))/2)
     
 })
+
+
+observeEvent(input$DE_res_selected, {
+    req(reactivevalue$DE_results)
+  
+    display_covariate <- as.character(input$DE_res_selected)
+    
+    volcano <- cbind(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$log2FoldChange,
+                     DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$pvalue)
+    results_tab <- as.data.frame(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate))
+    
+    output$DE_results <- renderDT({ results_tab
+    })
+    
+    output$volcano <- renderPlot({
+        volcano_plot(volcano,input$pslider,input$fcslider)
+    }, height = function() {session$clientData$output_volcano_width
+    })
+    
+    output$downloadDEData <- downloadHandler(
+        filename = function() {
+            paste("DE_results", ".csv", sep = "")
+        },
+        content = function(file) {
+            write.csv(results_tab,file)
+        }
+    )
+})
+
+
 
 

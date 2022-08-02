@@ -4,16 +4,10 @@
 \alias{pval_summary}
 \title{Returns summary table for p-values of explained variation}
 \usage{
-pval_summary(se, batch, condition, assay_name)
+pval_summary(DE_res)
 }
 \arguments{
-\item{se}{Summarized experiment object}
-
-\item{batch}{Batch Covariate}
-
-\item{condition}{Condition covariate(s) of interest}
-
-\item{assay_name}{Name of chosen assay}
+\item{DE_res}{DE analysis results output from DE_analyze()}
 }
 \value{
 List of explained variation by batch and condition

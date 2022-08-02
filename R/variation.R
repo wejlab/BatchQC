@@ -226,21 +226,28 @@ covariates_not_confounded <- function(se, batch) {
 
 #' Returns summary table for p-values of explained variation
 #'
-#' @param se Summarized experiment object
-#' @param batch Batch Covariate
-#' @param condition Condition covariate(s) of interest
-#' @param assay_name Name of chosen assay
+#' @param DE_res DE analysis results output from DE_analyze()
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
 #' @export
-pval_summary <- function(se, batch, condition, assay_name) {
-    batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
+pval_summary <- function(DE_res) {
 
-    pval_table <- rbind(summary(batchqc_ev$batch_ps))
+    pval_table <- rbind(summary(results(DE_res$dds)[,'pvalue']))
 
-    for (i in seq_len(length(condition))) {
-        pval_table <- rbind(pval_table, summary(batchqc_ev$cond_test[[i]]$p))
-        rownames(pval_table)[i + 1] <- condition[i]
+    row_count <- 1
+    for (i in seq_len(length(resultsNames(DE_res$dds)))) {
+        if (resultsNames(DE_res$dds)[i] == 'Intercept') {
+            next
+        }
+        else if (i == length(resultsNames(DE_res$dds))) {
+            next
+        }
+        else {
+        pval_table <- rbind(pval_table, summary(
+            results(DE_res$dds,name = resultsNames(DE_res$dds)[i])$pvalue))
+        rownames(pval_table)[row_count + 1] <- resultsNames(DE_res$dds)[i]
+        row_count <- row_count + 1
+        }
     }
 
     rownames(pval_table)[1] <- "Batch"

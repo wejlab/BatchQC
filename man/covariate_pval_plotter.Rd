@@ -5,16 +5,10 @@
 \title{Covariate P-value Plotter
 This function allows you to plot covariate p-values of explained variation}
 \usage{
-covariate_pval_plotter(se, batch, condition, assay_name)
+covariate_pval_plotter(DE_res)
 }
 \arguments{
-\item{se}{Summarized experiment object}
-
-\item{batch}{Batch covariate}
-
-\item{condition}{Condition covariate of interest}
-
-\item{assay_name}{Assay of choice}
+\item{DE_res}{DE analysis results output from DE_analyze()}
 }
 \value{
 List of explained variation by batch and condition

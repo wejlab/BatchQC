@@ -4,12 +4,14 @@
 \alias{volcano_plot}
 \title{Volcano plot}
 \usage{
-volcano_plot(volcano_data, slider)
+volcano_plot(volcano_data, pslider, fcslider)
 }
 \arguments{
 \item{volcano_data}{A dataframe of expression change and p-value data}
 
-\item{slider}{Magnitude of significance value threshold}
+\item{pslider}{Magnitude of significance value threshold}
+
+\item{fcslider}{Magnitude of expression change value threshold}
 }
 \value{
 A volcano plot of expression change and significane value data
@@ -21,7 +23,14 @@ This function allows you to plot DE analysis results as a volcano plot
 library(scran)
 se <- mockSCE()
 
-DE_res <- BatchQC::DE_analyze(se,"DESeq2","Treatment","counts")
+DE_res <- BatchQC::DE_analyze(se,
+                                "DESeq2",
+                                "Mutation_Status",
+                                "Treatment",
+                                "counts")
 
-volcano_plot(DE_res$volcano, -150)
+volcano <- cbind(DESeq2::results(DE_res$dds)$log2FoldChange,
+                    DESeq2::results(DE_res$dds)$pvalue)
+
+volcano_plot(volcano, -150,2)
 }

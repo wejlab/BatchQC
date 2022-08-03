@@ -39,7 +39,8 @@ server <- function(input, output, session) {
                                    metadata = '',
                                    metadata_location = NULL,
                                    se_location = NULL,
-                                   se = NULL)
+                                   se = NULL,
+                                   DE_results = NULL)
     output$confounding_table <- NULL
     output$metadata <- NULL
     #source(file.path("server/", "server.R"),  local = TRUE)$value

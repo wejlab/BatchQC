@@ -4,14 +4,16 @@
 \alias{DE_analyze}
 \title{Differential Expression Analysis}
 \usage{
-DE_analyze(se, method, conditions, assay_to_analyze)
+DE_analyze(se, method, batch, conditions, assay_to_analyze)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
 
-\item{method}{DE analysis method options t-test, Wilcox rank sum, and DESeq2}
+\item{method}{DE analysis method option}
 
-\item{conditions}{Sample metadata column for DE analysis}
+\item{batch}{Batch sample metadata column}
+
+\item{conditions}{Sample metadata columns for additional analysis covariates}
 
 \item{assay_to_analyze}{Assay for DE analysis}
 }
@@ -30,7 +32,11 @@ library(scran)
 se <- mockSCE()
 
 # Normalized counts are required for analysis methods other than DESeq2
-DE_res <- BatchQC::DE_analyze(se,"DESeq2","Treatment","counts")
+DE_res <- BatchQC::DE_analyze(se,
+                                "DESeq2",
+                                "Mutation_Status",
+                                "Treatment",
+                                "counts")
 
-DE_res$res
+DE_res$dds
 }

@@ -4,16 +4,10 @@
 \alias{batch_pval_plotter}
 \title{This function allows you to plot batch p-values of explained variation}
 \usage{
-batch_pval_plotter(se, batch, condition, assay_name)
+batch_pval_plotter(DE_res)
 }
 \arguments{
-\item{se}{Summarized experiment object}
-
-\item{batch}{Batch covariate}
-
-\item{condition}{Condition covariate of interest}
-
-\item{assay_name}{Assay of choice}
+\item{DE_res}{DE analysis results output from DE_analyze()}
 }
 \value{
 List of explained variation by batch and condition

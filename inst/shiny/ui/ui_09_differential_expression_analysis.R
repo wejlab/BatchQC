@@ -16,27 +16,34 @@ tabPanel("Differential Expression Analysis",
                  placeholder = 'Please select an option below',
                  onInitialize = I('function() { this.setValue(""); }'))
              ),
-             selectizeInput('DE_conditions','Choose analysis covariate',choices =c(),
-                            multiple = F,selected = NULL,
+             selectizeInput('DE_conditions','Choose analysis covariates',choices =c(),
+                            multiple = T,selected = NULL,
                             options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))
              ),
              selectizeInput('DE_method','Choose analysis method',
-                            multiple=F,choices = c('t','wilcox','DESeq2'),selected = NULL,
+                            multiple=F,choices = c('DESeq2'),selected = NULL,
                             options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))
                             ),
-             # List of assays to plot from se
-             sliderInput(inputId="slider", label="Select the magnitude of significance value coloring:", min=-300, max=0, value=-150, step = NULL,round = FALSE,ticks = TRUE
-                         ),
+             conditionalPanel(condition = "output.DE_results",
+                              selectizeInput('DE_res_selected', 'Choose analysis results to display', choices = "",options = list(
+                                  placeholder = 'Please select an option below',
+                                  onInitialize = I('function() { this.setValue(""); }'))
+                              ),
+                              sliderInput(inputId="pslider", label="Select the magnitude of significance value coloring:", min=0, max=1, value=0.5,round = FALSE,ticks = TRUE
+                              ),
+                              sliderInput(inputId="fcslider", label="Select the magnitude of expression change value coloring:", min=-10, max=10, value=0, step = NULL,round = FALSE,ticks = TRUE
+                              )
+                              ),
              actionButton('DE_analyze', label = 'Here we go!')
            ),
            
-           # Show a plot of the generated distribution
            mainPanel(
              tabsetPanel(
                tabPanel("Results Table",
                         DTOutput('DE_results'),
                         conditionalPanel(condition = "output.DE_results",
-                                         downloadButton("downloadDEData", "Download"))
+                                         downloadButton("downloadDEData", "Download")),
+                        textOutput('test')
                ),
                tabPanel("P-Value Analysis",
                         tableOutput('pval_summary'),

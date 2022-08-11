@@ -10,8 +10,14 @@ observeEvent(input$DE_batch, {
 observeEvent(input$DE_analyze, {
     req(reactivevalue$se, input$DE_analyze)
     
-    reactivevalue$DE_results <- DE_analyze(reactivevalue$se, input$DE_method, 
-                          input$DE_batch, input$DE_conditions, input$DE_assay)
+    withProgress({
+      setProgress(0.5, 'Calculating...')
+      reactivevalue$DE_results <- DE_analyze(reactivevalue$se, input$DE_method, 
+                                             input$DE_batch, input$DE_conditions, input$DE_assay)
+      setProgress(1, 'Complete!')
+    })
+    
+    
     display_covariate <- DESeq2::resultsNames(reactivevalue$DE_results$dds)[length(DESeq2::resultsNames(reactivevalue$DE_results$dds))]
     pval_summary_table <- pval_summary(reactivevalue$DE_results)
     volcano <- cbind(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$log2FoldChange,

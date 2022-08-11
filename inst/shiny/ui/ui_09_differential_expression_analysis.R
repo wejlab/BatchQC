@@ -24,12 +24,13 @@ tabPanel("Differential Expression Analysis",
                             multiple=F,choices = c('DESeq2'),selected = NULL,
                             options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))
                             ),
-             conditionalPanel(condition = "output.DE_results",
+             checkboxInput('DE_advanced_options','Advanced options',value = FALSE),
+             conditionalPanel(condition = "input.DE_advanced_options == 1",
                               selectizeInput('DE_res_selected', 'Choose analysis results to display', choices = "",options = list(
                                   placeholder = 'Please select an option below',
                                   onInitialize = I('function() { this.setValue(""); }'))
                               ),
-                              sliderInput(inputId="pslider", label="Select the magnitude of significance value coloring:", min=0, max=1, value=0.5,round = FALSE,ticks = TRUE
+                              sliderInput(inputId="pslider", label="Select the magnitude of significance value coloring:", min=0, max=1, value=0.5,round = FALSE,ticks = TRUE, step = 0.001
                               ),
                               sliderInput(inputId="fcslider", label="Select the magnitude of expression change value coloring:", min=-10, max=10, value=0, step = NULL,round = FALSE,ticks = TRUE
                               )

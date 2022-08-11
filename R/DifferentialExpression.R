@@ -29,22 +29,31 @@ volcano_plot <- function(volcano_data,pslider,fcslider) {
                                     fcslider_factor ~ "TRUE",
                                     TRUE ~ 'NA')
     filters <- cbind(pslider_cond,fcslider_cond)
-    cond <- apply(filters, 1, function(x)(TRUE %in% x))
-    slider_cond <- NULL
+    cond <- apply(filters, 1, function(x)(length(which(x==TRUE))==2))
+    Gene <- NULL
     volcano_data <- volcano_data %>%
-        mutate(slider_cond = cond)
+        mutate(Gene = cond)
 
     p <- ggplot(data = volcano_data, aes(x = volcano_data[,1],
                                         y = -log10(volcano_data[,2]),
-                                        color = slider_cond)) +
+                                        color = Gene)) +
         geom_point() +
-        scale_color_manual(values = c('FALSE' = 'red', 'TRUE' = 'blue',
-                                        'NA'='black')) +
+        scale_color_manual(values = c('FALSE' = 'blue', 'TRUE' = 'red',
+                                        'NA'='black'),
+                                    labels=c('Threshold failed',
+                                    'All Thresholds passed',
+                                    'NA')) +
         xlab("Change in Expression (log2 fold change)") +
         ylab("Signifigance Value (-log10 p-value)") +
         theme(legend.position = "bottom")
-
-    return(p)
+    
+    vol_plot <- p + 
+        geom_hline(yintercept = -log10(pslider_factor),
+                linetype = "dashed") + 
+        geom_vline(xintercept = c(-fcslider_factor, fcslider_factor),
+                linetype = "dashed")
+    
+    return(vol_plot)
 }
 
 #' Differential Expression Analysis

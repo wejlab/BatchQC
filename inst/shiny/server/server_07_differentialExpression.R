@@ -20,8 +20,11 @@ observeEvent(input$DE_analyze, {
     
     display_covariate <- DESeq2::resultsNames(reactivevalue$DE_results$dds)[length(DESeq2::resultsNames(reactivevalue$DE_results$dds))]
     pval_summary_table <- pval_summary(reactivevalue$DE_results)
-    volcano <- cbind(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$log2FoldChange,
-                     DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$pvalue)
+    volcano <- abind(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$log2FoldChange,
+                     DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$pvalue,
+                     rownames(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)),along=2)
+    volcano <- as.data.frame(volcano)
+    volcano[,1:2] <- sapply(volcano[,1:2], as.numeric)
     results_tab <- as.data.frame(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate))
     output$DE_results <- renderDT({ results_tab
     })
@@ -43,9 +46,8 @@ observeEvent(input$DE_analyze, {
         batch_pval_plotter(reactivevalue$DE_results)
     })
     
-    output$volcano <- renderPlot({
+    output$volcano <- renderPlotly({
         volcano_plot(volcano,input$pslider,input$fcslider)
-    }, height = function() {session$clientData$output_volcano_width
     })
     
     output$downloadDEData <- downloadHandler(
@@ -72,16 +74,18 @@ observeEvent(input$DE_res_selected, {
   
     display_covariate <- as.character(input$DE_res_selected)
     
-    volcano <- cbind(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$log2FoldChange,
-                     DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$pvalue)
+    volcano <- abind(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$log2FoldChange,
+                     DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)$pvalue,
+                     rownames(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate)),along=2)
+    volcano <- as.data.frame(volcano)
+    volcano[,1:2] <- sapply(volcano[,1:2], as.numeric)
     results_tab <- as.data.frame(DESeq2::results(reactivevalue$DE_results$dds,name = display_covariate))
     
     output$DE_results <- renderDT({ results_tab
     })
     
-    output$volcano <- renderPlot({
+    output$volcano <- renderPlotly({
         volcano_plot(volcano,input$pslider,input$fcslider)
-    }, height = function() {session$clientData$output_volcano_width
     })
     
     output$downloadDEData <- downloadHandler(

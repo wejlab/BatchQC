@@ -9,7 +9,7 @@ library(reader)
 library(abind)
 library(DT)
 library(dendextend)
-library(circlize)
+library(plotly)
 
 source(file.path("utils", "helpers.R"),  local = TRUE)
 

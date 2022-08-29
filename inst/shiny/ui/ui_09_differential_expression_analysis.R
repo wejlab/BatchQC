@@ -52,7 +52,7 @@ tabPanel("Differential Expression Analysis",
                         plotOutput('covariate_pval_plot')
                ),
                tabPanel("Volcano Plot",
-                        plotOutput('volcano')
+                        plotlyOutput('volcano', height = 'auto', width = 'auto')
                )
              )
            )

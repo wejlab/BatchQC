@@ -55,7 +55,7 @@ setupSelections <- function(){
                       selected = NULL)
     updateNumericInput(session = session, inputId = 'top_n_heatmap',
                        value = 2, min = 2, max = dim(reactivevalue$se)[1])
-    
+
     # Dendrogram
     updateSelectizeInput(session = session, inputId = 'dend_assay_name',
                          choices = assayNames((reactivevalue$se)),
@@ -162,6 +162,17 @@ observeEvent(input$exampleData, {
         data(protein_sample_info)
         rownames(protein_sample_info) <- paste0("X", protein_sample_info$Arrayname)
         reactivevalue$metadata <- protein_sample_info[3:4]
+        output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
+    }else if(input$exampleData == "signatureData"){
+        # need to figure out how the batch_indicator correlates to the signature_Data... it's not clear. May need to run old BatchQC program with that data set to figure it out
+        data(signature_data)
+        reactivevalue$counts <- signature_data
+        output$counts_header <- renderDT(datatable(reactivevalue$counts))
+        output$counts_dimensions <- renderText(paste(dim(reactivevalue$counts),
+                                                      c('observations and', 'samples')))
+
+        data(batch_indicator)
+        reactivevalue$metadata <- batch_indicator[2:3]
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }
 })

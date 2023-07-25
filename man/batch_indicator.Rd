@@ -16,7 +16,9 @@ A data frame with 89 rows and 3 variables:
 data(batch_indicator)
 }
 \description{
-This data consists of three batches and ten conditions
-corresponding to case and control for the signature data
+This dataset is from signature data captured when activating different growth
+pathway genes in human mammary epithelial cells (GEO accession: GSE73628).
+This data consists of three batches and ten different conditions
+corresponding to control and nine different pathways.
 }
 \keyword{datasets}

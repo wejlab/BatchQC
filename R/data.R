@@ -34,8 +34,10 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator", "sig
 
 #' Batch and Condition indicator for signature data
 #'
-#' This data consists of three batches and ten conditions
-#' corresponding to case and control for the signature data
+#' This dataset is from signature data captured when activating different growth
+#' pathway genes in human mammary epithelial cells (GEO accession: GSE73628).
+#' This data consists of three batches and ten different conditions
+#' corresponding to control and nine different pathways.
 #'
 #' @name batch_indicator
 #' @docType data

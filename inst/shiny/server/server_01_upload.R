@@ -172,6 +172,7 @@ observeEvent(input$exampleData, {
                                                       c('observations and', 'samples')))
 
         data(batch_indicator)
+        rownames(batch_indicator) <- batch_indicator$samples
         reactivevalue$metadata <- batch_indicator[2:3]
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }

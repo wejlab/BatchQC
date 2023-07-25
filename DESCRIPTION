@@ -47,7 +47,6 @@ Imports:
     ggplot2,
     matrixStats,
     pheatmap,
-    plotly,
     RColorBrewer,
     reader,
     reshape2,
@@ -61,11 +60,12 @@ Imports:
     tidyverse,
     utils
 Suggests:
-    spelling, 
-    testthat (>= 3.0.0),
-    knitr,
     BiocStyle,
-    lintr
+    knitr,
+    lintr,
+    plotly,
+    spelling, 
+    testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
 biocViews: BatchEffect, GraphAndNetwork, Microarray, Normalization, PrincipalComponent,

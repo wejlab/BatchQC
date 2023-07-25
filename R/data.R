@@ -1,4 +1,5 @@
-globalVariables(c("protein_sample_info", "protein_data", "batch_indicator", "signature_data"))
+globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
+    "signature_data", "bladder_meta", "bladder_data"))
 
 #' Batch and Condition indicator for protein expression data
 #'
@@ -67,7 +68,7 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator", "sig
 #' Real bladderbatch dataset
 #'
 #' This dataset is from bladder cancer data. This dataset has 57 bladder samples
-#' with 5 batches and 3 covariate levels (cancer, biopsy, control.
+#' with 5 batches and 3 covariate levels (cancer, biopsy, control).
 #' Batch 1 contains only cancer, 2 has cancer and controls, 3 has only controls,
 #' 4 contains only biopsy, and 5 contains cancer and biopsy
 #'

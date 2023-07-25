@@ -21,7 +21,7 @@ This function allows you to plot DE analysis results as a volcano plot
 }
 \examples{
 library(scran)
-library(plotly)
+
 se <- mockSCE()
 
 DE_res <- BatchQC::DE_analyze(se,
@@ -33,5 +33,5 @@ DE_res <- BatchQC::DE_analyze(se,
 volcano <- cbind(DESeq2::results(DE_res$dds)$log2FoldChange,
                     DESeq2::results(DE_res$dds)$pvalue)
 
-ggplotly(volcano_plot(volcano, -150,2))
+plotly::ggplotly(volcano_plot(volcano, -150,2))
 }

@@ -7,7 +7,6 @@
 #' @return A volcano plot of expression change and significane value data
 #' @import ggplot2
 #' @import scran
-#' @import plotly
 #' @example R/examples/volcano_plot.R
 #'
 #' @export
@@ -37,7 +36,7 @@ volcano_plot <- function(volcano_data,pslider,fcslider) {
     log2fc <- round(-log10(volcano_data[,2]), digits = 2)
     feature <- volcano_data[,3]
 
-    p <- ggplot(data = volcano_data, aes(x = pval,
+    p <- ggplot::ggplot(data = volcano_data, aes(x = pval,
                                         y = log2fc,
                                         text = feature,
                                         color = Features)) +
@@ -57,7 +56,7 @@ volcano_plot <- function(volcano_data,pslider,fcslider) {
         geom_vline(xintercept = c(-fcslider_factor, fcslider_factor),
                 linetype = "dashed")
 
-    vol_plot <- ggplotly(vol_plot,tooltip = c('x','y','text'))
+    vol_plot <- ggplotly::ggplotly(vol_plot,tooltip = c('x','y','text'))
 
     return(vol_plot)
 }

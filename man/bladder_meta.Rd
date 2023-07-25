@@ -17,7 +17,7 @@ data(bladder_meta)
 }
 \description{
 This dataset is from bladder cancer data. This dataset has 57 bladder samples
-with 5 batches and 3 covariate levels (cancer (2), biopsy (1), control (3)).
+with 5 batches and 3 covariate levels (cancer, biopsy, control).
 Batch 1 contains only cancer, 2 has cancer and controls, 3 has only controls,
 4 contains only biopsy, and 5 contains cancer and biopsy
 }

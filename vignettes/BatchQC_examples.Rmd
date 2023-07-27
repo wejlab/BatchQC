@@ -1,0 +1,44 @@
+---
+title: "BatchQC Examples"
+author:
+name: W. Evan Johnson
+  affiliation:
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
+  - Director, Center for Data Science, Rutgers University
+  email: wj183@njms.rutgers.edu 
+- name: Jessica McClintock
+  affiliation: Division of Infectious Disease, Department of Medicine, Rutgers
+  University 
+  email: jessica.mcclintock@rutgers.edu
+package: BatchQC
+output:
+  BiocStyle::html_document
+vignette: |
+  %\VignetteIndexEntry{BatchQC Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Example 1: Protein Data
+This dataset is from protein expression data captured for 39 proteins.
+It has two batches and two conditions corresponding to case and control.
+
+# Example 2: Signature Data
+This dataset is from signature data captured when activating different growth 
+pathway genes in human mammary epithelial cells (GEO accession: GSE73628). 
+This data consists of three batches and ten different conditions corresponding 
+to control and nine different pathways
+
+# Example 3: Bladderbatch Data
+This dataset is from bladder cancer data. This dataset has 57 bladder samples
+with 5 batches and 3 covariate levels (cancer, biopsy, control). Batch 1 
+contains only cancer, 2 has cancer and controls, 3 has only controls, 4 contains
+only biopsy, and 5 contains cancer and biopsy. This data set is from the
+bladderbatch package (Leek JT (2023). bladderbatch: Bladder gene expression data
+illustrating batch effects. R package version 1.38.0).
+
+# Session info {.unnumbered}
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```

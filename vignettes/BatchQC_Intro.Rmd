@@ -3,9 +3,13 @@ title: "Introduction to BatchQC"
 author: 
 - name: W. Evan Johnson
   affiliation:
-  - Division of Infectious Disease, Department of Medicine 
-  - Director, Center for Data Science
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
+  - Director, Center for Data Science, Rutgers University
   email: wj183@njms.rutgers.edu 
+- name: Jessica McClintock
+  affiliation: Division of Infectious Disease, Department of Medicine, Rutgers
+  University 
+  email: jessica.mcclintock@rutgers.edu
 date: '`r format(Sys.Date(), "%B %e, %Y")`'
 package: BatchQC
 output: 
@@ -17,6 +21,7 @@ vignette: >
 editor_options: 
   chunk_output_type: console
 ---
+## Introduction
 Sequencing and microarray samples are often collected or processed in multiple 
 batches or at different times. This often produces technical biases that can 
 lead to incorrect results in the downstream analysis. BatchQC is a software tool
@@ -48,7 +53,51 @@ ComBat and ComBat-Seq)
 
 `BatchQC()` is the function that launches the Shiny App in interactive mode.
 
-## Intstallation
+## Installation
+### Bioconductor Version
+When pushed to Bioconductor (aka not yet possible, this will download the old 
+version of BatchQC):
+To begin, install [Bioconductor](http://www.bioconductor.org/):
 
 ```{R}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(version = "3.17")
 ```
+
+Then, run the following to install BatchQC:
+
+```{R}
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("BatchQC")
+```
+
+### Github Version
+To install the most up-to-date version of BatchQC, please install directly from
+github. You will need the devtools package. You can install both of these with
+the following commands:
+```{R}
+install.packages("devtools")
+library(devtools)
+install_github("compbiomed/BatchQC")
+```
+
+### Load BatchQC and Launch Shiny App
+You should now be able to load BatchQC and launch the shiny app.
+
+```{R}
+library(BatchQC)
+BatchQC()
+```
+
+## Example Pipeline
+Below is an example of how you may use the shiny app to analyze your data:
+
+### 1. Select an example data set 
+(or import your own data set w/counts and metadata or with an SE object)
+### 2. Apply Normalization methods
+
+## Workflow for R commands w/out Shiny app
+This functionality needs to be created so that it is possible to recreate shiny
+workflow in an R script

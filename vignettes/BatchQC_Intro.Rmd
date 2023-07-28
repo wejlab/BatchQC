@@ -91,12 +91,88 @@ library(BatchQC)
 BatchQC()
 ```
 
-## Example Pipeline
+## Example Usage
 Below is an example of how you may use the shiny app to analyze your data:
 
-### 1. Select an example data set 
-(or import your own data set w/counts and metadata or with an SE object)
+### 1. Upload data set 
+Upon launching the shiny app, you will be on the "Upload Data" screen. From
+here, you may upload the following data:
+1. **Your own data w/Count and Metadata file.** Count file should have sample ID as 
+column and item of interest as row. Metadata should have sample ID as row and 
+all meta data labeled in the column. Both files should be uploaded as .csv by 
+selecting "Browse" and selecting the appropriate files from your computer.
+2. **Your own data as a Summarized Experiment object.** Upload should be a .RDS file
+type and can be uploaded by selecting "Browse" and then the appropriate files 
+from your computer
+3. **An example data set.** See the examples vignette for additional information on 
+each example data set
+
+A preview of the selected data will show up under the "Input Summary" and "Full
+Metadata" tab. Input summary shows the counts file/assay on the Input summary
+tab and the metadata on the "Full Metadata" tab. If a preview does not load
+properly, please ensure your dataset is structured properly and a valid file
+type.
+
+**You MUST hit "Upload" for your data to be available to interact with the shiny
+app.**
+
 ### 2. Apply Normalization methods
+After you have successfully uploaded your data set of interest, you can apply
+one of the following Normalization methods if appropriate:
+1. **CPM or counts per million.** CPM calculates the counts mapped to a feature 
+relative to the total counts mapped to a sample times one million. CPM may be 
+used to adjust expression count biases introduced by sequencing depth. CPM 
+adjusted values are not recommended for differential expression analysis or 
+within sample comparison.
+2. **DESeq.** DESeq calculates the counts mapped to a feature divided by sample-
+specific size factors. Size factors are determined by the median ratio of gene 
+counts relative to the geometric mean per feature. DESeq may be used to adjust expression count biases introduced by sequencing depth and RNA composition. 
+DESeq adjusted values are not recommended for within sample comparison.
+
+To use one of these two methods, select it from the normalization method drop 
+down, select an assay to perform the normalization on from the drop down, and
+name the new assy (the prepopulated name can be changed to your preference). You
+may also choose to Log-transform the results of either of these normalization 
+methods by selecting the "Log transform" box. Hit "Normalize" to complete the 
+analysis. Your new assay will not be available for further analysis.
+
+### 3. Apply Batch Effect Correction
+Select the appropriate Batch Effect correction model to create a batch-corrected
+assay for your data. You may select one of the following:
+1. **Combat-Seq.** Combat-Seq uses a negative binomial regression to model batch effects. It requires untransformed, raw count data to adjust for batch effect. 
+Only use this model on an untransformed raw counts assay (not any normalized 
+assays).
+2. **Combat.** Combat corrects for Batch effect using a parametric empirical 
+Bayes framework and data should be cleaned and normalized. Select a normalized 
+assay to run this on.
+
+To apply your desired batch effect correction model, select the method from the 
+drop down menu, then select the appropriate assay in the second drop down menu,
+select your batch variable (labeled batch in all built-in examples), and the 
+covariates that you would like to preserve (not including the batch variable).
+If desired, revise the name for the corrected assay and then hit "Correct."
+
+A progress bar will pop up in the bottom right hand corner and a message will 
+state "Correction Complete" in the bottom right hand corner.
+
+You are now ready to analyze your raw and batch effect corrected data sets!
+
+### Experimental Design
+### Variation Analysis
+### Heatmaps
+### Dendograms
+### PCA Analysis
+### Differential Expression Analysis
+### Data Download
+You may download the data set that you have been working with, including the 
+assays you added in the "Normalization" or "Batch Effect Correction" steps when
+you uploaded your data. A preview is provided that shows the Summarized 
+Experiment (SE) object, including the dimensions, metadata table, assays, 
+rownamesand colNames.
+
+Click the "Download" button and you can save this SE object to your computer for additional analysis outside of the BatchQC shiny app. The object is saved as a
+.RDS Summarized Experiment object in the folder of your choice. You should give
+it a descriptive name (default is "se.RDS").
 
 ## Workflow for R commands w/out Shiny app
 This functionality needs to be created so that it is possible to recreate shiny

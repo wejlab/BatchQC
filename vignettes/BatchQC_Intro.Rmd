@@ -157,18 +157,91 @@ state "Correction Complete" in the bottom right hand corner.
 
 You are now ready to analyze your raw and batch effect corrected data sets!
 
-### Experimental Design
+### 4. Experimental Design
+#### Batch Design
+This tab allows you to view the batch status of each condition. Select the 
+variable that represents your batch variable and then select the variable that 
+represents the condition. A table will then appear listing each condition in the
+row and how many samples in each condition are in each batch (displayed in the 
+columns).
+#### Confounding Statistics
+This tab displays the Pearson correlation coefficient and Cramer's V estimation
+based on the selected batch and condition. 
+##### Pearson Correlation Coefficient
+Pearson correlation coefficient indicates the strength of the linear 
+relationship between your batch and condition variables. It can range from -1 to
+1. The closer the value is to 0, the less likely there is a batch effect. The 
+closer the value is to -1 or 1, the more likely there is a batch effect.
+##### Cramer's V
+This is an additional metric for batch effect and will be between 0 and 1. The 
+closer the value is to 0, the lower the batch effect. The closer the value is to
+1, the greater the batch effect
+
+If both the Pearson Correlation Coefficient and the Cramer's V test indicate low
+batch effect, you likely do not need to adjust your results for batch. However,
+if one or both metrics indicate some or high batch effect, you should use
+additional analysis tools (listed below) to explore the need for a batch
+correction for your results.
+
 ### Variation Analysis
+First, select your raw count assay, your batch variate and the covariate 
+representing condition and notice the amount of variation explained by
+the individual batch, individual condition and batch and condition combined. 
+Next, use your batch corrected assay, with the same batch and condition
+variable and observe any changes. When batch effect is being properly corrected, 
+you should notice that the variation explained by the batch has decreased in 
+the batch corrected assay, indicating that the variation in the data is now more
+likely to be associated with your condition of interest rather than the batch.
+
 ### Heatmaps
+Select your assay of interest and the batch and condition(s) of interest. We
+recommend using the default of 2 for top variable features. 
+#### Sample Correlations
+This heat map shows how similar each sample is to each other sample in your
+data (samples are ploted on both the x and y axis, so are identical to themself). 
+The samples are clustered together based on similarity. Ideally, you would
+expect your samples to cluster and be more similar to samples from the same
+condition rather than from the sample batch. If there is clear visual clustering
+of the batch in your raw data, you should apply a batch correction method. Your
+batch corrected assay should have stronger clustering by condition.
+
+#### Heatmap
+The heatmap shoes the sample clustering on the x axis and the y axis is each
+gene. The values on the heatmap represent gene expression. The dendogram on the
+x axis is the same clustering arrangement as was seen in the sample
+correlations. This heatmap allows the viewer to see patterns of gene expression
+across the samples based on the selected variables. Remember that if batch is
+clustering together on your raw data, you should perform a batch effect 
+correction to adjust your data.
+
 ### Dendograms
+#### Dendogram
+This tab shows a more detailed dendogram as seen in the heatmap. When samples
+cluster together by batch, you are likely to have a strong batch effect in your
+data and you should consider a batch correction method for your raw data.
+Samples are clustered based on similarity of gene expression and other metadata.
+Currently, you may only select one covairate to display at a time.
+
+#### Circular Dendogram
+This circularizes the previous dendogram to better show relatedness of all 
+branches on the dendogram without the appearance of great distance of the 
+samples at the top and the bottom of the chart.
+
 ### PCA Analysis
+You may select multiple assays to plot PCS analysis side by side. Therefore, 
+select your raw count assay and batch corrected assay, the batch variable as shape, condition as color, and 2 top variable features. Review the clustering pattern. 
+In data sets where a strong batch effect is seen, similar shapes will all cluster together. Whereas if batch effect is not seen, shapes should be dispered
+throughout and hopefully you see clustering by condition (color).
+
 ### Differential Expression Analysis
+Not currently working....
+
 ### Data Download
 You may download the data set that you have been working with, including the 
 assays you added in the "Normalization" or "Batch Effect Correction" steps when
 you uploaded your data. A preview is provided that shows the Summarized 
 Experiment (SE) object, including the dimensions, metadata table, assays, 
-rownamesand colNames.
+rownames and colNames.
 
 Click the "Download" button and you can save this SE object to your computer for additional analysis outside of the BatchQC shiny app. The object is saved as a
 .RDS Summarized Experiment object in the folder of your choice. You should give

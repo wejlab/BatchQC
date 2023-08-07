@@ -6,8 +6,8 @@
 #' @import dplyr
 #' @import tidyr
 #' @return design table
-#'
 #' @export
+
 batch_design <- function(se, batch, covariate){
     ### Create a batch design table for the provided covariate
     design <- colData(se) %>% as_tibble %>%
@@ -22,11 +22,9 @@ batch_design <- function(se, batch, covariate){
 #' This function allows you to calculate correlation properties
 #' @param bd batch design
 #' @return correlation properties
-#'
 #' @export
-cor_props <- function(bd){
-    #Calculate correlation properties on a batch_design matrix `bd`
 
+cor_props <- function(bd){
     # Subset matrix to design only
     m <- bd[, -1, ]
     rowsums <- rowSums(m)
@@ -49,10 +47,9 @@ cor_props <- function(bd){
 #' Calculate a standardized Pearson correlation coefficient
 #' @param bd batch design
 #' @return standardized Pearson correlation coefficient
-#'
 #' @export
+
 std_pearson_corr_coef <- function(bd) {
-    #Calculate standardized Pearson correlation coefficient
     c <- cor_props(bd)
     r <- sqrt(c$chi * c$mmin/((c$chi + c$tablesum) * (c$mmin - 1)))
     return(r)
@@ -61,10 +58,9 @@ std_pearson_corr_coef <- function(bd) {
 #' This function allows you to calculate Cramer's V
 #' @param bd batch design
 #' @return Cramer's V
-#'
 #' @export
+#'
 cramers_v <- function(bd) {
-    # Calculate Cramer's V
     c <- cor_props(bd)
     v <- sqrt(c$chi/(c$tablesum * (c$mmin - 1)))
     return(v)
@@ -75,8 +71,8 @@ cramers_v <- function(bd) {
 #' @param se summarized experiment
 #' @param batch batch variable
 #' @return metrics of confounding
-#'
 #' @export
+
 confound_metrics <- function(se, batch){
     # Covariates are non-batch
     cols <- names(colData(se))

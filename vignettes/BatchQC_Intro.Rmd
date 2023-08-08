@@ -21,6 +21,7 @@ vignette: >
 editor_options: 
   chunk_output_type: console
 ---
+
 ## Introduction
 Sequencing and microarray samples are often collected or processed in multiple 
 batches or at different times. This often produces technical biases that can 
@@ -97,15 +98,15 @@ Below is an example of how you may use the shiny app to analyze your data:
 ### 1. Upload data set 
 Upon launching the shiny app, you will be on the "Upload Data" screen. From
 here, you may upload the following data:
-1. **Your own data w/Count and Metadata file.** Count file should have sample ID as 
-column and item of interest as row. Metadata should have sample ID as row and 
+1. **Your own data w/Count and Metadata file.** Count file should have sample ID
+as column and item of interest as row. Metadata should have sample ID as row and 
 all meta data labeled in the column. Both files should be uploaded as .csv by 
 selecting "Browse" and selecting the appropriate files from your computer.
-2. **Your own data as a Summarized Experiment object.** Upload should be a .RDS file
-type and can be uploaded by selecting "Browse" and then the appropriate files 
-from your computer
-3. **An example data set.** See the examples vignette for additional information on 
-each example data set
+2. **Your own data as a Summarized Experiment object.** Upload should be a .RDS
+file type and can be uploaded by selecting "Browse" and then the appropriate 
+files from your computer
+3. **An example data set.** See the examples vignette for additional information 
+on each example data set
 
 A preview of the selected data will show up under the "Input Summary" and "Full
 Metadata" tab. Input summary shows the counts file/assay on the Input summary
@@ -126,7 +127,8 @@ adjusted values are not recommended for differential expression analysis or
 within sample comparison.
 2. **DESeq.** DESeq calculates the counts mapped to a feature divided by sample-
 specific size factors. Size factors are determined by the median ratio of gene 
-counts relative to the geometric mean per feature. DESeq may be used to adjust expression count biases introduced by sequencing depth and RNA composition. 
+counts relative to the geometric mean per feature. DESeq may be used to adjust
+expression count biases introduced by sequencing depth and RNA composition. 
 DESeq adjusted values are not recommended for within sample comparison.
 
 To use one of these two methods, select it from the normalization method drop 
@@ -139,7 +141,8 @@ analysis. Your new assay will not be available for further analysis.
 ### 3. Apply Batch Effect Correction
 Select the appropriate Batch Effect correction model to create a batch-corrected
 assay for your data. You may select one of the following:
-1. **Combat-Seq.** Combat-Seq uses a negative binomial regression to model batch effects. It requires untransformed, raw count data to adjust for batch effect. 
+1. **Combat-Seq.** Combat-Seq uses a negative binomial regression to model batch
+effects. It requires untransformed, raw count data to adjust for batch effect. 
 Only use this model on an untransformed raw counts assay (not any normalized 
 assays).
 2. **Combat.** Combat corrects for Batch effect using a parametric empirical 
@@ -188,7 +191,7 @@ First, select your raw count assay, your batch variate and the covariate
 representing condition and notice the amount of variation explained by
 the individual batch, individual condition and batch and condition combined. 
 Next, use your batch corrected assay, with the same batch and condition
-variable and observe any changes. When batch effect is being properly corrected, 
+variable and observe any changes. When batch effect is being properly corrected,
 you should notice that the variation explained by the batch has decreased in 
 the batch corrected assay, indicating that the variation in the data is now more
 likely to be associated with your condition of interest rather than the batch.
@@ -198,12 +201,12 @@ Select your assay of interest and the batch and condition(s) of interest. We
 recommend using the default of 2 for top variable features. 
 #### Sample Correlations
 This heat map shows how similar each sample is to each other sample in your
-data (samples are ploted on both the x and y axis, so are identical to themself). 
-The samples are clustered together based on similarity. Ideally, you would
-expect your samples to cluster and be more similar to samples from the same
-condition rather than from the sample batch. If there is clear visual clustering
-of the batch in your raw data, you should apply a batch correction method. Your
-batch corrected assay should have stronger clustering by condition.
+data (samples are ploted on both the x and y axis, so are identical to 
+theirself). The samples are clustered together based on similarity. Ideally, you
+would expect your samples to cluster and be more similar to samples from the 
+same condition rather than from the sample batch. If there is clear visual 
+clustering of the batch in your raw data, you should apply a batch correction 
+method. Your batch corrected assay should have stronger clustering by condition.
 
 #### Heatmap
 The heatmap shoes the sample clustering on the x axis and the y axis is each
@@ -219,8 +222,9 @@ correction to adjust your data.
 This tab shows a more detailed dendogram as seen in the heatmap. When samples
 cluster together by batch, you are likely to have a strong batch effect in your
 data and you should consider a batch correction method for your raw data.
-Samples are clustered based on similarity of gene expression and other metadata.
-Currently, you may only select one covairate to display at a time.
+Samples are clustered based on similarity of gene expression and other metadata
+using a Euclidian distance metric. Currently, you may only select one covairate 
+to display at a time.
 
 #### Circular Dendogram
 This circularizes the previous dendogram to better show relatedness of all 
@@ -229,9 +233,11 @@ samples at the top and the bottom of the chart.
 
 ### PCA Analysis
 You may select multiple assays to plot PCS analysis side by side. Therefore, 
-select your raw count assay and batch corrected assay, the batch variable as shape, condition as color, and 2 top variable features. Review the clustering pattern. 
-In data sets where a strong batch effect is seen, similar shapes will all cluster together. Whereas if batch effect is not seen, shapes should be dispered
-throughout and hopefully you see clustering by condition (color).
+select your raw count assay and batch corrected assay, the batch variable as 
+shape, condition as color, and 2 top variable features. Review the clustering 
+pattern. In data sets where a strong batch effect is seen, similar shapes will 
+all cluster together. Whereas if batch effect is not seen, shapes should be 
+dispered throughout and hopefully you see clustering by condition (color).
 
 ### Differential Expression Analysis
 Not currently working....
@@ -243,10 +249,17 @@ you uploaded your data. A preview is provided that shows the Summarized
 Experiment (SE) object, including the dimensions, metadata table, assays, 
 rownames and colNames.
 
-Click the "Download" button and you can save this SE object to your computer for additional analysis outside of the BatchQC shiny app. The object is saved as a
+Click the "Download" button and you can save this SE object to your computer for
+additional analysis outside of the BatchQC shiny app. The object is saved as a
 .RDS Summarized Experiment object in the folder of your choice. You should give
 it a descriptive name (default is "se.RDS").
 
 ## Workflow for R commands w/out Shiny app
 This functionality needs to be created so that it is possible to recreate shiny
 workflow in an R script
+
+# Session info {.unnumbered}
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```

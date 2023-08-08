@@ -51,13 +51,10 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
     }
     # Reorder data
     pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
-
     var_explained_data <- var_explained_data[c(xaxisPC, yaxisPC), , drop=FALSE]
-
     plot <- plot_data(pca_plot_data, color, shape, xaxisPC, yaxisPC)
 
-    return(list(PCA = pca_plot_data,
-        var_explained = var_explained_data,
+    return(list(PCA = pca_plot_data, var_explained = var_explained_data,
         plot = plot))
 }
 

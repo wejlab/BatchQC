@@ -63,15 +63,15 @@ To begin, install [Bioconductor](http://www.bioconductor.org/):
 ```{R}
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install(version = "3.17")
+BiocManager::install(version = "3.16")
 ```
 
 Then, run the following to install BatchQC:
 
 ```{R}
-if (!requireNamespace("BiocManager", quietly=TRUE))
-    install.packages("BiocManager")
-BiocManager::install("BatchQC")
+#if (!requireNamespace("BiocManager", quietly=TRUE))
+#    install.packages("BiocManager")
+#BiocManager::install("BatchQC")
 ```
 
 ### Github Version
@@ -117,6 +117,18 @@ type.
 **You MUST hit "Upload" for your data to be available to interact with the shiny
 app.**
 
+All shiny app functions can also be run from the command line; all command line
+execution requires that your data is in a Summarized Experiment object. You
+can create a summarized experiment object from a counts and metadata matrix. 
+The remainder of this documentation will utilize the signature data example data
+set included in the package. This can be loaded from the command line as a
+summarized experiment object with the following:
+```{r}
+data(protein_data)
+data(protein_sample_info)
+se_object <- BatchQC::summarized_experiment(protein_data, protein_sample_info)
+```
+
 ### 2. Apply Normalization methods
 After you have successfully uploaded your data set of interest, you can apply
 one of the following Normalization methods if appropriate:
@@ -134,9 +146,26 @@ DESeq adjusted values are not recommended for within sample comparison.
 To use one of these two methods, select it from the normalization method drop 
 down, select an assay to perform the normalization on from the drop down, and
 name the new assy (the prepopulated name can be changed to your preference). You
-may also choose to Log-transform the results of either of these normalization 
+may also choose to log-transform the results of either of these normalization 
 methods by selecting the "Log transform" box. Hit "Normalize" to complete the 
 analysis. Your new assay will not be available for further analysis.
+
+Alternatively, this can be called directly from the command line on an SE
+object and will return the same SE object with an additional assay with the name
+that you provide as the output_assay_name.
+```{r}
+# CPM Normalization
+se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM", 
+    assay_to_normalize = "counts", output_assay_name = "CPM_normalized_counts")
+
+# DESeq Normalization
+se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq", 
+    assay_to_normalize = "counts", "DESeq_normalized_counts")
+
+# log adjust
+se_object@assays@data[["log_normalized_counts"]] <-
+                log(se_object@assays@data[["counts"]])
+```
 
 ### 3. Apply Batch Effect Correction
 Select the appropriate Batch Effect correction model to create a batch-corrected
@@ -158,7 +187,21 @@ If desired, revise the name for the corrected assay and then hit "Correct."
 A progress bar will pop up in the bottom right hand corner and a message will 
 state "Correction Complete" in the bottom right hand corner.
 
-You are now ready to analyze your raw and batch effect corrected data sets!
+You are now ready to analyze your raw and batch effect corrected data sets! 
+
+To run from the command line use the following:
+
+```{r}
+# Combat-Seq correction
+se_object <- BatchQC::batch_correct(se = se_object, method = "ComBat-Seq", 
+    assay_to_normalize = "counts" , batch = "batch", 
+    covar = "category", output_assay_name = "Combat_Seq_corrected")
+
+# Combat correction
+se_object <- BatchQC::batch_correct(se = se_object, method = "Combat", 
+    assay_to_normalize = "", batch = "batch", 
+    covar = c("category"), output_assay_name = "Combat_corrected")
+```
 
 ### 4. Experimental Design
 #### Batch Design
@@ -199,6 +242,7 @@ likely to be associated with your condition of interest rather than the batch.
 ### Heatmaps
 Select your assay of interest and the batch and condition(s) of interest. We
 recommend using the default of 2 for top variable features. 
+
 #### Sample Correlations
 This heat map shows how similar each sample is to each other sample in your
 data (samples are ploted on both the x and y axis, so are identical to 

@@ -160,7 +160,7 @@ observeEvent(input$exampleData, {
                                                      c('observations and', 'samples')))
 
         data(protein_sample_info)
-        reactivevalue$metadata <- protein_sample_info[2:3]
+        reactivevalue$metadata <- protein_sample_info
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }else if(input$exampleData == "signatureData"){
         data(signature_data)

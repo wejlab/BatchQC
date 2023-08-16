@@ -2,7 +2,8 @@
 % Please edit documentation in R/batchqc_fpvalue.R
 \name{batchqc_f.pvalue}
 \alias{batchqc_f.pvalue}
-\title{Returns R2 values from F-test (full/reduced model)}
+\title{Returns R2 values from F-test (full/reduced model) for explained variation
+plot and table}
 \usage{
 batchqc_f.pvalue(se, mod, batch_mod, assay_name)
 }
@@ -19,5 +20,6 @@ batchqc_f.pvalue(se, mod, batch_mod, assay_name)
 List of explained variation by batch and condition
 }
 \description{
-Returns R2 values from F-test (full/reduced model)
+Returns R2 values from F-test (full/reduced model) for explained variation
+plot and table
 }

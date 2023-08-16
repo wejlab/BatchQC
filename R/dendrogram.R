@@ -88,11 +88,12 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
         geom_segment(data = dendrogram_ends,
             aes(x=x, y=y.x, xend=xend, yend=yend,
                 color = dendrogram_ends[,annotation_column])) +
-        scale_color_manual(values = annotation_color) +
+        scale_color_manual(values = annotation_color,
+            limits = names(annotation_color),
+            name = as.character(annotation_column)) +
         scale_y_reverse() +
-        coord_flip() + theme(
-            axis.text.y=element_blank(),
-            axis.ticks.y=element_blank()) +
+        coord_flip() +
+        theme(axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
         theme_bw() + ylab("Distance")
 
     circular_dendrogram <- dendrogram + coord_polar(theta="x")

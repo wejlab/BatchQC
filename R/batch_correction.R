@@ -7,7 +7,7 @@
 #' @param group The group variable
 #' @param covar Covariate Matrix
 #' @param output_assay_name name of results assay
-#' @return a summarized experiment object with normalized assay appended.
+#' @return a summarized experiment object with normalized assay appended
 #' @import SummarizedExperiment
 #' @import sva
 #'
@@ -16,10 +16,9 @@ batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
                             covar, output_assay_name) {
     se <- se
     batch <- data.frame(colData(se))[,batch]
-
     if (method == 'ComBat-Seq'){
         se <- combat_seq_correction(se, assay_to_normalize, batch, group, covar,
-            output_assay_nam)
+            output_assay_name)
     } else if (method == 'ComBat') {
        se <- combat_correction(se, assay_to_normalize, batch, covar,
            output_assay_name)

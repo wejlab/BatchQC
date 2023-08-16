@@ -31,7 +31,7 @@ batch_correct(
 \item{output_assay_name}{name of results assay}
 }
 \value{
-a summarized experiment object with normalized assay appended.
+a summarized experiment object with normalized assay appended
 }
 \description{
 Batch Correct

@@ -7,8 +7,7 @@ author:
   - Director, Center for Data Science, Rutgers University
   email: wj183@njms.rutgers.edu 
 - name: Jessica McClintock
-  affiliation: Division of Infectious Disease, Department of Medicine, Rutgers
-  University 
+  affiliation: Division of Infectious Disease, Department of Medicine, Rutgers University 
   email: jessica.mcclintock@rutgers.edu
 date: '`r format(Sys.Date(), "%B %e, %Y")`'
 package: BatchQC
@@ -63,15 +62,15 @@ To begin, install [Bioconductor](http://www.bioconductor.org/):
 ```{R}
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install(version = "3.17")
+BiocManager::install(version = "3.16")
 ```
 
 Then, run the following to install BatchQC:
 
 ```{R}
-if (!requireNamespace("BiocManager", quietly=TRUE))
-    install.packages("BiocManager")
-BiocManager::install("BatchQC")
+#if (!requireNamespace("BiocManager", quietly=TRUE))
+#    install.packages("BiocManager")
+#BiocManager::install("BatchQC")
 ```
 
 ### Github Version
@@ -117,6 +116,18 @@ type.
 **You MUST hit "Upload" for your data to be available to interact with the shiny
 app.**
 
+All shiny app functions can also be run from the command line; all command line
+execution requires that your data is in a Summarized Experiment object. You
+can create a summarized experiment object from a counts and metadata matrix. 
+The remainder of this documentation will utilize the signature data example data
+set included in the package. This can be loaded from the command line as a
+summarized experiment object with the following:
+```{r}
+data(protein_data)
+data(protein_sample_info)
+se_object <- BatchQC::summarized_experiment(protein_data, protein_sample_info)
+```
+
 ### 2. Apply Normalization methods
 After you have successfully uploaded your data set of interest, you can apply
 one of the following Normalization methods if appropriate:
@@ -134,9 +145,26 @@ DESeq adjusted values are not recommended for within sample comparison.
 To use one of these two methods, select it from the normalization method drop 
 down, select an assay to perform the normalization on from the drop down, and
 name the new assy (the prepopulated name can be changed to your preference). You
-may also choose to Log-transform the results of either of these normalization 
+may also choose to log-transform the results of either of these normalization 
 methods by selecting the "Log transform" box. Hit "Normalize" to complete the 
 analysis. Your new assay will not be available for further analysis.
+
+Alternatively, this can be called directly from the command line on an SE
+object and will return the same SE object with an additional assay with the name
+that you provide as the output_assay_name.
+```{r}
+# CPM Normalization
+se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM", 
+    assay_to_normalize = "counts", output_assay_name = "CPM_normalized_counts")
+
+# DESeq Normalization
+se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq", 
+    assay_to_normalize = "counts", "DESeq_normalized_counts")
+
+# log adjust
+se_object@assays@data[["log_normalized_counts"]] <-
+                log(se_object@assays@data[["counts"]])
+```
 
 ### 3. Apply Batch Effect Correction
 Select the appropriate Batch Effect correction model to create a batch-corrected
@@ -158,7 +186,21 @@ If desired, revise the name for the corrected assay and then hit "Correct."
 A progress bar will pop up in the bottom right hand corner and a message will 
 state "Correction Complete" in the bottom right hand corner.
 
-You are now ready to analyze your raw and batch effect corrected data sets!
+You are now ready to analyze your raw and batch effect corrected data sets! 
+
+To run from the command line use the following:
+
+```{r}
+# Combat-Seq correction
+se_object <- BatchQC::batch_correct(se = se_object, method = "ComBat-Seq", 
+    assay_to_normalize = "counts" , batch = "batch", 
+    covar = "category", output_assay_name = "Combat_Seq_corrected")
+
+# Combat correction
+se_object <- BatchQC::batch_correct(se = se_object, method = "Combat", 
+    assay_to_normalize = "", batch = "batch", 
+    covar = c("category"), output_assay_name = "Combat_corrected")
+```
 
 ### 4. Experimental Design
 #### Batch Design
@@ -167,18 +209,45 @@ variable that represents your batch variable and then select the variable that
 represents the condition. A table will then appear listing each condition in the
 row and how many samples in each condition are in each batch (displayed in the 
 columns).
+
+To recreate this table, run the following code, which will produce a tibble
+as output:
+```{R}
+batch_design_tibble <- BatchQC::batch_design(se = se_object, batch = "batch", 
+    covariate = "category")
+batch_design_tibble
+```
 #### Confounding Statistics
 This tab displays the Pearson correlation coefficient and Cramer's V estimation
-based on the selected batch and condition. 
+based on the selected batch and condition.
+
+This table can be recreated with the following code:
+```{R}
+confound_table <- BatchQC::confound_metrics(se = se_object, batch = "batch")
+confound_table
+```
+
 ##### Pearson Correlation Coefficient
 Pearson correlation coefficient indicates the strength of the linear 
 relationship between your batch and condition variables. It can range from -1 to
 1. The closer the value is to 0, the less likely there is a batch effect. The 
 closer the value is to -1 or 1, the more likely there is a batch effect.
+
+To calculate only the pearson correlation coefficient, run the following:
+```{R}
+pearson_cor_result <- BatchQC::std_pearson_corr_coef(batch_design_tibble)
+pearson_cor_result
+```
 ##### Cramer's V
 This is an additional metric for batch effect and will be between 0 and 1. The 
 closer the value is to 0, the lower the batch effect. The closer the value is to
 1, the greater the batch effect
+
+To calculate only Cramer's V, run the following:
+```{R}
+cramers_v_result <- BatchQC::cramers_v(batch_design_tibble)
+cramers_v_result
+```
 
 If both the Pearson Correlation Coefficient and the Cramer's V test indicate low
 batch effect, you likely do not need to adjust your results for batch. However,
@@ -186,7 +255,7 @@ if one or both metrics indicate some or high batch effect, you should use
 additional analysis tools (listed below) to explore the need for a batch
 correction for your results.
 
-### Variation Analysis
+### 5. Variation Analysis
 First, select your raw count assay, your batch variate and the covariate 
 representing condition and notice the amount of variation explained by
 the individual batch, individual condition and batch and condition combined. 
@@ -196,17 +265,43 @@ you should notice that the variation explained by the batch has decreased in
 the batch corrected assay, indicating that the variation in the data is now more
 likely to be associated with your condition of interest rather than the batch.
 
-### Heatmaps
+To recreate the variation analysis plot for the counts assay, use the
+following code:
+```{r}
+EV_boxplot <- BatchQC::EV_plotter(se = se_object, batch = "batch", 
+    condition = "category", assay_name = "counts")
+EV_boxplot
+```
+
+To recreate the variation analysis table for the counts assay, use the
+following code:
+```{r}
+EV_table <- BatchQC::EV_table(se = se_object, batch = "batch",
+    condition = "category", assay_name = "counts")
+EV_table
+```
+
+### 6. Heatmaps
 Select your assay of interest and the batch and condition(s) of interest. We
-recommend using the default of 2 for top variable features. 
+recommend viewing no more than 50 elements at a time (or the max number in your
+data set, which is 38 for the protein sample data). 
+
 #### Sample Correlations
 This heat map shows how similar each sample is to each other sample in your
 data (samples are ploted on both the x and y axis, so are identical to 
-theirself). The samples are clustered together based on similarity. Ideally, you
-would expect your samples to cluster and be more similar to samples from the 
+their self). The samples are clustered together based on similarity. Ideally, 
+you would expect your samples to cluster and be more similar to samples from the 
 same condition rather than from the sample batch. If there is clear visual 
 clustering of the batch in your raw data, you should apply a batch correction 
 method. Your batch corrected assay should have stronger clustering by condition.
+
+Use the following code to recreate the sample correlation heatmap:
+```{r}
+heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts",
+    nfeature = 38, annotation_column = c("batch", "category"))
+correlation_heatmap <- heatmaps$correlation_heatmap
+correlation_heatmap
+```
 
 #### Heatmap
 The heatmap shoes the sample clustering on the x axis and the y axis is each
@@ -217,32 +312,67 @@ across the samples based on the selected variables. Remember that if batch is
 clustering together on your raw data, you should perform a batch effect 
 correction to adjust your data.
 
-### Dendograms
-#### Dendogram
-This tab shows a more detailed dendogram as seen in the heatmap. When samples
+Use the following code to recreate the sample correlation heatmap:
+```{r}
+heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts", 
+    nfeature = 38, annotation_column = c("batch", "category"))
+heatmap <- heatmaps$topn_heatmap
+heatmap
+```
+
+### 7. Dendrograms
+#### Dendrogram
+This tab shows a more detailed dendrogram as seen in the heatmap. When samples
 cluster together by batch, you are likely to have a strong batch effect in your
 data and you should consider a batch correction method for your raw data.
 Samples are clustered based on similarity of gene expression and other metadata
-using a Euclidian distance metric. Currently, you may only select one covairate 
+using a Euclidian distance metric. Currently, you may only select one covariate 
 to display at a time.
 
+Use the following code to recreate the dendrogram: 
+```{r}
+dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, assay = "counts", 
+    batch_var = "batch", category_var = "condition")
+dendrogram_plot$dendrogram
+```
 #### Circular Dendogram
 This circularizes the previous dendogram to better show relatedness of all 
 branches on the dendogram without the appearance of great distance of the 
 samples at the top and the bottom of the chart.
 
-### PCA Analysis
+Use the following code to recreate the circular dendrogram: 
+```{r}
+circular_dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, 
+    assay = "counts", batch_var = "batch", category_var = "condition")
+circular_dendrogram_plot$circular_dendrogram
+```
+### 8. PCA Analysis
 You may select multiple assays to plot PCS analysis side by side. Therefore, 
 select your raw count assay and batch corrected assay, the batch variable as 
 shape, condition as color, and 2 top variable features. Review the clustering 
 pattern. In data sets where a strong batch effect is seen, similar shapes will 
 all cluster together. Whereas if batch effect is not seen, shapes should be 
-dispered throughout and hopefully you see clustering by condition (color).
+dispersed throughout and hopefully you see clustering by condition (color).
 
-### Differential Expression Analysis
+Use the following code to recreate the PCA plot and associated table that lists
+the explained variation of each PC:
+```{r}
+pca_plot <- BatchQC::PCA_plotter(se = se_object, nfeature = 2, color = "batch",
+    shape = "category", assays = c("counts", "Combat_Seq_corrected"), 
+    xaxisPC = 1, yaxisPC = 2)
+pca_plot$plot
+pca_plot$var_explained
+```
+
+### 9. Differential Expression Analysis
 Not currently working....
 
-### Data Download
+```{r}
+differential_expression <- BatchQC::DE_analyze(se = se_object, 
+    method = "DESeq2", batch = "batch", conditions = c("category"), assay_to_analyze = "counts")
+```
+
+### 10. Data Download
 You may download the data set that you have been working with, including the 
 assays you added in the "Normalization" or "Batch Effect Correction" steps when
 you uploaded your data. A preview is provided that shows the Summarized 
@@ -254,9 +384,9 @@ additional analysis outside of the BatchQC shiny app. The object is saved as a
 .RDS Summarized Experiment object in the folder of your choice. You should give
 it a descriptive name (default is "se.RDS").
 
-## Workflow for R commands w/out Shiny app
-This functionality needs to be created so that it is possible to recreate shiny
-workflow in an R script
+If you run code from the command line according to the above instructions, all
+assays will be saved to your original SE object and available for your use in
+other applications.
 
 # Session info {.unnumbered}
 

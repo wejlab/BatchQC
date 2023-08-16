@@ -160,8 +160,7 @@ observeEvent(input$exampleData, {
                                                      c('observations and', 'samples')))
 
         data(protein_sample_info)
-        rownames(protein_sample_info) <- paste0("X", protein_sample_info$Arrayname)
-        reactivevalue$metadata <- protein_sample_info[3:4]
+        reactivevalue$metadata <- protein_sample_info
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }else if(input$exampleData == "signatureData"){
         data(signature_data)
@@ -195,9 +194,7 @@ observeEvent(input$submit, {
         if(input$uploadChoice == "countFile" &
            !is.null(reactivevalue$counts_location) &
            !is.null(reactivevalue$metadata_location)){
-            se <- summarized_experiment(reactivevalue$counts, reactivevalue$metadata) #reactivevalue$counts_location,
-                                        #reactivevalue$metadata_location)
-
+            se <- summarized_experiment(reactivevalue$counts, reactivevalue$metadata)
             se <- se[which(rownames(se) !='NA')]
 
         }else if(input$uploadChoice == "seObject" &
@@ -206,7 +203,6 @@ observeEvent(input$submit, {
             se <- se[rowSums(se@assays@data$counts)>0,]
         }else if(input$uploadChoice == "example"){
             se <- summarized_experiment(reactivevalue$counts, reactivevalue$metadata)
-            se <- se[which(rownames(se) !='NA')]
         }
 
         reactivevalue$se <- se

@@ -332,7 +332,7 @@ to display at a time.
 Use the following code to recreate the dendrogram: 
 ```{r}
 dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, assay = "counts", 
-    annotation_column = "batch")
+    batch_var = "batch", category_var = "condition")
 dendrogram_plot$dendrogram
 ```
 #### Circular Dendogram
@@ -343,7 +343,7 @@ samples at the top and the bottom of the chart.
 Use the following code to recreate the circular dendrogram: 
 ```{r}
 circular_dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, 
-    assay = "counts", annotation_column = "batch")
+    assay = "counts", batch_var = "batch", category_var = "condition")
 circular_dendrogram_plot$circular_dendrogram
 ```
 ### 8. PCA Analysis

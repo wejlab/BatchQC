@@ -4,14 +4,16 @@
 \alias{dendrogram_plotter}
 \title{Dendrogram Plot}
 \usage{
-dendrogram_plotter(se, assay, annotation_column)
+dendrogram_plotter(se, assay, batch_var, category_var)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
 
 \item{assay}{assay to plot}
 
-\item{annotation_column}{sample metadata column}
+\item{batch_var}{sample metadata column representing batch}
+
+\item{category_var}{sample metadata column representing category of interest}
 }
 \value{
 named list of dendrogram plots

@@ -4,14 +4,14 @@
 \alias{process_dendrogram}
 \title{Process Dendrogram}
 \usage{
-process_dendrogram(se, assay, annotation_column)
+process_dendrogram(se, assay, batch_var)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
 
 \item{assay}{assay to plot}
 
-\item{annotation_column}{sample metadata column}
+\item{batch_var}{sample metadata column}
 }
 \value{
 named list of dendrogram data

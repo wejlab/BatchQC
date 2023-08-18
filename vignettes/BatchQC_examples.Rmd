@@ -1,14 +1,14 @@
 ---
 title: "BatchQC Examples"
 author:
-name: W. Evan Johnson
+- name: W. Evan Johnson
   affiliation:
   - Division of Infectious Disease, Department of Medicine, Rutgers University 
   - Director, Center for Data Science, Rutgers University
   email: wj183@njms.rutgers.edu 
 - name: Jessica McClintock
-  affiliation: Division of Infectious Disease, Department of Medicine, Rutgers
-  University 
+  affiliation: 
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
   email: jessica.mcclintock@rutgers.edu
 package: BatchQC
 output:

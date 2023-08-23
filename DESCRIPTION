@@ -60,7 +60,9 @@ Imports:
     tidyverse,
     utils
 Suggests:
+    BiocManager,
     BiocStyle,
+    devtools,
     knitr,
     lintr,
     plotly,

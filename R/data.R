@@ -8,11 +8,9 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 #'
 #' @name protein_sample_info
 #' @docType data
-#' @format A data frame with 24 rows and 4 variables:
+#' @format A data frame with 24 rows and 2 variables:
 #' \describe{
-#'     \item{Arrayname}{Array Name}
-#'     \item{samplename}{Sample Name}
-#'     \item{Batch}{Batch Indicator}
+#'     \item{batch}{Batch Indicator}
 #'     \item{category}{Condition (Case vs Control) Indicator}
 #' }
 #' @keywords datasets
@@ -76,7 +74,7 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 #' @docType data
 #' @format A data frame with 57 rows and 3 variables:
 #' \describe{
-#'     \item{samples}{sample ID}
+#'     \item{samplesbladder}{sample ID}
 #'     \item{batch}{batch}
 #'     \item{condition}{condition}
 #' }

@@ -11,7 +11,6 @@
 #' @return named list of dendrogram data
 #' @return dendrogram_segments is data representing segments of the dendrogram
 #' @return dendrogram_ends is data representing ends of the dendrogram
-#' @example R/examples/process_dendrogram.R
 #'
 #' @export
 process_dendrogram <- function(se, assay, batch_var) {
@@ -57,7 +56,6 @@ process_dendrogram <- function(se, assay, batch_var) {
 #' @return named list of dendrogram plots
 #' @return dendrogram is a dendrogram ggplot
 #' @return circular_dendrogram is a circular dendrogram ggplot
-#' @example R/examples/dendrogram_plotter.R
 #'
 #' @export
 dendrogram_plotter <- function(se, assay, batch_var, category_var) {

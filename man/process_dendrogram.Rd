@@ -23,13 +23,3 @@ dendrogram_ends is data representing ends of the dendrogram
 \description{
 This function processes count data for dendrogram plotting
 }
-\examples{
-library(scran)
-se <- mockSCE(20)
-
-dends <- BatchQC::process_dendrogram(se,"counts","Treatment")
-
-dends$dendrogram_segments
-
-dends$dendrogram_ends
-}

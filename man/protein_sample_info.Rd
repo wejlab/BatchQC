@@ -5,11 +5,9 @@
 \alias{protein_sample_info}
 \title{Batch and Condition indicator for protein expression data}
 \format{
-A data frame with 24 rows and 4 variables:
+A data frame with 24 rows and 2 variables:
 \describe{
-\item{Arrayname}{Array Name}
-\item{samplename}{Sample Name}
-\item{Batch}{Batch Indicator}
+\item{batch}{Batch Indicator}
 \item{category}{Condition (Case vs Control) Indicator}
 }
 }

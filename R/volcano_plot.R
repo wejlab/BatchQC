@@ -32,7 +32,7 @@ volcano_plot <- function(volcano_data,pslider,fcslider) {
     log2fc <- round(-log10(volcano_data[,2]), digits = 2)
     feature <- volcano_data[,3]
 
-    p <- ggplot::ggplot(data = volcano_data,
+    p <- ggplot2::ggplot(data = volcano_data,
         aes(x = pval, y = log2fc, text = feature, color = Features)) +
         geom_point() +
         scale_color_manual(values = c('FALSE' = 'blue', 'TRUE' = 'red',
@@ -49,7 +49,7 @@ volcano_plot <- function(volcano_data,pslider,fcslider) {
         geom_vline(xintercept = c(-fcslider_factor, fcslider_factor),
                 linetype = "dashed")
 
-    vol_plot <- ggplotly::ggplotly(vol_plot,tooltip = c('x','y','text'))
+    vol_plot <- plotly::ggplotly(vol_plot,tooltip = c('x','y','text'))
 
     return(vol_plot)
 }

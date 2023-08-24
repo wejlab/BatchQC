@@ -15,22 +15,22 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
     df0 <- dim(batch_mod)[2]
     p <- rep(0, m)
 
-    resid <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(
-        se@assays@data[[assay_name]]) %*% mod %*%
+    resid <- as.matrix(assays(se)[[assay_name]]) - as.matrix(
+        assays(se)[[assay_name]]) %*% mod %*%
         solve(t(mod) %*% mod) %*% t(mod)
     rss1 <- rowSums(resid * resid)
     rm(resid)
 
-    resid0 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(
-        se@assays@data[[assay_name]]) %*%
+    resid0 <- as.matrix(assays(se)[[assay_name]]) - as.matrix(
+        assays(se)[[assay_name]]) %*%
         batch_mod %*%
         solve(t(batch_mod) %*% batch_mod) %*%
         t(batch_mod)
     rss0 <- rowSums(resid0 * resid0)
     rm(resid0)
 
-    resid00 <- as.matrix(se@assays@data[[assay_name]]) - as.matrix(
-        se@assays@data[[assay_name]]) %*%
+    resid00 <- as.matrix(assays(se)[[assay_name]]) - as.matrix(
+        assays(se)[[assay_name]]) %*%
         mod00 %*%
         solve(t(mod00) %*% mod00) %*%
         t(mod00)

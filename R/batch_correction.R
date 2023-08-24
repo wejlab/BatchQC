@@ -42,8 +42,8 @@ batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
 combat_seq_correction <- function(se, assay_to_normalize, batch,
     group, covar, output_assay_name){
     if (is.null(covar)) {
-        se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-            se@assays@data[[assay_to_normalize]]), batch = batch)
+        assays(se)[[output_assay_name]] <- ComBat_seq(as.matrix(
+           assays(se)[[assay_to_normalize]]), batch = batch)
     } else {
         if (length(covar) == 1) {
             cov <- data.frame(colData(se))[,covar]
@@ -53,13 +53,13 @@ combat_seq_correction <- function(se, assay_to_normalize, batch,
             rownames(cov) <- rownames(data.frame(colData(se)))
 
             if (!is.null(group)){
-                se@assays@data[[output_assay_name]] <- ComBat_seq(
-                    as.matrix(se@assays@data[[assay_to_normalize]]),
+                assays(se)[[output_assay_name]] <- ComBat_seq(
+                    as.matrix(assays(se)[[assay_to_normalize]]),
                     batch = batch, covar_mod = cov, group = group,
                     full_mod = TRUE)
             } else {
-                se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-                    se@assays@data[[assay_to_normalize]]),
+                assays(se)[[output_assay_name]] <- ComBat_seq(as.matrix(
+                    assays(se)[[assay_to_normalize]]),
                     batch = batch, covar_mod = cov, group = group)
             }
         } else {
@@ -70,13 +70,13 @@ combat_seq_correction <- function(se, assay_to_normalize, batch,
             }
 
             if (!is.null(group)){
-                se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-                    se@assays@data[[assay_to_normalize]]),
+                assays(se)[[output_assay_name]] <- ComBat_seq(as.matrix(
+                    assays(se)[[assay_to_normalize]]),
                     batch = batch, covar_mod = cov, group = group,
                     full_mod = TRUE)
             } else {
-                se@assays@data[[output_assay_name]] <- ComBat_seq(as.matrix(
-                    se@assays@data[[assay_to_normalize]]),
+                assays(se)[[output_assay_name]] <- ComBat_seq(as.matrix(
+                    assays(se)[[assay_to_normalize]]),
                     batch = batch, covar_mod = cov, group = group)
             }
         }
@@ -98,8 +98,8 @@ combat_seq_correction <- function(se, assay_to_normalize, batch,
 combat_correction <- function(se, assay_to_normalize, batch,
     covar, output_assay_name){
     if (is.null(covar)) {
-        se@assays@data[[output_assay_name]] <-
-            ComBat(dat = se@assays@data[[assay_to_normalize]],batch = batch)
+        assays(se)[[output_assay_name]] <-
+            ComBat(dat = assays(se)[[assay_to_normalize]],batch = batch)
     } else {
         if (length(covar) == 1) {
             cov <- data.frame(colData(se))[,covar]
@@ -111,11 +111,11 @@ combat_correction <- function(se, assay_to_normalize, batch,
 
             model <- stats::model.matrix(stats::as.formula(
                 paste0('~', colnames(cov))), data = cov)
-            results <- ComBat(dat = se@assays@data[[assay_to_normalize]],
+            results <- ComBat(dat = assays(se)[[assay_to_normalize]],
                 batch = batch,
                 mod = model)
             results[is.na(results)] <- 0
-            se@assays@data[[output_assay_name]] <- results
+            assays(se)[[output_assay_name]] <- results
         } else {
             cov <- data.frame(colData(se))[,covar]
 
@@ -133,11 +133,11 @@ combat_correction <- function(se, assay_to_normalize, batch,
                     sep = '+')))
             model <- stats::model.matrix(linearmodel, data = cov)
 
-            results <- ComBat(dat = se@assays@data[[assay_to_normalize]],
+            results <- ComBat(dat = assays(se)[[assay_to_normalize]],
                 batch = batch,
                 mod = model)
             results[is.na(results)] <- 0
-            se@assays@data[[output_assay_name]] <- results
+            assays(se)[[output_assay_name]] <- results
 
         }
     }

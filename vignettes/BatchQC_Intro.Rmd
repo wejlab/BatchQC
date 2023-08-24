@@ -145,7 +145,7 @@ DESeq adjusted values are not recommended for within sample comparison.
 
 To use one of these two methods, select it from the normalization method drop 
 down, select an assay to perform the normalization on from the drop down, and
-name the new assy (the prepopulated name can be changed to your preference). You
+name the new assay (the prepopulated name can be changed to your preference). You
 may also choose to log-transform the results of either of these normalization 
 methods by selecting the "Log transform" box. Hit "Normalize" to complete the 
 analysis. Your new assay will not be available for further analysis.
@@ -163,8 +163,8 @@ se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq",
     assay_to_normalize = "counts", "DESeq_normalized_counts")
 
 # log adjust
-se_object@assays@data[["log_normalized_counts"]] <-
-                log(se_object@assays@data[["counts"]])
+SummarizedExperiment::assays(se_object)$log_counts <-
+                log(SummarizedExperiment::assays(se_object)$counts)
 ```
 
 ### 3. Apply Batch Effect Correction
@@ -336,9 +336,9 @@ dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, assay = "counts",
     batch_var = "batch", category_var = "condition")
 dendrogram_plot$dendrogram
 ```
-#### Circular Dendogram
+#### Circular Dendrogram
 This circularizes the previous dendogram to better show relatedness of all 
-branches on the dendogram without the appearance of great distance of the 
+branches on the dendrogram without the appearance of great distance of the 
 samples at the top and the bottom of the chart.
 
 Use the following code to recreate the circular dendrogram: 

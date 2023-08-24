@@ -18,7 +18,7 @@ globalVariables(c("chosen"))
 #'
 #' @export
 DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
-    data <- se@assays@data[[assay_to_analyze]]
+    data <- assays(se)[[assay_to_analyze]]
     rownames(data) <- names(se)
     analysis_design <- as.data.frame(se@colData[c(conditions,batch)])
 

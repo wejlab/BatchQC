@@ -60,9 +60,12 @@ setupSelections <- function(){
     updateSelectizeInput(session = session, inputId = 'dend_assay_name',
                          choices = assayNames((reactivevalue$se)),
                          selected = NULL)
-    updateSelectInput(session = session, inputId = 'dend_variates_to_display',
+    updateSelectInput(session = session, inputId = 'dend_batch_to_display',
                       choices = colnames(colData(reactivevalue$se)),
                       selected = NULL)
+    updateSelectInput(session = session, inputId = 'dend_category_to_display',
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL)
 
     # PCA
     updateSelectizeInput(session = session, inputId = 'pca_assays',

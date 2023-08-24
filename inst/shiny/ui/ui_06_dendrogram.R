@@ -7,8 +7,10 @@ tabPanel("Dendrograms",
              sidebarPanel(
                  selectizeInput('dend_assay_name','Choose assay to display',choices =c(),multiple = FALSE,selected = NULL,
                                 options=list(placeholder = 'Please select an option below',onInitialize = I('function() { this.setValue(""); }'))),
-                 selectizeInput('dend_variates_to_display','Choose variate(s) to display on dendogram',
+                 selectizeInput('dend_batch_to_display','Choose batch variable to display on dendogram',
                                 choices =c(),multiple = TRUE,selected = NULL),
+                 selectizeInput('dend_category_to_display','Choose category variable to display on dendogram',
+                     choices =c(),multiple = TRUE,selected = NULL),
                  actionButton('dend_plot',label = 'Here we go!')
              ),
 

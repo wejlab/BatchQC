@@ -6,7 +6,7 @@
 
 preprocess <- function(se, assay, nfeature){
 
-    data <- se@assays@data[[assay]]
+    data <- assays(se)[[assay]]
     data <- as.matrix(data)
     data <- apply(data, c(1, 2), as.numeric)
     data <- data[rowSums(data) != 0, ]

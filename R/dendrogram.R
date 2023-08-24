@@ -15,7 +15,7 @@
 #' @export
 process_dendrogram <- function(se, assay, batch_var) {
 
-    data <- t(se@assays@data[[assay]])
+    data <- t(assays(se)[[assay]])
     dat <- as.data.frame(data) %>%
         mutate(sample_name = paste("sample", seq_len(nrow(data)), sep = "_"))
     rownames(dat) <- dat$sample_name

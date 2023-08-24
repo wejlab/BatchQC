@@ -20,7 +20,5 @@ summarized_experiment <- function(counts, columndata){
                                 colData = columndata,
                                 metadata = list(metadata = columndata))
     se <- se[which(rownames(se) !='NA')]
-    # Add library size
-    #colData(se)$library_size <- colSums(se@assays@data$counts)
     return(se)
 }

@@ -14,23 +14,23 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
     var_explained_data <- NULL
     coldata <- data.frame(colData(se))
     for (assay in assays){
-        if (! assay %in%  names(se@assays)){
+        if (! assay %in%  names(se@assays)) {
             warning(sprintf('"%s" is not an available assay', assay))
             next
         }else {
             # Preprocess data
             data <- preprocess(se, assay, nfeature)
-            centered <- data - rowMeans(data)/matrixStats::rowSds(data)
+            centered <- data - rowMeans(data) / matrixStats::rowSds(data)
             coldata <- data.frame(colData(se))
             pca <- stats::prcomp(t(centered), center = FALSE)
 
             # Get variance explained
-            var_explained <- summary(pca)$importance["Proportion of Variance",]
+            var_explained <- summary(pca)$importance["Proportion of Variance", ]
             var_explained_df <- stats::setNames(as.data.frame(var_explained),
                 assay)
-            if (is.null(var_explained_data)){
+            if (is.null(var_explained_data)) {
                 var_explained_data <- var_explained_df
-            }else{
+            }else {
                 var_explained_data <- cbind(var_explained_data,
                     var_explained_df)
             }
@@ -51,7 +51,8 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
     }
     # Reorder data
     pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
-    var_explained_data <- var_explained_data[c(xaxisPC, yaxisPC), , drop=FALSE]
+    var_explained_data <- var_explained_data[c(xaxisPC, yaxisPC), ,
+                                            drop = FALSE]
     plot <- plot_data(pca_plot_data, color, shape, xaxisPC, yaxisPC)
 
     return(list(PCA = pca_plot_data, var_explained = var_explained_data,
@@ -67,7 +68,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
 #' @import ggplot2
 #' @return PCA plot
 
-plot_data <- function(pca_plot_data, color, shape, xaxisPC, yaxisPC){
+plot_data <- function(pca_plot_data, color, shape, xaxisPC, yaxisPC) {
     pca_plot_data[, c(color)] <- factor(pca_plot_data[, color])
     pca_plot_data[, c(shape)] <- factor(pca_plot_data[, shape])
 

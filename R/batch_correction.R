@@ -15,8 +15,8 @@
 batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
                             covar, output_assay_name) {
     se <- se
-    batch <- data.frame(colData(se))[,batch]
-    if (method == 'ComBat-Seq'){
+    batch <- data.frame(colData(se))[, batch]
+    if (method == 'ComBat-Seq') {
         se <- combat_seq_correction(se, assay_to_normalize, batch, group, covar,
             output_assay_name)
     } else if (method == 'ComBat') {
@@ -40,19 +40,19 @@ batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
 #' @import sva
 
 combat_seq_correction <- function(se, assay_to_normalize, batch,
-    group, covar, output_assay_name){
+    group, covar, output_assay_name) {
     if (is.null(covar)) {
         assays(se)[[output_assay_name]] <- ComBat_seq(as.matrix(
            assays(se)[[assay_to_normalize]]), batch = batch)
     } else {
         if (length(covar) == 1) {
-            cov <- data.frame(colData(se))[,covar]
+            cov <- data.frame(colData(se))[, covar]
             cov <- as.factor(cov)
             cov <- as.numeric(cov)
             cov <- as.matrix(cov)
             rownames(cov) <- rownames(data.frame(colData(se)))
 
-            if (!is.null(group)){
+            if (!is.null(group)) {
                 assays(se)[[output_assay_name]] <- ComBat_seq(
                     as.matrix(assays(se)[[assay_to_normalize]]),
                     batch = batch, covar_mod = cov, group = group,
@@ -63,13 +63,13 @@ combat_seq_correction <- function(se, assay_to_normalize, batch,
                     batch = batch, covar_mod = cov, group = group)
             }
         } else {
-            cov <- data.frame(colData(se))[,covar]
+            cov <- data.frame(colData(se))[, covar]
             for (i in seq_len(ncol(cov))) {
-                cov[,i] <- as.factor(cov[,i])
-                cov[,i] <- as.numeric(cov[,i])
+                cov[, i] <- as.factor(cov[, i])
+                cov[, i] <- as.numeric(cov[, i])
             }
 
-            if (!is.null(group)){
+            if (!is.null(group)) {
                 assays(se)[[output_assay_name]] <- ComBat_seq(as.matrix(
                     assays(se)[[assay_to_normalize]]),
                     batch = batch, covar_mod = cov, group = group,
@@ -96,13 +96,13 @@ combat_seq_correction <- function(se, assay_to_normalize, batch,
 #' @import sva
 
 combat_correction <- function(se, assay_to_normalize, batch,
-    covar, output_assay_name){
+    covar, output_assay_name) {
     if (is.null(covar)) {
         assays(se)[[output_assay_name]] <-
-            ComBat(dat = assays(se)[[assay_to_normalize]],batch = batch)
+            ComBat(dat = assays(se)[[assay_to_normalize]], batch = batch)
     } else {
         if (length(covar) == 1) {
-            cov <- data.frame(colData(se))[,covar]
+            cov <- data.frame(colData(se))[, covar]
             cov <- as.factor(cov)
             cov <- as.numeric(cov)
             cov <- data.frame(cov)
@@ -117,11 +117,11 @@ combat_correction <- function(se, assay_to_normalize, batch,
             results[is.na(results)] <- 0
             assays(se)[[output_assay_name]] <- results
         } else {
-            cov <- data.frame(colData(se))[,covar]
+            cov <- data.frame(colData(se))[, covar]
 
             for (i in seq_len(ncol(cov))) {
-                cov[,i] <- as.factor(cov[,i])
-                cov[,i] <- as.numeric(cov[,i])
+                cov[, i] <- as.factor(cov[, i])
+                cov[, i] <- as.numeric(cov[, i])
             }
 
             cov <- data.frame(cov)

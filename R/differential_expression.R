@@ -20,7 +20,7 @@ globalVariables(c("chosen"))
 DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
     data <- assays(se)[[assay_to_analyze]]
     rownames(data) <- names(se)
-    analysis_design <- as.data.frame(se@colData[c(conditions,batch)])
+    analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
 
     if (method == 'DESeq2') {
         colnames(data) <- rownames(analysis_design)
@@ -30,7 +30,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
                                             design = stats::as.formula(
                                                 paste(" ~ ",
                                         paste(colnames(analysis_design),
-                                            collapse= "+"))))
+                                            collapse = "+"))))
         dds <- DESeq(dds)
     }
     return(list(dds = dds))
@@ -45,19 +45,17 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 #' @export
 pval_summary <- function(DE_res) {
 
-    pval_table <- rbind(summary(results(DE_res$dds)[,'pvalue']))
+    pval_table <- rbind(summary(results(DE_res$dds)[, 'pvalue']))
 
     row_count <- 1
     for (i in seq_len(length(resultsNames(DE_res$dds)))) {
         if (resultsNames(DE_res$dds)[i] == 'Intercept') {
             next
-        }
-        else if (i == length(resultsNames(DE_res$dds))) {
+        }else if (i == length(resultsNames(DE_res$dds))) {
             next
-        }
-        else {
+        }else {
             pval_table <- rbind(pval_table, summary(
-                results(DE_res$dds,name = resultsNames(DE_res$dds)[i])$pvalue))
+                results(DE_res$dds, name = resultsNames(DE_res$dds)[i])$pvalue))
             rownames(pval_table)[row_count + 1] <- resultsNames(DE_res$dds)[i]
             row_count <- row_count + 1
         }
@@ -65,7 +63,7 @@ pval_summary <- function(DE_res) {
 
     rownames(pval_table)[1] <- "Batch"
 
-    return(list(pval_table=pval_table))
+    return(list(pval_table = pval_table))
 }
 
 
@@ -83,15 +81,13 @@ covariate_pval_plotter <- function(DE_res) {
     for (i in seq_len(length(resultsNames(DE_res$dds)))) {
         if (resultsNames(DE_res$dds)[i] == 'Intercept') {
             next
-        }
-        else if (i == length(resultsNames(DE_res$dds))) {
+        }else if (i == length(resultsNames(DE_res$dds))) {
             next
-        }
-        else {
+        }else {
             pval_table <- cbind(pval_table,
                 results(DE_res$dds,
                     name = resultsNames(DE_res$dds)[i])$pvalue)
-            covar_list <- c(covar_list,resultsNames(DE_res$dds)[i])
+            covar_list <- c(covar_list, resultsNames(DE_res$dds)[i])
         }
     }
     colnames(pval_table) <- covar_list
@@ -104,7 +100,8 @@ covariate_pval_plotter <- function(DE_res) {
         coord_flip() +
         scale_x_discrete(name = "") +
         scale_y_continuous(name = "P-Values") +
-        labs(title="Distribution of Covariate Effects (P-Values) Across Genes")+
+        labs(title =
+                "Distribution of Covariate Effects (P-Values) Across Genes") +
         theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
     return(list(covar_boxplot = covar_boxplot))
 }
@@ -127,8 +124,8 @@ batch_pval_plotter <- function(DE_res) {
         scale_color_manual(values = "#56B4E9", aesthetics = "fill") +
         coord_flip() +
         scale_x_discrete(name = "", labels = "Batch") +
-        scale_y_continuous(name = "P-Values")+
-        labs(title="Distribution of Batch Effect (P-Values) Across Genes") +
+        scale_y_continuous(name = "P-Values") +
+        labs(title = "Distribution of Batch Effect (P-Values) Across Genes") +
         theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
     return(list(batch_boxplot = batch_boxplot))
 }

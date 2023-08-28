@@ -1,4 +1,4 @@
-accepted = c("text/csv",
+accepted <- c("text/csv",
              "text/comma-separated-values",
              "text/plain",
              ".csv")
@@ -52,11 +52,13 @@ tabPanel("Upload Data",
                                  accept = c(accepted, ".RDS")
                              )),
             conditionalPanel(condition = "input.uploadChoice == 'example'",
-                             selectInput("exampleData", "Example Data",
-                                         choices = c("", "proteinData", "signatureData", "bladderData", "No Selection"),
-                                         selected = ""),),
-            withBusyIndicatorUI(actionButton(inputId = 'submit',label = 'Upload'
-            ))
+                             selectInput("exampleData",
+                                 "Example Data",
+                                 choices = c("", "proteinData", "signatureData",
+                                     "bladderData", "No Selection"),
+                                 selected = ""), ),
+            withBusyIndicatorUI(actionButton(inputId = 'submit',
+                                            label = 'Upload'))
         ),
 
         # Show a table of the inputted data
@@ -84,17 +86,22 @@ tabPanel("Upload Data",
                          h4(strong("Usage")),
                          h5("CPM calculates the counts mapped to a feature relative to the total counts mapped to a sample times one million. CPM may be used to adjust expression count biases introduced by sequencing depth. CPM adjusted values are not recommended for differential expression analysis or within sample comparison."),
                          h5("DESeq calculates the counts mapped to a feature divided by sample-specific size factors. Size factors are determined by the median ratio of gene counts relative to the geometric mean per feature. DESeq may be used to adjust expression count biases introduced by sequencing depth and RNA composition. DESeq adjusted values are not recommended for within sample comparison."),
-                         selectizeInput('normalization_method','Choose normalization method',
-                                        multiple=FALSE,
-                                        choices = c('CPM','DESeq'),
+                         selectizeInput('normalization_method',
+                             'Choose normalization method',
+                                        multiple = FALSE,
+                                        choices = c('CPM', 'DESeq'),
                                         selected = NULL,
-                                        options=list(placeholder = 'Please select an option below',
-                                                     onInitialize = I('function() { this.setValue(""); }'))),
-                         selectizeInput('normalization_assay','Choose the assay on which to do normalization',
-                                        multiple=FALSE,
+                                        options = list(placeholder =
+                                            'Please select an option below',
+                                        onInitialize = I(
+                                            'function() { this.setValue(""); }'
+                                                 ))),
+                         selectizeInput('normalization_assay',
+                             'Choose the assay on which to do normalization',
+                                        multiple = FALSE,
                                         choices = c(''),
                                         selected = NULL),
-                         textInput(inputId = 'normalized_assay_name','Name for the normalized assay',
+                         textInput(inputId = 'normalized_assay_name', 'Name for the normalized assay',
                                    value = ''),
                          checkboxInput('log', 'Log transform the results'),
                          withBusyIndicatorUI(actionButton(inputId = 'normalize',
@@ -105,31 +112,47 @@ tabPanel("Upload Data",
                          h4(strong("Usage")),
                          h5("Combat-Seq uses a negative binomial regression to model batch effects. It requires untransformed, raw count data to adjust for batch effect. Please select use this with a counts assay"),
                          h5("Combat corrects for Batch effect using a parametric empirical Bayes framework and data should be cleaned and normalized. Therefore, please select a normalized assay to run this on."),
-                         selectizeInput('correction_method','Choose correction method',
-                                        multiple=FALSE,
-                                        choices = c('ComBat-Seq','ComBat'),
+                         selectizeInput('correction_method', 'Choose correction method',
+                                        multiple = FALSE,
+                                        choices = c('ComBat-Seq', 'ComBat'),
                                         selected = NULL,
-                                        options=list(placeholder = 'Please select an option below',
-                                                     onInitialize = I('function() { this.setValue(""); }'))),
-                         selectizeInput('correction_assay','Choose the assay on which to do correction',
-                                        multiple=FALSE,
+                                        options = list(placeholder =
+                                            'Please select an option below',
+                                            onInitialize = I(
+                                            'function() { this.setValue(""); }'
+                                                ))),
+                         selectizeInput('correction_assay',
+                             'Choose the assay on which to do correction',
+                                        multiple = FALSE,
                                         choices = c(''),
                                         selected = NULL,
-                                        options=list(placeholder = 'Please select an option below',
-                                                     onInitialize = I('function() { this.setValue(""); }'))),
-                         selectizeInput('correction_batch','Select the variable that represents batch',
-                                        multiple=FALSE,
+                                        options = list(placeholder =
+                                            'Please select an option below',
+                                            onInitialize = I(
+                                            'function() { this.setValue(""); }')
+                                            )),
+                         selectizeInput('correction_batch',
+                             'Select the variable that represents batch',
+                                        multiple = FALSE,
                                         choices = c(''),
                                         selected = NULL,
-                                        options=list(placeholder = 'Please select an option below',
-                                                     onInitialize = I('function() { this.setValue(""); }'))),
-                         selectizeInput('correction_covariates','Choose the covariates you would like to preserve',
-                                        multiple=TRUE,
+                                        options = list(placeholder =
+                                            'Please select an option below',
+                                            onInitialize = I(
+                                            'function() { this.setValue(""); }')
+                                            )),
+                         selectizeInput('correction_covariates',
+                             'Choose the covariates you would like to preserve',
+                                        multiple = TRUE,
                                         choices = c(''),
                                         selected = NULL,
-                                        options=list(placeholder = 'Please select an option below',
-                                                     onInitialize = I('function() { this.setValue(""); }'))),
-                         textInput(inputId = 'corrected_assay_name','Name for the corrected assay'),
+                                        options = list(placeholder =
+                                            'Please select an option below',
+                                            onInitialize = I(
+                                            'function() { this.setValue(""); }')
+                                            )),
+                         textInput(inputId = 'corrected_assay_name',
+                             'Name for the corrected assay'),
                          actionButton(inputId = 'correct', label = 'Correct')
                         )
 

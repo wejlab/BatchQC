@@ -13,11 +13,10 @@ normalize_SE <- function(se, method, assay_to_normalize, output_assay_name) {
     se <- se
     if (method == 'CPM') {
         assays(se)[[output_assay_name]] <-
-            (assays(se)[[assay_to_normalize]] +1) /
-            colSums(assays(se)[[assay_to_normalize]])*(10^6)
+            (assays(se)[[assay_to_normalize]] + 1) /
+            colSums(assays(se)[[assay_to_normalize]]) * (10^6)
 
-    }
-    else if (method == 'DESeq') {
+    }else if (method == 'DESeq') {
         assays(se)[[output_assay_name]] <- GetNormalizedMat(
             assays(se)[[assay_to_normalize]],
             MedianNorm(assays(se)[[assay_to_normalize]]))

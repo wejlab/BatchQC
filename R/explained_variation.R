@@ -18,7 +18,7 @@ EV_plotter <- function(se, batch, condition, assay_name) {
         scale_y_continuous(name = "Percent Explained Variation") +
         labs(title = "Percent of Variation Explained by Source") +
         theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
-    return(list(EV_boxplot=EV_boxplot))
+    return(list(EV_boxplot = EV_boxplot))
 }
 
 #' EV Table
@@ -36,7 +36,7 @@ EV_table <- function(se, batch, condition, assay_name) {
     EV_table <- data.table(batchqc_ev$explained_variation[],
         keep.rownames = TRUE)
     colnames(EV_table)[1] <- "Gene Name"
-    return(list(EV_table=EV_table))
+    return(list(EV_table = EV_table))
 }
 
 #' Returns a list of explained variation by batch and condition
@@ -77,49 +77,53 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 
         mod[[i]] <- cbind(cond_mod[[i]], batch_mod[, -1])
 
-        if(qr(mod[[i]])$rank < ncol(mod[[i]])){
+        if (qr(mod[[i]])$rank < ncol(mod[[i]])) {
             options(error = NULL)
-            if(ncol(mod[[i]]) == (nlb+1)){
+            if (ncol(mod[[i]]) == (nlb + 1)) {
                 stop("A covariate is confounded with batch!
                         Please choose different covariates.")
             }
-            if(ncol(mod[[i]]) > (nlb + 1)){
-                if((qr(mod[[i]][,-c(seq_len(nlb))])$rank <
-                        ncol(mod[[i]][,-c(seq_len(nlb))]))){
+            if (ncol(mod[[i]]) > (nlb + 1)) {
+                if ((qr(mod[[i]][, -c(seq_len(nlb))])$rank <
+                        ncol(mod[[i]][, -c(seq_len(nlb))]))) {
                     stop('A covariate is confounded with batch!
                             Please choose different covariates.')
-                }else{
+                }else {
                     stop("A covariate is confounded with batch!
-                            Please choose different covariates.")}}
+                            Please choose different covariates.")
+                }
+            }
         }
     }
 
     mod2 <- list.cbind(cond_mod)
-    mod2 <- cbind(mod2, batch_mod[,-1])
+    mod2 <- cbind(mod2, batch_mod[, -1])
     cond_mod2 <- list.cbind(cond_mod)
-    if (length(condition) > 1){
+    if (length(condition) > 1) {
         idx <- which(duplicated(colnames(mod2)) &
                 colnames(mod2) == "(Intercept)")
         idx2 <- which(duplicated(colnames(cond_mod2)) &
                 colnames(cond_mod2) == "(Intercept)")
-        mod2 <- mod2[,-idx]
-        cond_mod2 <- cond_mod2[,-idx2]
+        mod2 <- mod2[, -idx]
+        cond_mod2 <- cond_mod2[, -idx2]
     }
 
-    if(qr(mod2)$rank < ncol(mod2)){
+    if (qr(mod2)$rank < ncol(mod2)) {
         options(error = NULL)
-        if(ncol(mod2) == (nlb + 1)){
+        if (ncol(mod2) == (nlb + 1)) {
             stop("A covariate is confounded with batch!
                     Please choose different covariates.")
         }
-        if(ncol(mod2) > (nlb + 1)){
-            if((qr(mod2[,-c(seq_len(nlb))])$rank <
-                    ncol(mod2[,-c(seq_len(nlb))]))){
+        if (ncol(mod2) > (nlb + 1)) {
+            if ((qr(mod2[, -c(seq_len(nlb))])$rank <
+                    ncol(mod2[, -c(seq_len(nlb))]))) {
                 stop('At least one covariate is confounded with another!
                         Please choose different covariates.')
-            }else{
+            }else {
                 stop("At least one covariate is confounded with another!
-                        Please choose different covariates.")}}
+                        Please choose different covariates.")
+            }
+        }
     }
 
     for (i in seq_len(length(condition))) {
@@ -135,10 +139,10 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
         idx <- which(duplicated(colnames(batch_mod2)) &
                 colnames(batch_mod2) == "(Intercept)")
         if (length(idx) > 0) {
-            batch_mod2 <- batch_mod2[,-idx]
+            batch_mod2 <- batch_mod2[, -idx]
         }
 
-        batch_mod2 <- batch_mod2[,-1]
+        batch_mod2 <- batch_mod2[, -1]
 
         cond_test[[i]] <- batchqc_f.pvalue(se, mod2, batch_mod2, assay_name)
 
@@ -167,7 +171,7 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     colnames(explained_variation)[2] <- "Batch"
 
     for (i in seq_len(length(condition))) {
-        colnames(explained_variation)[i+2] <- condition[i]
+        colnames(explained_variation)[i + 2] <- condition[i]
     }
 
     batchqc_ev <- list(explained_variation = explained_variation,
@@ -175,4 +179,3 @@ batchqc_explained_variation <- function(se, batch, condition, assay_name) {
 
     return(batchqc_ev)
 }
-

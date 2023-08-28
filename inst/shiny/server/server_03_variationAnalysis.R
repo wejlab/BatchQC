@@ -4,9 +4,9 @@
 observeEvent(input$variation_batch, {
     req(reactivevalue$se, input$variation_batch)
     covariate_choices <- covariates_not_confounded(reactivevalue$se,
-                                                   input$variation_batch)
+        input$variation_batch)
     updateSelectizeInput(session = session, inputId = "variation_condition",
-                         choices = covariate_choices, selected = NULL)
+        choices = covariate_choices, selected = NULL)
 })
 
 ## Update variation analysis plot
@@ -14,11 +14,11 @@ ev_plot_reactive <- eventReactive(input$variation, {
     req(input$variation_batch, input$variation_condition, input$variation_assay,
         reactivevalue$se)
     # Create boxplot for variation explained by batch, condition, and
-    # batch + condition
+    # batch and condition
     tryCatch({
         batchqc_ev_plot <- EV_plotter(reactivevalue$se, input$variation_batch,
-                                      input$variation_condition,
-                                      input$variation_assay)
+            input$variation_condition,
+            input$variation_assay)
         plot(batchqc_ev_plot$EV_boxplot)
     })
 })
@@ -31,8 +31,8 @@ ev_table_reactive <- eventReactive(input$variation, {
     # and batch + condition
     tryCatch({
         batchqc_ev_table <- EV_table(reactivevalue$se, input$variation_batch,
-                                     input$variation_condition,
-                                     input$variation_assay)
+            input$variation_condition,
+            input$variation_assay)
         batchqc_ev_table$EV_table
     }, error = function(err) {
         showNotification("At least one covariate is confounded with another!

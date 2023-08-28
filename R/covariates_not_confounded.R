@@ -7,10 +7,10 @@
 #' @export
 
 covariates_not_confounded <- function(se, batch) {
-    df <- confound_metrics(se,batch)
+    df <- confound_metrics(se, batch)
     covariate_options <- rownames(df)
     for (i in seq_len(dim(df)[1])) {
-        if (df[i]== 1 | is.na(df[i])) {
+        if (df[i] == 1 || is.na(df[i])) {
             covariate_options <- covariate_options[!(covariate_options) %in%
                     rownames(df)[i]]
         }

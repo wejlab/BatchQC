@@ -20,7 +20,7 @@ process_dendrogram <- function(se, assay, batch_var) {
         mutate(sample_name = paste("sample", seq_len(nrow(data)), sep = "_"))
     rownames(dat) <- dat$sample_name
     sample_name <- dat$sample_name
-    metadata <- cbind(as.data.frame(colData(se)),sample_name)
+    metadata <- cbind(as.data.frame(colData(se)), sample_name)
     metadata[] <- lapply(metadata, as.character)
     dist_matrix <- stats::dist(dat, method = "euclidean")
 
@@ -38,8 +38,8 @@ process_dendrogram <- function(se, assay, batch_var) {
         rename(sample_name = label) %>%
         left_join(metadata, by = "sample_name")
 
-    return(list(dendrogram_ends=dendrogram_ends,
-        dendrogram_segments=dendrogram_segments))
+    return(list(dendrogram_ends = dendrogram_ends,
+        dendrogram_segments = dendrogram_segments))
 
 }
 
@@ -70,12 +70,13 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
 
     dendrogram_segments <- dends$dendrogram_segments
 
-    unique_vars <- levels(factor(dendrogram_ends[,batch_var])) %>%
-        as.data.frame() %>% rownames_to_column("row_id")
+    unique_vars <- levels(factor(dendrogram_ends[, batch_var])) %>%
+        as.data.frame() %>%
+        rownames_to_column("row_id")
 
     color_count <- length(unique(unique_vars$.))
     get_palette <- grDevices::colorRampPalette(brewer.pal(
-        n = length(unique(dendrogram_ends[,batch_var])),
+        n = length(unique(dendrogram_ends[, batch_var])),
         name = "Paired"))
     palette <- get_palette(color_count) %>% as.data.frame() %>%
         rename("color" = ".") %>%
@@ -87,19 +88,20 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
 
     dendrogram <- ggplot() +
         geom_segment(data = dendrogram_segments,
-            aes(x=x, y=y, xend=xend, yend=yend)) +
+            aes(x = x, y = y, xend = xend, yend = yend)) +
         geom_segment(data = dendrogram_ends,
-            aes(x=x, y=y.x, xend=xend, yend=yend,
-                color = dendrogram_ends[,batch_var])) +
+            aes(x = x, y = y.x, xend = xend, yend = yend,
+                color = dendrogram_ends[, batch_var])) +
         scale_color_manual(values = annotation_color,
             limits = names(annotation_color),
             name = as.character(batch_var)) +
         scale_y_reverse() +
         coord_flip() +
-        theme(axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
         theme_bw() + ylab("Distance")
 
-    circular_dendrogram <- dendrogram + coord_polar(theta="x")
+    circular_dendrogram <- dendrogram + coord_polar(theta = "x")
 
-    return(list(dendrogram=dendrogram,circular_dendrogram=circular_dendrogram))
+    return(list(dendrogram = dendrogram,
+        circular_dendrogram = circular_dendrogram))
 }

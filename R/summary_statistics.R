@@ -8,7 +8,7 @@
 #' @return design table
 #' @export
 
-batch_design <- function(se, batch, covariate){
+batch_design <- function(se, batch, covariate) {
     ### Create a batch design table for the provided covariate
     design <- colData(se) %>% as_tibble %>%
         group_by_at(covariate) %>%
@@ -24,7 +24,7 @@ batch_design <- function(se, batch, covariate){
 #' @return correlation properties
 #' @export
 
-cor_props <- function(bd){
+cor_props <- function(bd) {
     # Subset matrix to design only
     m <- bd[, -1, ]
     rowsums <- rowSums(m)
@@ -33,13 +33,13 @@ cor_props <- function(bd){
     expected <- matrix(0, nrow(m), ncol(m))
     for (i in seq_len(nrow(m))) {
         for (j in seq_len(ncol(m))) {
-            expected[i, j] <- rowsums[i] * colsums[j]/tablesum
+            expected[i, j] <- rowsums[i] * colsums[j] / tablesum
         }
     }
-    chi <- sum((m - expected)^2/expected)
+    chi <- sum((m - expected)^2 / expected)
     mmin <- min(nrow(m), ncol(m))
 
-    out <- list("chi" = chi, "mmin"=mmin, "tablesum"=tablesum)
+    out <- list("chi" = chi, "mmin" = mmin, "tablesum" = tablesum)
     return(out)
 }
 
@@ -51,7 +51,7 @@ cor_props <- function(bd){
 
 std_pearson_corr_coef <- function(bd) {
     c <- cor_props(bd)
-    r <- sqrt(c$chi * c$mmin/((c$chi + c$tablesum) * (c$mmin - 1)))
+    r <- sqrt(c$chi * c$mmin / ((c$chi + c$tablesum) * (c$mmin - 1)))
     return(r)
 }
 
@@ -62,7 +62,7 @@ std_pearson_corr_coef <- function(bd) {
 #'
 cramers_v <- function(bd) {
     c <- cor_props(bd)
-    v <- sqrt(c$chi/(c$tablesum * (c$mmin - 1)))
+    v <- sqrt(c$chi / (c$tablesum * (c$mmin - 1)))
     return(v)
 }
 
@@ -73,7 +73,7 @@ cramers_v <- function(bd) {
 #' @return metrics of confounding
 #' @export
 
-confound_metrics <- function(se, batch){
+confound_metrics <- function(se, batch) {
     # Covariates are non-batch
     cols <- names(colData(se))
     covs <- cols[cols != batch]

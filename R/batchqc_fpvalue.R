@@ -1,5 +1,5 @@
-#' Returns R2 values from F-test (full/reduced model) for explained variation
-#' plot and table
+#' Returns R2 values from F-test (full/reduced model) for explained
+#' variation plot and table
 #'
 #' @param se Summarized experiment object
 #' @param mod mod
@@ -37,12 +37,12 @@ batchqc_f.pvalue <- function(se, mod, batch_mod, assay_name) {
     rss00 <- rowSums(resid00 * resid00)
     rm(resid00)
 
-    r2_full <- 1 - rss1/rss00
-    r2_reduced <- 1 - rss0/rss00
+    r2_full <- 1 - rss1 / rss00
+    r2_reduced <- 1 - rss0 / rss00
 
     p <- 1
     if (df1 > df0)  {
-        fstats <- ((rss0 - rss1)/(df1 - df0))/(rss1/(n - df1))
+        fstats <- ((rss0 - rss1) / (df1 - df0)) / (rss1 / (n - df1))
         p <- 1 - stats::pf(fstats, df1 = (df1 - df0), df2 = (n - df1))
     }
     return(list(p = p, r2_full = r2_full, r2_reduced = r2_reduced))

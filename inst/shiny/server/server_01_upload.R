@@ -2,105 +2,101 @@
 
 ### UPDATING SELECTIONS ###
 
-setupSelections <- function(){
+setupSelections <- function() {
     # Experimental design
     updateSelectizeInput(session = session, inputId = "design_batch",
-                         choices = names(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = names(colData(reactivevalue$se)),
+        selected = NULL)
     updateSelectizeInput(session = session, inputId = "design_covariate",
-                         choices = names(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = names(colData(reactivevalue$se)),
+        selected = NULL)
 
     # Normalization
-    updateSelectizeInput(session = session, inputId = 'normalization_assay',
-                         choices = assayNames((reactivevalue$se)),
-                         selected = NULL,
-                         options = list(placeholder =
-                                            'Please select an option below',
-                                        onInitialize = I('function() {
-                                                       this.setValue(""); }')))
+    updateSelectizeInput(session = session, inputId = "normalization_assay",
+        choices = assayNames((reactivevalue$se)),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
 
     # Batch Correction
     updateSelectizeInput(session = session,
-                         inputId = "correction_batch",
-                         choices = (names(colData(reactivevalue$se))),
-                         selected = NULL,
-                         options = list(placeholder =
-                                        'Please select an option below',
-                                        onInitialize =
-                                        I('function() { this.setValue(""); }')))
+        inputId = "correction_batch",
+        choices = (names(colData(reactivevalue$se))),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
     updateSelectizeInput(session = session,
-                         inputId = 'correction_assay',
-                         choices = (assayNames((reactivevalue$se))),
-                         selected = NULL,
-                         options = list(placeholder =
-                                        'Please select an option below',
-                                        onInitialize =
-                                        I('function() { this.setValue(""); }')))
+        inputId = "correction_assay",
+        choices = (assayNames((reactivevalue$se))),
+        selected = NULL,
+        options = list(placeholder =
+                'Please select an option below',
+            onInitialize =
+                I('function() { this.setValue(""); }')))
     updateSelectizeInput(session = session,
-                         inputId = "correction_covariates",
-                         choices = (names(colData(reactivevalue$se))),
-                         selected = NULL,
-                         options = list(placeholder =
-                                        'Please select an option below',
-                                        onInitialize =
-                                        I('function() { this.setValue(""); }')))
+        inputId = "correction_covariates",
+        choices = (names(colData(reactivevalue$se))),
+        selected = NULL,
+        options = list(placeholder =
+                'Please select an option below',
+            onInitialize =
+                I('function() { this.setValue(""); }')))
 
     # Heatmap
     updateSelectizeInput(session = session, inputId = 'heatmap_assay_name',
-                         choices = assayNames((reactivevalue$se)),
-                         selected = NULL)
+        choices = assayNames((reactivevalue$se)),
+        selected = NULL)
     updateSelectInput(session = session, inputId = 'variates_to_display',
-                      choices = colnames(colData(reactivevalue$se)),
-                      selected = NULL)
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL)
     updateNumericInput(session = session, inputId = 'top_n_heatmap',
-                       value = 2, min = 2, max = dim(reactivevalue$se)[1])
+        value = 2, min = 2, max = dim(reactivevalue$se)[1])
 
     # Dendrogram
     updateSelectizeInput(session = session, inputId = 'dend_assay_name',
-                         choices = assayNames((reactivevalue$se)),
-                         selected = NULL)
+        choices = assayNames((reactivevalue$se)),
+        selected = NULL)
     updateSelectInput(session = session, inputId = 'dend_batch_to_display',
-                      choices = colnames(colData(reactivevalue$se)),
-                      selected = NULL)
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL)
     updateSelectInput(session = session, inputId = 'dend_category_to_display',
         choices = colnames(colData(reactivevalue$se)),
         selected = NULL)
 
     # PCA
     updateSelectizeInput(session = session, inputId = 'pca_assays',
-                         choices = assayNames((reactivevalue$se)),
-                         selected = NULL)
+        choices = assayNames((reactivevalue$se)),
+        selected = NULL)
     updateNumericInput(session = session, inputId = 'top_n_PCA',
-                       value = 2, min = 2, max = dim(reactivevalue$se)[1])
+        value = 2, min = 2, max = dim(reactivevalue$se)[1])
     updateSelectizeInput(session = session, inputId = 'variates_shape',
-                         choices = colnames(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL)
     updateSelectizeInput(session = session, inputId = 'variates_color',
-                         choices = colnames(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL)
     updateSelectizeInput(session, inputId = 'batch',
-                         choices = colnames(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL)
     updateSelectizeInput(session, inputId = 'group',
-                         choices = colnames(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL)
 
     # Variation Analysis
     updateSelectizeInput(session = session, inputId = "variation_assay",
-                         choices = names(assays(reactivevalue$se)),
-                         selected = NULL)
+        choices = names(assays(reactivevalue$se)),
+        selected = NULL)
     updateSelectizeInput(session = session, inputId = "variation_batch",
-                         choices = names(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = names(colData(reactivevalue$se)),
+        selected = NULL)
 
     # Differential expression analysis
-    updateSelectizeInput(session = session, inputId="DE_assay",
-                         choices = names(assays(reactivevalue$se)),
-                         selected = NULL)
+    updateSelectizeInput(session = session, inputId = "DE_assay",
+        choices = names(assays(reactivevalue$se)),
+        selected = NULL)
     updateSelectizeInput(session = session, inputId = "DE_batch",
-                         choices = names(colData(reactivevalue$se)),
-                         selected = NULL)
+        choices = names(colData(reactivevalue$se)),
+        selected = NULL)
 }
 
 observeEvent(input$uploadChoice, {
@@ -111,15 +107,16 @@ observeEvent(input$uploadChoice, {
 observeEvent(input$counts, {
     req(input$counts)
     reactivevalue$counts_location <- input$counts$datapath
-    reactivevalue$counts <- read.table(reactivevalue$counts_location, header = TRUE,
-                               row.names = 1,
-                               sep = get.delim(reactivevalue$counts_location,
-                                               n = 10,
-                                               delims = c('\t',',')),
-                               check.names = FALSE)
+    reactivevalue$counts <- read.table(reactivevalue$counts_location,
+        header = TRUE,
+        row.names = 1,
+        sep = get.delim(reactivevalue$counts_location,
+            n = 10,
+            delims = c('\t', ',')),
+        check.names = FALSE)
     output$counts_header <- renderDT((datatable(reactivevalue$counts)))
     output$counts_dimensions <- renderText(paste(dim(reactivevalue$counts),
-                                                c('observations and','samples')))
+        c('observations and', 'samples')))
 })
 
 ## Obtain the metadata matrix and metadata table location
@@ -128,10 +125,10 @@ observeEvent(input$md, {
     reactivevalue$metadata_location <- input$md$datapath
 
     reactivevalue$metadata <- read.table(reactivevalue$metadata_location,
-                                        header = TRUE, row.names = 1,
-                                        sep = get.delim(reactivevalue$metadata_location,
-                                                        n = 10,
-                                                        delims = c('\t',',')))
+        header = TRUE, row.names = 1,
+        sep = get.delim(reactivevalue$metadata_location,
+            n = 10,
+            delims = c('\t', ',')))
 
     output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
 })
@@ -145,38 +142,38 @@ observeEvent(input$se, {
     output$counts_header <- renderDT(datatable(assays(reactivevalue$se)$counts))
     #output$counts_header <- renderDT((datatable(reactivevalue$counts)))
     output$counts_dimensions <- renderText(paste(dim(reactivevalue$se),
-                                             c('observations and', 'samples')))
+        c('observations and', 'samples')))
 
     reactivevalue$metadata <- as.data.table(colData(reactivevalue$se))
     output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
-    })
+})
 
 ## Obtain count matrix and count location for example data
 observeEvent(input$exampleData, {
     req(input$exampleData)
-    if(input$exampleData == "proteinData"){
+    if (input$exampleData == "proteinData") {
 
         data(protein_data)
         reactivevalue$counts <- protein_data
         output$counts_header <- renderDT(datatable(reactivevalue$counts))
         output$counts_dimensions <- renderText(paste(dim(reactivevalue$counts),
-                                                     c('observations and', 'samples')))
+            c('observations and', 'samples')))
 
         data(protein_sample_info)
         reactivevalue$metadata <- protein_sample_info
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
-    }else if(input$exampleData == "signatureData"){
+    }else if (input$exampleData == "signatureData") {
         data(signature_data)
         reactivevalue$counts <- signature_data
         output$counts_header <- renderDT(datatable(reactivevalue$counts))
         output$counts_dimensions <- renderText(paste(dim(reactivevalue$counts),
-                                                      c('observations and', 'samples')))
+            c('observations and', 'samples')))
 
         data(batch_indicator)
         rownames(batch_indicator) <- batch_indicator$samples
         reactivevalue$metadata <- batch_indicator[2:3]
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
-    }else if(input$exampleData == "bladderData"){
+    }else if (input$exampleData == "bladderData") {
         data(bladder_data)
         reactivevalue$counts <- bladder_data
         output$counts_header <- renderDT(datatable(reactivevalue$counts))
@@ -194,18 +191,19 @@ observeEvent(input$exampleData, {
 observeEvent(input$submit, {
     withBusyIndicatorServer("submit", {
         #need to clear all previous selections
-        if(input$uploadChoice == "countFile" &
-           !is.null(reactivevalue$counts_location) &
-           !is.null(reactivevalue$metadata_location)){
-            se <- summarized_experiment(reactivevalue$counts, reactivevalue$metadata)
-            se <- se[which(rownames(se) !='NA')]
-
-        }else if(input$uploadChoice == "seObject" &
-                 !is.null(input$se$datapath)){
+        if (input$uploadChoice == "countFile" &
+                !is.null(reactivevalue$counts_location) &
+                !is.null(reactivevalue$metadata_location)) {
+            se <- summarized_experiment(reactivevalue$counts,
+                reactivevalue$metadata)
+            se <- se[which(rownames(se) != 'NA')]
+        } else if (input$uploadChoice == "seObject" &
+                !is.null(input$se$datapath)) {
             se <- readRDS(reactivevalue$se_location)
-            se <- se[rowSums(se@assays@data$counts)>0,]
-        }else if(input$uploadChoice == "example"){
-            se <- summarized_experiment(reactivevalue$counts, reactivevalue$metadata)
+            se <- se[rowSums(se@assays@data$counts) > 0, ]
+        } else if (input$uploadChoice == "example") {
+            se <- summarized_experiment(reactivevalue$counts,
+                reactivevalue$metadata)
         }
 
         reactivevalue$se <- se
@@ -216,7 +214,7 @@ observeEvent(input$submit, {
                 paste("se", ".RDS", sep = "")
             },
             content = function(file) {
-                saveRDS(reactivevalue$se,file)
+                saveRDS(reactivevalue$se, file)
             }
         )
 
@@ -234,9 +232,9 @@ observeEvent(input$submit, {
 observe({
     req(input$normalization_method, input$normalization_assay)
     updateTextInput(session = session, inputId = 'normalized_assay_name',
-                    'Name for the normalized Assay',
-                    value = paste(input$normalization_assay,
-                                  input$normalization_method, sep = '_'))
+        'Name for the normalized Assay',
+        value = paste(input$normalization_assay,
+            input$normalization_method, sep = '_'))
 })
 
 ## Normalize a selected assay
@@ -245,9 +243,9 @@ observeEvent(input$normalize, {
         input$normalized_assay_name)
     withBusyIndicatorServer("normalize", {
         reactivevalue$se <- normalize_SE(reactivevalue$se,
-                                        input$normalization_method,
-                                        input$normalization_assay,
-                                        input$normalized_assay_name)
+            input$normalization_method,
+            input$normalization_assay,
+            input$normalized_assay_name)
         if (input$log) {
             reactivevalue$se@assays@data[[input$normalized_assay_name]] <-
                 log(reactivevalue$se@assays@data[[input$normalized_assay_name]])
@@ -259,44 +257,44 @@ observeEvent(input$normalize, {
 ## Update batch effect corrected assay name
 observe( {
     req(input$correction_assay, input$correction_batch, input$correction_method)
-    if (!is.null(input$correction_covariates)){
+    if (!is.null(input$correction_covariates)) {
         if (!is.null(input$group_for_batch)) {
             updateTextInput(session = session,
-                            inputId = 'corrected_assay_name',
-                            'Name for the corrected assay',
-                            value = paste(input$correction_assay,
-                                          input$correction_batch,
-                                          input$group_for_batch,
-                                          input$correction_method,
-                                          paste(input$correction_covariates,
-                                                collapse = '_'),
-                                          sep = '_'))
+                inputId = 'corrected_assay_name',
+                'Name for the corrected assay',
+                value = paste(input$correction_assay,
+                    input$correction_batch,
+                    input$group_for_batch,
+                    input$correction_method,
+                    paste(input$correction_covariates,
+                        collapse = '_'),
+                    sep = '_'))
         }else {
             updateTextInput(session = session, inputId = 'corrected_assay_name',
-                            'Name for the corrected assay',
-                            value = paste(input$correction_assay,
-                                          input$correction_batch,
-                                          input$correction_method,
-                                          paste(input$correction_covariates,
-                                                collapse = '_'),
-                                          sep = '_'))
+                'Name for the corrected assay',
+                value = paste(input$correction_assay,
+                    input$correction_batch,
+                    input$correction_method,
+                    paste(input$correction_covariates,
+                        collapse = '_'),
+                    sep = '_'))
         }
     }else {
         if (!is.null(input$group_for_batch)) {
             updateTextInput(session = session, inputId = 'corrected_assay_name',
-                            'Name for the corrected assay',
-                            value = paste(input$correction_assay,
-                                          input$correction_batch,
-                                          input$group_for_batch,
-                                          input$correction_method,
-                                          sep = '_'))
+                'Name for the corrected assay',
+                value = paste(input$correction_assay,
+                    input$correction_batch,
+                    input$group_for_batch,
+                    input$correction_method,
+                    sep = '_'))
         }else {
-            updateTextInput(session = session,inputId = 'corrected_assay_name',
-                            'Name for the corrected assay',
-                            value = paste(input$correction_assay,
-                                          input$correction_batch,
-                                          input$correction_method,
-                                          sep = '_'))
+            updateTextInput(session = session, inputId = 'corrected_assay_name',
+                'Name for the corrected assay',
+                value = paste(input$correction_assay,
+                    input$correction_batch,
+                    input$correction_method,
+                    sep = '_'))
         }
     }
 })
@@ -308,20 +306,20 @@ observeEvent(input$correct, {
         msg <- sprintf('Start the batch correction process')
         withProgress(message = msg, {
             setProgress(0.5, 'Correcting...')
-            reactivevalue$se = batch_correct(reactivevalue$se,
-                                             input$correction_method,
-                                             input$correction_assay,
-                                             input$correction_batch,
-                                             group=NULL,
-                                             input$correction_covariates,
-                                             input$corrected_assay_name)
+            reactivevalue$se <- batch_correct(reactivevalue$se,
+                input$correction_method,
+                input$correction_assay,
+                input$correction_batch,
+                group = NULL,
+                input$correction_covariates,
+                input$corrected_assay_name)
             setProgress(1, 'Complete!')
         })
     }},
-    error = function(error) {
-        showNotification('Confounding', type = "error")
-        print(error)
-    })
+        error = function(error) {
+            showNotification('Confounding', type = "error")
+            print(error)
+        })
     setupSelections()
     showNotification('Batch Correction Completed', type = "message")
 })

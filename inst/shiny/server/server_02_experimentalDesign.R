@@ -15,4 +15,3 @@ observeEvent(input$design_batch, {
     conf_stats <- confound_metrics(reactivevalue$se, input$design_batch)
     output$confounding_table <- renderTable(conf_stats, rownames = TRUE)
 })
-

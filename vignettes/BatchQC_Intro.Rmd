@@ -7,7 +7,8 @@ author:
   - Director, Center for Data Science, Rutgers University
   email: wj183@njms.rutgers.edu 
 - name: Jessica McClintock
-  affiliation: Division of Infectious Disease, Department of Medicine, Rutgers University 
+  affiliation: 
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
   email: jessica.mcclintock@rutgers.edu
 date: '`r format(Sys.Date(), "%B %e, %Y")`'
 package: BatchQC
@@ -98,15 +99,15 @@ Below is an example of how you may use the shiny app to analyze your data:
 ### 1. Upload data set 
 Upon launching the shiny app, you will be on the "Upload Data" screen. From
 here, you may upload the following data:
-1. **Your own data w/Count and Metadata file.** Count file should have sample ID
-as column and item of interest as row. Metadata should have sample ID as row and 
-all meta data labeled in the column. Both files should be uploaded as .csv by 
-selecting "Browse" and selecting the appropriate files from your computer.
+1. **Your own data w/Count and Metadata file.** Count file should have sample
+ID as column and item of interest as row. Metadata should have sample ID as row
+and all meta data labeled in the column. Both files should be uploaded as .csv
+by selecting "Browse" and selecting the appropriate files from your computer.
 2. **Your own data as a Summarized Experiment object.** Upload should be a .RDS
 file type and can be uploaded by selecting "Browse" and then the appropriate 
 files from your computer
-3. **An example data set.** See the examples vignette for additional information 
-on each example data set
+3. **An example data set.** See the examples vignette for additional
+information on each example data set
 
 A preview of the selected data will show up under the "Input Summary" and "Full
 Metadata" tab. Input summary shows the counts file/assay on the Input summary
@@ -145,21 +146,22 @@ DESeq adjusted values are not recommended for within sample comparison.
 
 To use one of these two methods, select it from the normalization method drop 
 down, select an assay to perform the normalization on from the drop down, and
-name the new assay (the prepopulated name can be changed to your preference). You
-may also choose to log-transform the results of either of these normalization 
-methods by selecting the "Log transform" box. Hit "Normalize" to complete the 
-analysis. Your new assay will not be available for further analysis.
+name the new assay (the prepopulated name can be changed to your preference).
+You may also choose to log-transform the results of either of these
+normalization methods by selecting the "Log transform" box. Hit "Normalize" to
+complete the analysis. Your new assay will not be available for further
+analysis.
 
 Alternatively, this can be called directly from the command line on an SE
 object and will return the same SE object with an additional assay with the name
 that you provide as the output_assay_name.
 ```{r}
 # CPM Normalization
-se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM", 
+se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM",
     assay_to_normalize = "counts", output_assay_name = "CPM_normalized_counts")
 
 # DESeq Normalization
-se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq", 
+se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq",
     assay_to_normalize = "counts", "DESeq_normalized_counts")
 
 # log adjust
@@ -193,13 +195,13 @@ To run from the command line use the following:
 
 ```{r}
 # Combat-Seq correction
-se_object <- BatchQC::batch_correct(se = se_object, method = "ComBat-Seq", 
-    assay_to_normalize = "counts" , batch = "batch", 
+se_object <- BatchQC::batch_correct(se = se_object, method = "ComBat-Seq",
+    assay_to_normalize = "counts", batch = "batch",
     covar = "category", output_assay_name = "Combat_Seq_corrected")
 
 # Combat correction
-se_object <- BatchQC::batch_correct(se = se_object, method = "Combat", 
-    assay_to_normalize = "", batch = "batch", 
+se_object <- BatchQC::batch_correct(se = se_object, method = "Combat",
+    assay_to_normalize = "", batch = "batch",
     covar = c("category"), output_assay_name = "Combat_corrected")
 ```
 
@@ -269,7 +271,7 @@ likely to be associated with your condition of interest rather than the batch.
 To recreate the variation analysis plot for the counts assay, use the
 following code:
 ```{r}
-EV_boxplot <- BatchQC::EV_plotter(se = se_object, batch = "batch", 
+EV_boxplot <- BatchQC::EV_plotter(se = se_object, batch = "batch",
     condition = "category", assay_name = "counts")
 EV_boxplot
 ```
@@ -291,8 +293,8 @@ data set, which is 38 for the protein sample data).
 This heat map shows how similar each sample is to each other sample in your
 data (samples are ploted on both the x and y axis, so are identical to 
 their self). The samples are clustered together based on similarity. Ideally, 
-you would expect your samples to cluster and be more similar to samples from the 
-same condition rather than from the sample batch. If there is clear visual 
+you would expect your samples to cluster and be more similar to samples from
+the same condition rather than from the sample batch. If there is clear visual 
 clustering of the batch in your raw data, you should apply a batch correction 
 method. Your batch corrected assay should have stronger clustering by condition.
 
@@ -315,7 +317,7 @@ correction to adjust your data.
 
 Use the following code to recreate the sample correlation heatmap:
 ```{r}
-heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts", 
+heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts",
     nfeature = 38, annotation_column = c("batch", "category"))
 heatmap <- heatmaps$topn_heatmap
 heatmap
@@ -332,8 +334,8 @@ to display at a time.
 
 Use the following code to recreate the dendrogram: 
 ```{r}
-dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, assay = "counts", 
-    batch_var = "batch", category_var = "condition")
+dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, assay = "counts",
+    batch_var = "batch", category_var = "category")
 dendrogram_plot$dendrogram
 ```
 #### Circular Dendrogram
@@ -343,8 +345,8 @@ samples at the top and the bottom of the chart.
 
 Use the following code to recreate the circular dendrogram: 
 ```{r}
-circular_dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, 
-    assay = "counts", batch_var = "batch", category_var = "condition")
+circular_dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object,
+    assay = "counts", batch_var = "batch", category_var = "category")
 circular_dendrogram_plot$circular_dendrogram
 ```
 ### 8. PCA Analysis
@@ -359,7 +361,7 @@ Use the following code to recreate the PCA plot and associated table that lists
 the explained variation of each PC:
 ```{r}
 pca_plot <- BatchQC::PCA_plotter(se = se_object, nfeature = 2, color = "batch",
-    shape = "category", assays = c("counts", "Combat_Seq_corrected"), 
+    shape = "category", assays = c("counts", "Combat_Seq_corrected"),
     xaxisPC = 1, yaxisPC = 2)
 pca_plot$plot
 pca_plot$var_explained
@@ -369,8 +371,8 @@ pca_plot$var_explained
 Not currently working....
 
 ```{r}
-#differential_expression <- BatchQC::DE_analyze(se = se_object, 
-#    method = "DESeq2", batch = "batch", conditions = c("category"), 
+#differential_expression <- BatchQC::DE_analyze(se = se_object,
+#    method = "DESeq2", batch = "batch", conditions = c("category"),
 #    assay_to_analyze = "counts")
 ```
 

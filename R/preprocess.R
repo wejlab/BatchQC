@@ -4,7 +4,7 @@
 #' @param nfeature Number of variable features to use
 #' @return Returns processed data
 
-preprocess <- function(se, assay, nfeature){
+preprocess <- function(se, assay, nfeature) {
 
     data <- assays(se)[[assay]]
     data <- as.matrix(data)

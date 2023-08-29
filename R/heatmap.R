@@ -12,7 +12,7 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
     data <- preprocess(se, assay, nfeature)
 
     for (i in seq_len(nrow(data))) {
-        data[i,] <- (data[i,]-mean(data[i,]))/stats::sd(data[i,])
+        data[i, ] <- (data[i, ] - mean(data[i, ])) / stats::sd(data[i, ])
     }
 
     coldata <- data.frame(colData(se))
@@ -20,10 +20,9 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
     cor <- cor(data)
     if (!is.null(annotation_column)) {
         if (length(annotation_column) == 1) {
-            coldata <- data.frame(coldata[ , annotation_column],
+            coldata <- data.frame(coldata[, annotation_column],
                 row.names = rownames(coldata))
-        }
-        else {
+        }else {
             coldata <- coldata[, annotation_column]
         }
         correlation_heatmap <- pheatmap(cor, annotation_col = coldata,
@@ -39,8 +38,7 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
             annotation_names_col = FALSE,
             show_rownames = FALSE,
             silent = TRUE)
-    }
-    else {
+    }else {
         correlation_heatmap <- pheatmap(cor, show_colnames = FALSE,
             show_rownames = FALSE,
             annotation_names_col = FALSE,

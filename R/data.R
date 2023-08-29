@@ -94,4 +94,3 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 #' @keywords datasets
 #' @usage data(bladder_data)
 "bladder_data"
-

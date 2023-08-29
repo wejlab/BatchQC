@@ -17,13 +17,15 @@ observeEvent(input$heatmap_plot, {
                           input$top_n_heatmap > 1,
                       "Please select between 2 and the size of your data set variates to display"))
         results$correlation_heatmap
-    }, height = function() {session$clientData$output_correlation_heatmap_width
+        }, height = function() {
+        session$clientData$output_correlation_heatmap_width
     })
 
     output$topn_heatmap <- renderPlot({
         validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1],
                       "Value must be less than the dim of your data set"))
         results$topn_heatmap
-    }, height = function() {session$clientData$output_topn_heatmap_width
+    }, height = function() {
+        session$clientData$output_topn_heatmap_width
     })
 })

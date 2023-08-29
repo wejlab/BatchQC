@@ -7,7 +7,8 @@ author:
   - Director, Center for Data Science, Rutgers University
   email: wj183@njms.rutgers.edu 
 - name: Jessica McClintock
-  affiliation: Division of Infectious Disease, Department of Medicine, Rutgers University 
+  affiliation: 
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
   email: jessica.mcclintock@rutgers.edu
 date: '`r format(Sys.Date(), "%B %e, %Y")`'
 package: BatchQC
@@ -98,15 +99,15 @@ Below is an example of how you may use the shiny app to analyze your data:
 ### 1. Upload data set 
 Upon launching the shiny app, you will be on the "Upload Data" screen. From
 here, you may upload the following data:
-1. **Your own data w/Count and Metadata file.** Count file should have sample ID
-as column and item of interest as row. Metadata should have sample ID as row and 
-all meta data labeled in the column. Both files should be uploaded as .csv by 
-selecting "Browse" and selecting the appropriate files from your computer.
+1. **Your own data w/Count and Metadata file.** Count file should have sample
+ID as column and item of interest as row. Metadata should have sample ID as row
+and all meta data labeled in the column. Both files should be uploaded as .csv
+by selecting "Browse" and selecting the appropriate files from your computer.
 2. **Your own data as a Summarized Experiment object.** Upload should be a .RDS
 file type and can be uploaded by selecting "Browse" and then the appropriate 
 files from your computer
-3. **An example data set.** See the examples vignette for additional information 
-on each example data set
+3. **An example data set.** See the examples vignette for additional
+information on each example data set
 
 A preview of the selected data will show up under the "Input Summary" and "Full
 Metadata" tab. Input summary shows the counts file/assay on the Input summary
@@ -145,10 +146,11 @@ DESeq adjusted values are not recommended for within sample comparison.
 
 To use one of these two methods, select it from the normalization method drop 
 down, select an assay to perform the normalization on from the drop down, and
-name the new assay (the prepopulated name can be changed to your preference). You
-may also choose to log-transform the results of either of these normalization 
-methods by selecting the "Log transform" box. Hit "Normalize" to complete the 
-analysis. Your new assay will not be available for further analysis.
+name the new assay (the prepopulated name can be changed to your preference).
+You may also choose to log-transform the results of either of these
+normalization methods by selecting the "Log transform" box. Hit "Normalize" to
+complete the analysis. Your new assay will not be available for further
+analysis.
 
 Alternatively, this can be called directly from the command line on an SE
 object and will return the same SE object with an additional assay with the name
@@ -291,8 +293,8 @@ data set, which is 38 for the protein sample data).
 This heat map shows how similar each sample is to each other sample in your
 data (samples are ploted on both the x and y axis, so are identical to 
 their self). The samples are clustered together based on similarity. Ideally, 
-you would expect your samples to cluster and be more similar to samples from the 
-same condition rather than from the sample batch. If there is clear visual 
+you would expect your samples to cluster and be more similar to samples from
+the same condition rather than from the sample batch. If there is clear visual 
 clustering of the batch in your raw data, you should apply a batch correction 
 method. Your batch corrected assay should have stronger clustering by condition.
 

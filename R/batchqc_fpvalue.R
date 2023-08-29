@@ -1,5 +1,5 @@
-#' Returns R2 values from F-test (full/reduced model) for explained variation
-#' plot and table
+#' Returns R2 values from F-test (full/reduced model) for explained
+#' variation plot and table
 #'
 #' @param se Summarized experiment object
 #' @param mod mod

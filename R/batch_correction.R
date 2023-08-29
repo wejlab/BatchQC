@@ -13,15 +13,15 @@
 #'
 #' @export
 batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
-                            covar, output_assay_name) {
+    covar, output_assay_name) {
     se <- se
     batch <- data.frame(colData(se))[, batch]
     if (method == 'ComBat-Seq') {
         se <- combat_seq_correction(se, assay_to_normalize, batch, group, covar,
             output_assay_name)
     } else if (method == 'ComBat') {
-       se <- combat_correction(se, assay_to_normalize, batch, covar,
-           output_assay_name)
+        se <- combat_correction(se, assay_to_normalize, batch, covar,
+            output_assay_name)
     }
     return(se)
 }
@@ -43,7 +43,7 @@ combat_seq_correction <- function(se, assay_to_normalize, batch,
     group, covar, output_assay_name) {
     if (is.null(covar)) {
         assays(se)[[output_assay_name]] <- ComBat_seq(as.matrix(
-           assays(se)[[assay_to_normalize]]), batch = batch)
+            assays(se)[[assay_to_normalize]]), batch = batch)
     } else {
         if (length(covar) == 1) {
             cov <- data.frame(colData(se))[, covar]

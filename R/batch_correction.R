@@ -7,6 +7,8 @@
 #' @param group The group variable
 #' @param covar Covariate Matrix
 #' @param output_assay_name name of results assay
+#' @usage batch_correct(se, method, assay_to_normalize, batch, group = NULL,
+#' covar, output_assay_name)
 #' @return a summarized experiment object with normalized assay appended
 #' @import SummarizedExperiment
 #' @import sva
@@ -30,11 +32,13 @@ batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,
 #' This function applies combat-seq correction to your summarized experiment
 #' object
 #' @param se SummarizedExperiment object
-#' @param assay_to_normalize Assay that shoudl be corrected
+#' @param assay_to_normalize Assay that should be corrected
 #' @param batch The variable that represents batch
 #' @param group The group variable
 #' @param covar Covariate Matrix
 #' @param output_assay_name name of results assay
+#' @usage combat_seq_correction(se, assay_to_normalize, batch, group, covar,
+#' output_assay_name)
 #' @return SE object with an added combat-seq corrected array
 #' @import SummarizedExperiment
 #' @import sva
@@ -87,7 +91,7 @@ combat_seq_correction <- function(se, assay_to_normalize, batch,
 #' Combat Correction
 #' This function applies combat correction to your summarized experiment object
 #' @param se SummarizedExperiment object
-#' @param assay_to_normalize Assay that shoudl be corrected
+#' @param assay_to_normalize Assay that should be corrected
 #' @param batch The variable that represents batch
 #' @param covar Covariate Matrix
 #' @param output_assay_name name of results assay

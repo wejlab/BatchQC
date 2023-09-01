@@ -5,15 +5,8 @@
 \title{Batch Correct
 This function allows you to Add batch corrected count matrix to the SE object}
 \usage{
-batch_correct(
-  se,
-  method,
-  assay_to_normalize,
-  batch,
-  group = NULL,
-  covar,
-  output_assay_name
-)
+batch_correct(se, method, assay_to_normalize, batch, group = NULL,
+covar, output_assay_name)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}

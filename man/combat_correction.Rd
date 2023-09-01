@@ -10,7 +10,7 @@ combat_correction(se, assay_to_normalize, batch, covar, output_assay_name)
 \arguments{
 \item{se}{SummarizedExperiment object}
 
-\item{assay_to_normalize}{Assay that shoudl be corrected}
+\item{assay_to_normalize}{Assay that should be corrected}
 
 \item{batch}{The variable that represents batch}
 

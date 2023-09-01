@@ -14,7 +14,7 @@ volcano_plot(volcano_data, pslider, fcslider)
 \item{fcslider}{Magnitude of expression change value threshold}
 }
 \value{
-A volcano plot of expression change and significane value data
+A volcano plot of expression change and significance value data
 }
 \description{
 This function allows you to plot DE analysis results as a volcano plot

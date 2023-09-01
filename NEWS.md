@@ -8,4 +8,5 @@
 
 ## Minor Changes
 * Added a `NEWS.md` file to track changes to the package.
-* Added functionality allowing batch & category to plot together in dendrograms
+* Added `dendrogram_color_palette.R` for coloring dendrogram
+* Updated `dendrogram.R`allowing batch & category to plot together

@@ -21,8 +21,7 @@ dendrogram_alpha_numeric_check <- function(dendro_category) {
         }
     }
 
-    if (all_numeric)
-    {
+    if (all_numeric) {
         geom_label <- as.character(sort(as.numeric(levels(factor(
             dendro_category)))))
 

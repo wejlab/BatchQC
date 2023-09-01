@@ -38,8 +38,8 @@ process_dendrogram <- function(se, assay, batch_var) {
         filter(!is.na(sample_name)) %>%
         left_join(metadata, by = "sample_name")
 
-    return(list(dendrogram_ends=dendrogram_ends,
-                dendrogram_segments=dendrogram_segments))
+    return(list(dendrogram_ends = dendrogram_ends,
+                dendrogram_segments = dendrogram_segments))
 }
 
 #' Dendrogram Plot
@@ -80,9 +80,9 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
     # Create dendrogram plot
     dendrogram <- ggplot() +
         geom_segment(data = dendrogram_segments,
-                     aes(x=x, y=y, xend=xend, yend=yend)) +
+                     aes(x = x, y = y, xend = xend, yend = yend)) +
         geom_segment(data = dendrogram_ends,
-                     aes(x=x, y=y.x, xend=xend, yend=yend,
+                     aes(x = x, y = y.x, xend = xend, yend = yend,
                          color = dendrogram_ends[, batch_var]
                      )) +
         scale_color_manual(values = batch_color, name = batch_var,
@@ -90,7 +90,7 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
                                         order = 1)) +
         new_scale_color() + # To separate the color palette
         geom_text(data = dendrogram_ends,
-                  aes(x=x, y=y.y-1.5, label=as.character(
+                  aes(x = x, y = y.y - 1.5, label = as.character(
                       as.numeric(factor(dendrogram_ends[, category_var]))),
                       color = dendrogram_ends[, category_var]),
                   check_overlap = TRUE, size = 2.2) +
@@ -99,12 +99,13 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
         scale_color_manual(labels = geom_label,
                            values = category_color,
                            name = category_var)  +
-        scale_y_reverse(expand = c(0.2,0)) +
+        scale_y_reverse(expand = c(0.2, 0)) +
         coord_flip() +
-        theme(axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
         theme_bw() + ylab("Distance")
 
-    circular_dendrogram <- dendrogram + coord_polar(theta="x")
+    circular_dendrogram <- dendrogram + coord_polar(theta = "x")
 
-    return(list(dendrogram=dendrogram,circular_dendrogram=circular_dendrogram))
+    return(list(dendrogram = dendrogram,
+                circular_dendrogram = circular_dendrogram))
 }

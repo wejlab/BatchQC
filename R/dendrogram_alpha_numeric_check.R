@@ -14,8 +14,8 @@ dendrogram_alpha_numeric_check <- function(dendro_category) {
         factor(dendro_category))))))
     all_numeric <- TRUE
 
-    for (n in numeric_or_alpha){
-        if (n==FALSE){
+    for (n in numeric_or_alpha) {
+        if (n == FALSE) {
             all_numeric <- FALSE
             break
         }
@@ -37,8 +37,8 @@ dendrogram_alpha_numeric_check <- function(dendro_category) {
                                         sep = " - ") %>%
             as.data.frame() %>% dplyr::rename("category_val" = ".")
 
-        geom_label <- label_category_strings[,"category_val"]
+        geom_label <- label_category_strings[, "category_val"]
     }
 
-    return(geom_label=geom_label)
+    return(geom_label = geom_label)
 }

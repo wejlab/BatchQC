@@ -20,7 +20,7 @@ dendrogram_color_palette <- function(col, dendrogram_info) {
     # Determine color count and palette
     color_count <- length(unique(unique_vars$.))
     n <- length(unique(dendrogram_info[, col]))
-    if (n<5) {
+    if (n < 5) {
         get_palette <- function(n) {
             hues <- seq(25, 375, length = n + 1)
             grDevices::hcl(h = hues, l = c(40, 65), c = 100)[seq_len(n)]

@@ -66,7 +66,6 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
     dends <- process_dendrogram(se, assay, batch_var)
 
     dendrogram_ends <- dends$dendrogram_ends
-
     dendrogram_segments <- dends$dendrogram_segments
 
     #Color palette

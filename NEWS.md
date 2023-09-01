@@ -8,4 +8,4 @@
 
 ## Minor Changes
 * Added a `NEWS.md` file to track changes to the package.
-
+* Added functionality allowing batch & category to plot together in dendrograms

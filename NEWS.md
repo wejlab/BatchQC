@@ -9,7 +9,7 @@
 ## Minor Changes
 * Added a `NEWS.md` file to track changes to the package.
 
-# BatchQC 1.99.00
+# Version 1.99.00
 ## Changes made to dendrogram
 * Added `dendrogram_color_palette.R` for coloring dendrogram
 * Updated `dendrogram.R` allowing batch & category to plot together

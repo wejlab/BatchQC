@@ -79,25 +79,25 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
     # Create dendrogram plot
     dendrogram <- ggplot() +
         geom_segment(data = dendrogram_segments,
-                     aes(x = x, y = y, xend = xend, yend = yend)) +
+                    aes(x = x, y = y, xend = xend, yend = yend)) +
         geom_segment(data = dendrogram_ends,
-                     aes(x = x, y = y.x, xend = xend, yend = yend,
-                         color = dendrogram_ends[, batch_var]
-                     )) +
+                    aes(x = x, y = y.x, xend = xend, yend = yend,
+                        color = dendrogram_ends[, batch_var]
+                    )) +
         scale_color_manual(values = batch_color, name = batch_var,
-                           guide_legend(override.aes = batch_color,
+                        guide_legend(override.aes = batch_color,
                                         order = 1)) +
         new_scale_color() + # To separate the color palette
         geom_text(data = dendrogram_ends,
-                  aes(x = x, y = y.y - 1.5, label = as.character(
-                      as.numeric(factor(dendrogram_ends[, category_var]))),
-                      color = dendrogram_ends[, category_var]),
-                  check_overlap = TRUE, size = 2.2) +
+                aes(x = x, y = y.y - 1.5, label = as.character(
+                    as.numeric(factor(dendrogram_ends[, category_var]))),
+                    color = dendrogram_ends[, category_var]),
+                check_overlap = TRUE, size = 2.2) +
         guides(color = guide_legend(override.aes = list(
             label = "\u2014", alpha = 1))) +
         scale_color_manual(labels = geom_label,
-                           values = category_color,
-                           name = category_var)  +
+                        values = category_color,
+                        name = category_var)  +
         scale_y_reverse(expand = c(0.2, 0)) +
         coord_flip() +
         theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +

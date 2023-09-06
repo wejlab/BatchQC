@@ -4,7 +4,7 @@
 #' @param volcano_data A dataframe of expression change and p-value data
 #' @param pslider Magnitude of significance value threshold
 #' @param fcslider Magnitude of expression change value threshold
-#' @return A volcano plot of expression change and significane value data
+#' @return A volcano plot of expression change and significance value data
 #' @import ggplot2
 #' @import scran
 #' @example R/examples/volcano_plot.R

@@ -58,27 +58,20 @@ ComBat and ComBat-Seq)
 ### Bioconductor Version
 When pushed to Bioconductor (aka not yet possible, this will download the old 
 version of BatchQC):
-To begin, install [Bioconductor](http://www.bioconductor.org/):
+To begin, install [Bioconductor](http://www.bioconductor.org/) and then install
+BatchQC:
 
-```{R}
-if (!require("BiocManager", quietly = TRUE))
+```{R, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install(version = "3.17")
-```
-
-Then, run the following to install BatchQC:
-
-```{R}
-#if (!requireNamespace("BiocManager", quietly=TRUE))
-#    install.packages("BiocManager")
-#BiocManager::install("BatchQC")
+BiocManager::install("BatchQC")
 ```
 
 ### Github Version
 To install the most up-to-date version of BatchQC, please install directly from
 github. You will need the devtools package. You can install both of these with
 the following commands:
-```{R}
+```{R, eval = FALSE}
 if (!require("devtools", quietly = TRUE))
     install.packages("devtools")
 library(devtools)
@@ -291,7 +284,7 @@ data set, which is 38 for the protein sample data).
 
 #### Sample Correlations
 This heat map shows how similar each sample is to each other sample in your
-data (samples are ploted on both the x and y axis, so are identical to 
+data (samples are plotted on both the x and y axis, so are identical to 
 their self). The samples are clustered together based on similarity. Ideally, 
 you would expect your samples to cluster and be more similar to samples from
 the same condition rather than from the sample batch. If there is clear visual 
@@ -308,7 +301,7 @@ correlation_heatmap
 
 #### Heatmap
 The heatmap shoes the sample clustering on the x axis and the y axis is each
-gene. The values on the heatmap represent gene expression. The dendogram on the
+gene. The values on the heatmap represent gene expression. The dendrogram on the
 x axis is the same clustering arrangement as was seen in the sample
 correlations. This heatmap allows the viewer to see patterns of gene expression
 across the samples based on the selected variables. Remember that if batch is
@@ -339,7 +332,7 @@ dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, assay = "counts",
 dendrogram_plot$dendrogram
 ```
 #### Circular Dendrogram
-This circularizes the previous dendogram to better show relatedness of all 
+This circularizes the previous dendrogram to better show relatedness of all 
 branches on the dendrogram without the appearance of great distance of the 
 samples at the top and the bottom of the chart.
 

@@ -1,4 +1,3 @@
-
 #' Process Dendrogram
 #'
 #' This function processes count data for dendrogram plotting
@@ -14,7 +13,6 @@
 #'
 #' @export
 process_dendrogram <- function(se, assay, batch_var) {
-
     data <- t(assays(se)[[assay]])
     dat <- as.data.frame(data) %>%
         mutate(sample_name = paste("sample", seq_len(nrow(data)), sep = "_"))
@@ -22,6 +20,7 @@ process_dendrogram <- function(se, assay, batch_var) {
     sample_name <- dat$sample_name
     metadata <- cbind(as.data.frame(colData(se)), sample_name)
     metadata[] <- lapply(metadata, as.character)
+    dat <- dat %>% select(-c(sample_name))
     dist_matrix <- stats::dist(dat, method = "euclidean")
 
     dendrogram <- stats::as.dendrogram(
@@ -35,12 +34,12 @@ process_dendrogram <- function(se, assay, batch_var) {
     dendrogram_ends <- dendrogram_segments %>%
         filter(yend == 0) %>%
         left_join(dendrogram_data$labels, by = "x") %>%
-        rename(sample_name = label) %>%
+        dplyr::rename(sample_name = label) %>%
+        filter(!is.na(sample_name)) %>%
         left_join(metadata, by = "sample_name")
 
     return(list(dendrogram_ends = dendrogram_ends,
-        dendrogram_segments = dendrogram_segments))
-
+                dendrogram_segments = dendrogram_segments))
 }
 
 #' Dendrogram Plot
@@ -51,8 +50,9 @@ process_dendrogram <- function(se, assay, batch_var) {
 #' @param batch_var sample metadata column representing batch
 #' @param category_var sample metadata column representing category of interest
 #' @import ggdendro
-#' @import RColorBrewer
+#' @import ggplot2
 #' @import dplyr
+#' @import ggnewscale
 #' @return named list of dendrogram plots
 #' @return dendrogram is a dendrogram ggplot
 #' @return circular_dendrogram is a circular dendrogram ggplot
@@ -63,39 +63,42 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
     # if(batch_var == "batch_var"){
     # rename the "batch_var" column to "batch"
     #}
-
     dends <- process_dendrogram(se, assay, batch_var)
 
     dendrogram_ends <- dends$dendrogram_ends
-
     dendrogram_segments <- dends$dendrogram_segments
 
-    unique_vars <- levels(factor(dendrogram_ends[, batch_var])) %>%
-        as.data.frame() %>%
-        rownames_to_column("row_id")
+    #Color palette
+    batch_color <- dendrogram_color_palette(
+        col = batch_var, dendrogram_info = dendrogram_ends)
+    category_color <- dendrogram_color_palette(
+        col = category_var, dendrogram_info = dendrogram_ends)
+    geom_label <- dendrogram_alpha_numeric_check(
+        dendro_category = dendrogram_ends[, category_var])
 
-    color_count <- length(unique(unique_vars$.))
-    get_palette <- grDevices::colorRampPalette(brewer.pal(
-        n = length(unique(dendrogram_ends[, batch_var])),
-        name = "Paired"))
-    palette <- get_palette(color_count) %>% as.data.frame() %>%
-        rename("color" = ".") %>%
-        rownames_to_column(var = "row_id")
-    color_list <- left_join(unique_vars, palette, by = "row_id") %>%
-        select(-row_id)
-    annotation_color <- as.character(color_list$color)
-    names(annotation_color) <- color_list$.
-
+    # Create dendrogram plot
     dendrogram <- ggplot() +
         geom_segment(data = dendrogram_segments,
-            aes(x = x, y = y, xend = xend, yend = yend)) +
+                    aes(x = x, y = y, xend = xend, yend = yend)) +
         geom_segment(data = dendrogram_ends,
-            aes(x = x, y = y.x, xend = xend, yend = yend,
-                color = dendrogram_ends[, batch_var])) +
-        scale_color_manual(values = annotation_color,
-            limits = names(annotation_color),
-            name = as.character(batch_var)) +
-        scale_y_reverse() +
+                    aes(x = x, y = y.x, xend = xend, yend = yend,
+                        color = dendrogram_ends[, batch_var]
+                    )) +
+        scale_color_manual(values = batch_color, name = batch_var,
+                        guide_legend(override.aes = batch_color,
+                                        order = 1)) +
+        new_scale_color() + # To separate the color palette
+        geom_text(data = dendrogram_ends,
+                aes(x = x, y = y.y - 1.5, label = as.character(
+                    as.numeric(factor(dendrogram_ends[, category_var]))),
+                    color = dendrogram_ends[, category_var]),
+                check_overlap = TRUE, size = 2.2) +
+        guides(color = guide_legend(override.aes = list(
+            label = "\u2014", alpha = 1))) +
+        scale_color_manual(labels = geom_label,
+                        values = category_color,
+                        name = category_var)  +
+        scale_y_reverse(expand = c(0.2, 0)) +
         coord_flip() +
         theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
         theme_bw() + ylab("Distance")
@@ -103,5 +106,5 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
     circular_dendrogram <- dendrogram + coord_polar(theta = "x")
 
     return(list(dendrogram = dendrogram,
-        circular_dendrogram = circular_dendrogram))
+                circular_dendrogram = circular_dendrogram))
 }

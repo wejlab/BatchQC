@@ -5,4 +5,5 @@ globalVariables(c("value",
                     "row_id",
                     "x",
                     "y",
-                    "y.x"))
+                    "y.x",
+                    "y.y"))

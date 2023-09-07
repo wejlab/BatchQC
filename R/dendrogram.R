@@ -3,16 +3,16 @@
 #' This function processes count data for dendrogram plotting
 #' @param se SummarizedExperiment object
 #' @param assay assay to plot
-#' @param batch_var sample metadata column
 #' @import tibble
 #' @import ggdendro
 #' @import dplyr
 #' @return named list of dendrogram data
 #' @return dendrogram_segments is data representing segments of the dendrogram
 #' @return dendrogram_ends is data representing ends of the dendrogram
+#' @example R/examples/process_dendrogram.R
 #'
 #' @export
-process_dendrogram <- function(se, assay, batch_var) {
+process_dendrogram <- function(se, assay) {
     data <- t(assays(se)[[assay]])
     dat <- as.data.frame(data) %>%
         mutate(sample_name = paste("sample", seq_len(nrow(data)), sep = "_"))
@@ -56,6 +56,7 @@ process_dendrogram <- function(se, assay, batch_var) {
 #' @return named list of dendrogram plots
 #' @return dendrogram is a dendrogram ggplot
 #' @return circular_dendrogram is a circular dendrogram ggplot
+#' @example R/examples/dendrogram_plotter.R
 #'
 #' @export
 dendrogram_plotter <- function(se, assay, batch_var, category_var) {
@@ -63,7 +64,7 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
     # if(batch_var == "batch_var"){
     # rename the "batch_var" column to "batch"
     #}
-    dends <- process_dendrogram(se, assay, batch_var)
+    dends <- process_dendrogram(se, assay)
 
     dendrogram_ends <- dends$dendrogram_ends
     dendrogram_segments <- dends$dendrogram_segments

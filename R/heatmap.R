@@ -6,6 +6,7 @@
 #' @param annotation_column choose column
 #' @import pheatmap
 #' @return heatmap plot
+#' @example R/examples/heatmap_plotter.R
 #'
 #' @export
 heatmap_plotter <- function(se, assay, nfeature, annotation_column) {

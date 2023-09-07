@@ -6,6 +6,7 @@
 #' @import reshape2
 #' @import ggplot2
 #' @return List of explained variation by batch and condition
+#' @example R/examples/EV_plotter.R
 #' @export
 EV_plotter <- function(se, batch, condition, assay_name) {
     batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
@@ -30,6 +31,7 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 #' @param assay_name Name of chosen assay
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
+#' @example R/examples/EV_table.R
 #' @export
 EV_table <- function(se, batch, condition, assay_name) {
     batchqc_ev <- batchqc_explained_variation(se, batch, condition, assay_name)
@@ -48,6 +50,7 @@ EV_table <- function(se, batch, condition, assay_name) {
 #' @param assay_name Assay of choice
 #' @import rlist
 #' @return List of explained variation by batch and condition
+#' @example R/examples/batchqc_explained_variation.R
 #' @export
 batchqc_explained_variation <- function(se, batch, condition, assay_name) {
     df <- se@colData

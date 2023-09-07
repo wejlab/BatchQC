@@ -12,6 +12,7 @@
 #' @return a summarized experiment object with normalized assay appended
 #' @import SummarizedExperiment
 #' @import sva
+#' @example R/examples/batch_correct.R
 #'
 #' @export
 batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,

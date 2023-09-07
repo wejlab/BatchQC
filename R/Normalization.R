@@ -7,6 +7,7 @@
 #' @import SummarizedExperiment
 #' @import reader
 #' @import EBSeq
+#' @example R/examples/normalize_SE.R
 #'
 #' @export
 normalize_SE <- function(se, method, assay_to_normalize, output_assay_name) {

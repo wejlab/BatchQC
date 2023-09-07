@@ -8,6 +8,7 @@
 #' @import dplyr
 #' @import RColorBrewer
 #' @return annotation_color vector of colors corresponding to col variable
+#' @example R/examples/dendrogram_color_palette.R
 #'
 #' @export
 

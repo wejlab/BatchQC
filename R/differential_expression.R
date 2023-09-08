@@ -42,6 +42,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 #' @param DE_res DE analysis results output from DE_analyze()
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
+#' @example R/examples/pval_summary.R
 #' @export
 pval_summary <- function(DE_res) {
 
@@ -74,6 +75,7 @@ pval_summary <- function(DE_res) {
 #' @import ggplot2
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
+#' @example R/examples/covariate_pval_plotter.R
 #' @export
 covariate_pval_plotter <- function(DE_res) {
     pval_table <- c()
@@ -113,6 +115,7 @@ covariate_pval_plotter <- function(DE_res) {
 #' @import ggplot2
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
+#' @example R/examples/batch_pval_plotter.R
 #' @export
 batch_pval_plotter <- function(DE_res) {
     batch_boxplot <- ggplot(

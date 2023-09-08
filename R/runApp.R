@@ -5,7 +5,7 @@
 #' @param dev Run the application in developer mode
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' BatchQC()
 #' }
 #' @export

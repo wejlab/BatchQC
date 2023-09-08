@@ -4,6 +4,7 @@
 #' @param se Summarized experiment object
 #' @param batch Batch variable
 #' @return List of explained variation by batch and condition
+#' @example R/examples/covariates_not_confounded.R
 #' @export
 
 covariates_not_confounded <- function(se, batch) {

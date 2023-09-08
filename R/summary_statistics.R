@@ -6,6 +6,7 @@
 #' @import dplyr
 #' @import tidyr
 #' @return design table
+#' @example R/examples/batch_design.R
 #' @export
 
 batch_design <- function(se, batch, covariate) {
@@ -22,6 +23,7 @@ batch_design <- function(se, batch, covariate) {
 #' This function allows you to calculate correlation properties
 #' @param bd batch design
 #' @return correlation properties
+#' @example R/examples/cor_props.R
 #' @export
 
 cor_props <- function(bd) {
@@ -47,6 +49,7 @@ cor_props <- function(bd) {
 #' Calculate a standardized Pearson correlation coefficient
 #' @param bd batch design
 #' @return standardized Pearson correlation coefficient
+#' @example R/examples/std_pearson_corr_coef.R
 #' @export
 
 std_pearson_corr_coef <- function(bd) {
@@ -58,6 +61,7 @@ std_pearson_corr_coef <- function(bd) {
 #' This function allows you to calculate Cramer's V
 #' @param bd batch design
 #' @return Cramer's V
+#' @example R/examples/cramers_v.R
 #' @export
 #'
 cramers_v <- function(bd) {
@@ -71,6 +75,7 @@ cramers_v <- function(bd) {
 #' @param se summarized experiment
 #' @param batch batch variable
 #' @return metrics of confounding
+#' @example R/examples/confound_metrics.R
 #' @export
 
 confound_metrics <- function(se, batch) {

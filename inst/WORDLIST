@@ -16,10 +16,12 @@ csv
 devtools
 ggplot
 github
+mTCC
 normalizations
 pearson
 prcomp
 prepopulated
 se
+sTCC
 tibble
 untransformed

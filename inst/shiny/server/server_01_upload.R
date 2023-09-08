@@ -174,15 +174,13 @@ observeEvent(input$exampleData, {
         reactivevalue$metadata <- batch_indicator[2:3]
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }else if (input$exampleData == "bladderData") {
-        data(bladder_data)
-        reactivevalue$counts <- bladder_data
+        bladder_data <- bladder_data_upload()
+        reactivevalue$counts <- assays(bladder_data)$counts
         output$counts_header <- renderDT(datatable(reactivevalue$counts))
         output$counts_dimensions <- renderText(paste(dim(reactivevalue$counts),
             c('observations and', 'samples')))
 
-        data(bladder_meta)
-        rownames(bladder_meta) <- bladder_meta$samplesbladder
-        reactivevalue$metadata <- bladder_meta[2:3]
+        reactivevalue$metadata <- as.data.frame(colData(bladder_data))
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }
 })

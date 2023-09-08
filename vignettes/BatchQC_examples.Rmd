@@ -50,10 +50,8 @@ only biopsy, and 5 contains cancer and biopsy. This data set is from the
 bladderbatch package (Leek JT (2023). bladderbatch: Bladder gene expression data
 illustrating batch effects. R package version 1.38.0).
 
-```{r}
-data(bladder_data)
-data(bladder_meta)
-se_object <- BatchQC::summarized_experiment(bladder_data, bladder_meta)
+```{r, eval = FALSE}
+se_object <- BatchQC::bladder_data_upload()
 ```
 
 # Session info {.unnumbered}

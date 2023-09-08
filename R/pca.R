@@ -7,6 +7,7 @@
 #' @param xaxisPC the PC to plot as the x axis
 #' @param yaxisPC the PC to plot as the y axis
 #' @return List containing PCA info, PCA variance and PCA plot
+#' @example R/examples/PCA_plotter.R
 #'
 #' @export
 PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {

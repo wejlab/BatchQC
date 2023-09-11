@@ -9,7 +9,11 @@
 #' @return named list of dendrogram data
 #' @return dendrogram_segments is data representing segments of the dendrogram
 #' @return dendrogram_ends is data representing ends of the dendrogram
-#' @example R/examples/process_dendrogram.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' process_dendro <- BatchQC::process_dendrogram(se, "counts")
+#' process_dendro
 #'
 #' @export
 process_dendrogram <- function(se, assay) {
@@ -56,7 +60,15 @@ process_dendrogram <- function(se, assay) {
 #' @return named list of dendrogram plots
 #' @return dendrogram is a dendrogram ggplot
 #' @return circular_dendrogram is a circular dendrogram ggplot
-#' @example R/examples/dendrogram_plotter.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' dendrogram_plot <- BatchQC::dendrogram_plotter(se,
+#'                                              "counts",
+#'                                              "Mutation_Status",
+#'                                              "Treatment")
+#' dendrogram_plot$dendrogram
+#' dendrogram_plot$circular_dendrogram
 #'
 #' @export
 dendrogram_plotter <- function(se, assay, batch_var, category_var) {

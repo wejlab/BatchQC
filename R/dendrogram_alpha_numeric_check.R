@@ -6,7 +6,12 @@
 #' @import ggdendro
 #' @import dplyr
 #' @return geom_label label for the legend of category variable
-#' @example R/examples/dendrogram_alpha_numeric_check.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' dendro_alpha_numeric_check <- dendrogram_alpha_numeric_check(
+#'                                          dendro_category = "Treatment")
+#' dendro_alpha_numeric_check
 #'
 #' @export
 #'

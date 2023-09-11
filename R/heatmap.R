@@ -6,7 +6,19 @@
 #' @param annotation_column choose column
 #' @import pheatmap
 #' @return heatmap plot
-#' @example R/examples/heatmap_plotter.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' heatmaps <- BatchQC::heatmap_plotter(se,
+#'                                  assay = "counts",
+#'                                  nfeature = 15,
+#'                                  annotation_column = c("Mutation_Status",
+#'                                  "Treatment"))
+#' correlation_heatmap <- heatmaps$correlation_heatmap
+#' correlation_heatmap
+#'
+#' heatmap <- heatmaps$topn_heatmap
+#' heatmap
 #'
 #' @export
 heatmap_plotter <- function(se, assay, nfeature, annotation_column) {

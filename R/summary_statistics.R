@@ -10,7 +10,7 @@
 #' library(scran)
 #' se <- mockSCE()
 #' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
-#'                                                  covariate = "Treatment")
+#'                                                 covariate = "Treatment")
 #' batch_design_tibble
 #'
 #' @export
@@ -33,7 +33,7 @@ batch_design <- function(se, batch, covariate) {
 #' library(scran)
 #' se <- mockSCE()
 #' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
-#'                                                  covariate = "Treatment")
+#'                                                 covariate = "Treatment")
 #' correlation_property <- BatchQC::cor_props(batch_design_tibble)
 #' correlation_property
 #'
@@ -66,7 +66,7 @@ cor_props <- function(bd) {
 #' library(scran)
 #' se <- mockSCE()
 #' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
-#'                                                  covariate = "Treatment")
+#'                                                 covariate = "Treatment")
 #' pearson_cor_result <- BatchQC::std_pearson_corr_coef(batch_design_tibble)
 #' pearson_cor_result
 #'
@@ -85,7 +85,7 @@ std_pearson_corr_coef <- function(bd) {
 #' library(scran)
 #' se <- mockSCE()
 #' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
-#'                                                  covariate = "Treatment")
+#'                                                 covariate = "Treatment")
 #' cramers_v_result <- BatchQC::cramers_v(batch_design_tibble)
 #' cramers_v_result
 #'

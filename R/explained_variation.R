@@ -10,7 +10,7 @@
 #' library(scran)
 #' se <- mockSCE()
 #' EV_boxplot <- BatchQC::EV_plotter(se, batch = "Mutation_Status",
-#'                              condition = "Treatment", assay_name = "counts")
+#'                             condition = "Treatment", assay_name = "counts")
 #' EV_boxplot
 #'
 #' @export
@@ -41,8 +41,8 @@ EV_plotter <- function(se, batch, condition, assay_name) {
 #' library(scran)
 #' se <- mockSCE()
 #' EV_table <- BatchQC::EV_table(se, batch = "Mutation_Status",
-#'                                      condition = "Treatment",
-#'                                      assay_name = "counts")
+#'                                     condition = "Treatment",
+#'                                     assay_name = "counts")
 #' EV_table
 #'
 #' @export
@@ -67,9 +67,9 @@ EV_table <- function(se, batch, condition, assay_name) {
 #' library(scran)
 #' se <- mockSCE()
 #' batchqc_explained_variation <- BatchQC::batchqc_explained_variation(se,
-#'                                          batch = "Mutation_Status",
-#'                                          condition = "Treatment",
-#'                                          assay_name = "counts")
+#'                                         batch = "Mutation_Status",
+#'                                         condition = "Treatment",
+#'                                         assay_name = "counts")
 #' batchqc_explained_variation
 #'
 #' @export

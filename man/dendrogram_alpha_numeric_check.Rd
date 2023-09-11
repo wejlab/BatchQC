@@ -19,7 +19,7 @@ This function checks if there is any numeric or strings for plotting legend
 library(scran)
 se <- mockSCE()
 dendro_alpha_numeric_check <- dendrogram_alpha_numeric_check(
-                                         dendro_category = "Treatment")
+                                        dendro_category = "Treatment")
 dendro_alpha_numeric_check
 
 }

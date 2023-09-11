@@ -63,34 +63,25 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 #' @usage data(signature_data)
 "signature_data"
 
-#' Real bladderbatch dataset
+#' Bladder data upload
+#' This function uploads the Bladder data set from the bladderbatch package.
+#' This dataset is from bladder cancer data with 22,283 different microarray
+#' gene expression data. It has 57 bladder samples with 3 metadata variables
+#' (batch, outcome and cancer). It contains 5 batches, 3 cancer types (cancer,
+#' biopsy, control), and 5 outcomes (Biopsy, mTCC, sTCC-CIS, sTCC+CIS, and
+#' Normal). Batch 1 contains only cancer, 2 has cancer and controls, 3 has only
+#' controls, 4 contains only biopsy, and 5 contains cancer and biopsy
 #'
-#' This dataset is from bladder cancer data. This dataset has 57 bladder samples
-#' with 5 batches and 3 covariate levels (cancer, biopsy, control).
-#' Batch 1 contains only cancer, 2 has cancer and controls, 3 has only controls,
-#' 4 contains only biopsy, and 5 contains cancer and biopsy
+#' @usage bladder_data_upload()
+#' @return a SE object with counts data and metadata
 #'
-#' @name bladder_meta
-#' @docType data
-#' @format A data frame with 57 rows and 3 variables:
-#' \describe{
-#'     \item{samplesbladder}{sample ID}
-#'     \item{batch}{batch}
-#'     \item{condition}{condition}
-#' }
-#' @keywords datasets
-#' @usage data(bladder_meta)
-"bladder_meta"
+#' @export
+bladder_data_upload <- function() {
+    data(bladderdata, package = "bladderbatch", envir = environment())
+    bladderEset <- bladderEset
+    pheno <- pData(bladderEset)
+    edata <- exprs(bladderEset)
+    se_object <- BatchQC::summarized_experiment(edata, pheno)
 
-#' Bladder cancer data with 22,283 microarray gene expression data
-#'
-#' This data consists of five batches and three conditions.
-#' The columns are samples, and the rows represent
-#' 22,283 different microarray gene expression data.
-#'
-#' @name bladder_data
-#' @docType data
-#' @format A data frame with 22,283 rows and 57 variables
-#' @keywords datasets
-#' @usage data(bladder_data)
-"bladder_data"
+    return(se_object)
+}

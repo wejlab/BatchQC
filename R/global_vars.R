@@ -1,0 +1,11 @@
+globalVariables(c("exprs",
+    "pData",
+    "row_id",
+    "value",
+    "variable",
+    "xend",
+    "x",
+    "y",
+    "yend",
+    "y.x",
+    "y.y"))

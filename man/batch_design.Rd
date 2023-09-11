@@ -21,11 +21,9 @@ This function allows you to make a batch design matrix
 }
 \examples{
 library(scran)
-
 se <- mockSCE()
-
 batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
-                            covariate = "Treatment")
-
+                                                 covariate = "Treatment")
 batch_design_tibble
+
 }

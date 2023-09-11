@@ -6,7 +6,13 @@
 #' @import dplyr
 #' @import tidyr
 #' @return design table
-#' @example R/examples/batch_design.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
+#'                                                  covariate = "Treatment")
+#' batch_design_tibble
+#'
 #' @export
 
 batch_design <- function(se, batch, covariate) {
@@ -23,7 +29,14 @@ batch_design <- function(se, batch, covariate) {
 #' This function allows you to calculate correlation properties
 #' @param bd batch design
 #' @return correlation properties
-#' @example R/examples/cor_props.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
+#'                                                  covariate = "Treatment")
+#' correlation_property <- BatchQC::cor_props(batch_design_tibble)
+#' correlation_property
+#'
 #' @export
 
 cor_props <- function(bd) {
@@ -49,7 +62,14 @@ cor_props <- function(bd) {
 #' Calculate a standardized Pearson correlation coefficient
 #' @param bd batch design
 #' @return standardized Pearson correlation coefficient
-#' @example R/examples/std_pearson_corr_coef.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
+#'                                                  covariate = "Treatment")
+#' pearson_cor_result <- BatchQC::std_pearson_corr_coef(batch_design_tibble)
+#' pearson_cor_result
+#'
 #' @export
 
 std_pearson_corr_coef <- function(bd) {
@@ -61,7 +81,14 @@ std_pearson_corr_coef <- function(bd) {
 #' This function allows you to calculate Cramer's V
 #' @param bd batch design
 #' @return Cramer's V
-#' @example R/examples/cramers_v.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' batch_design_tibble <- batch_design(se, batch = "Mutation_Status",
+#'                                                  covariate = "Treatment")
+#' cramers_v_result <- BatchQC::cramers_v(batch_design_tibble)
+#' cramers_v_result
+#'
 #' @export
 #'
 cramers_v <- function(bd) {
@@ -75,7 +102,12 @@ cramers_v <- function(bd) {
 #' @param se summarized experiment
 #' @param batch batch variable
 #' @return metrics of confounding
-#' @example R/examples/confound_metrics.R
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' confound_table <- BatchQC::confound_metrics(se, batch = "Mutation_Status")
+#' confound_table
+#'
 #' @export
 
 confound_metrics <- function(se, batch) {

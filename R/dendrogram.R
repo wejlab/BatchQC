@@ -77,7 +77,6 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
     # rename the "batch_var" column to "batch"
     #}
     dends <- process_dendrogram(se, assay)
-
     dendrogram_ends <- dends$dendrogram_ends
     dendrogram_segments <- dends$dendrogram_segments
 
@@ -86,8 +85,10 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
         col = batch_var, dendrogram_info = dendrogram_ends)
     category_color <- dendrogram_color_palette(
         col = category_var, dendrogram_info = dendrogram_ends)
-    geom_label <- dendrogram_alpha_numeric_check(
-        dendro_category = dendrogram_ends[, category_var])
+    geom_label_batch <- dendrogram_alpha_numeric_check(
+        dendro_var = dendrogram_ends[, batch_var])
+    geom_label_category <- dendrogram_alpha_numeric_check(
+        dendro_var = dendrogram_ends[, category_var])
 
     # Create dendrogram plot
     dendrogram <- ggplot() +
@@ -95,11 +96,10 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
                     aes(x = x, y = y, xend = xend, yend = yend)) +
         geom_segment(data = dendrogram_ends,
                     aes(x = x, y = y.x, xend = xend, yend = yend,
-                        color = dendrogram_ends[, batch_var]
-                    )) +
-        scale_color_manual(values = batch_color, name = batch_var,
-                        guide_legend(override.aes = batch_color,
-                                        order = 1)) +
+                        color = dendrogram_ends[, batch_var])) +
+        scale_color_manual(labels = geom_label_batch, values = batch_color,
+                        name = batch_var,
+                        guide_legend(override.aes = batch_color, order = 1)) +
         new_scale_color() + # To separate the color palette
         geom_text(data = dendrogram_ends,
                 aes(x = x, y = y.y - 1.5, label = as.character(
@@ -108,7 +108,7 @@ dendrogram_plotter <- function(se, assay, batch_var, category_var) {
                 check_overlap = TRUE, size = 2.2) +
         guides(color = guide_legend(override.aes = list(
             label = "\u2014", alpha = 1))) +
-        scale_color_manual(labels = geom_label,
+        scale_color_manual(labels = geom_label_category,
                         values = category_color,
                         name = category_var)  +
         scale_y_reverse(expand = c(0.2, 0)) +

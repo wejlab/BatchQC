@@ -4,14 +4,12 @@
 \alias{process_dendrogram}
 \title{Process Dendrogram}
 \usage{
-process_dendrogram(se, assay, batch_var)
+process_dendrogram(se, assay)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
 
 \item{assay}{assay to plot}
-
-\item{batch_var}{sample metadata column}
 }
 \value{
 named list of dendrogram data
@@ -22,4 +20,11 @@ dendrogram_ends is data representing ends of the dendrogram
 }
 \description{
 This function processes count data for dendrogram plotting
+}
+\examples{
+library(scran)
+se <- mockSCE()
+process_dendro <- BatchQC::process_dendrogram(se, "counts")
+process_dendro
+
 }

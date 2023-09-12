@@ -19,3 +19,11 @@ List of explained variation by batch and condition
 Returns list of covariates not confounded by batch; helper function for
 explained variation and for populating shiny app condition options
 }
+\examples{
+library(scran)
+se <- mockSCE()
+covariates_not_confounded <- BatchQC::covariates_not_confounded(se,
+                                            batch = "Mutation_Status")
+covariates_not_confounded
+
+}

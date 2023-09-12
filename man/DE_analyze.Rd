@@ -27,16 +27,3 @@ volcano features a subset of the DE analysis results for plotting.
 \description{
 This function runs DE analysis on a count matrix in the se object
 }
-\examples{
-library(scran)
-se <- mockSCE()
-
-# Normalized counts are required for analysis methods other than DESeq2
-DE_res <- BatchQC::DE_analyze(se,
-                                "DESeq2",
-                                "Mutation_Status",
-                                "Treatment",
-                                "counts")
-
-DE_res$dds
-}

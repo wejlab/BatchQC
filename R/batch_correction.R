@@ -12,6 +12,22 @@
 #' @return a summarized experiment object with normalized assay appended
 #' @import SummarizedExperiment
 #' @import sva
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' se <- BatchQC::batch_correct(se, method = "ComBat-Seq",
+#'                                     assay_to_normalize = "counts",
+#'                                     batch = "Mutation_Status",
+#'                                     covar = "Treatment",
+#'                                     output_assay_name =
+#'                                         "ComBat_Seq_Corrected")
+#' se <- BatchQC::batch_correct(se, method = "Combat",
+#'                                     assay_to_normalize = "counts",
+#'                                     batch = "Mutation_Status",
+#'                                     covar = "Treatment",
+#'                                     output_assay_name =
+#'                                         "Combat_Corrected")
+#' se
 #'
 #' @export
 batch_correct <- function(se, method, assay_to_normalize, batch, group = NULL,

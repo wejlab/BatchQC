@@ -17,3 +17,10 @@ metrics of confounding
 \description{
 Combine std. Pearson correlation coefficient and Cramer's V
 }
+\examples{
+library(scran)
+se <- mockSCE()
+confound_table <- BatchQC::confound_metrics(se, batch = "Mutation_Status")
+confound_table
+
+}

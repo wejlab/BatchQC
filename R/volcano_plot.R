@@ -7,7 +7,6 @@
 #' @return A volcano plot of expression change and significance value data
 #' @import ggplot2
 #' @import scran
-#' @example R/examples/volcano_plot.R
 #'
 #' @export
 volcano_plot <- function(volcano_data, pslider, fcslider) {

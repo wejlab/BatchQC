@@ -14,7 +14,6 @@ globalVariables(c("chosen"))
 #' @import SummarizedExperiment
 #' @import DESeq2
 #' @import scran
-#' @example R/examples/DE_analyze.R
 #'
 #' @export
 DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
@@ -42,6 +41,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 #' @param DE_res DE analysis results output from DE_analyze()
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
+#'
 #' @export
 pval_summary <- function(DE_res) {
 
@@ -74,6 +74,7 @@ pval_summary <- function(DE_res) {
 #' @import ggplot2
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
+#'
 #' @export
 covariate_pval_plotter <- function(DE_res) {
     pval_table <- c()
@@ -113,6 +114,7 @@ covariate_pval_plotter <- function(DE_res) {
 #' @import ggplot2
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
+#'
 #' @export
 batch_pval_plotter <- function(DE_res) {
     batch_boxplot <- ggplot(

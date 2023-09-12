@@ -4,6 +4,13 @@
 #' @param se Summarized experiment object
 #' @param batch Batch variable
 #' @return List of explained variation by batch and condition
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' covariates_not_confounded <- BatchQC::covariates_not_confounded(se,
+#'                                             batch = "Mutation_Status")
+#' covariates_not_confounded
+#'
 #' @export
 
 covariates_not_confounded <- function(se, batch) {

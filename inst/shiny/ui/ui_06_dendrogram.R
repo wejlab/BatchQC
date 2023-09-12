@@ -22,6 +22,10 @@ tabPanel("Dendrograms",
                      choices = c(),
                      multiple = TRUE,
                      selected = NULL),
+                 checkboxInput(inputId = "switch",
+                               label = "leaf=Category [Default: leaf=Batch]",
+                               value = FALSE
+                               ),
                  actionButton('dend_plot', label = 'Here we go!')
              ),
 

@@ -4,10 +4,10 @@
 \alias{dendrogram_alpha_numeric_check}
 \title{Dendrogram alpha or numeric checker}
 \usage{
-dendrogram_alpha_numeric_check(dendro_category)
+dendrogram_alpha_numeric_check(dendro_var)
 }
 \arguments{
-\item{dendro_category}{column from dendrogram object representing category}
+\item{dendro_var}{column from dendrogram object representing category}
 }
 \value{
 geom_label label for the legend of category variable
@@ -19,7 +19,7 @@ This function checks if there is any numeric or strings for plotting legend
 library(scran)
 se <- mockSCE()
 dendro_alpha_numeric_check <- dendrogram_alpha_numeric_check(
-                                        dendro_category = "Treatment")
+                                        dendro_var = "Treatment")
 dendro_alpha_numeric_check
 
 }

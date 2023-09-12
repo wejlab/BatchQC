@@ -14,17 +14,6 @@ globalVariables(c("chosen"))
 #' @import SummarizedExperiment
 #' @import DESeq2
 #' @import scran
-#' @examples
-#' library(scran)
-#' se <- mockSCE()
-#' # Normalized counts are required for analysis methods other than DESeq2
-#' DE_res <- BatchQC::DE_analyze(se,
-#'                         "DESeq2",
-#'                         "Mutation_Status",
-#'                         "Treatment",
-#'                         "counts")
-#' DE_res$dds
-#'
 #'
 #' @export
 DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
@@ -52,16 +41,6 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 #' @param DE_res DE analysis results output from DE_analyze()
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
-#' @examples
-#' library(scran)
-#' se <- mockSCE()
-#' DE_res <- BatchQC::DE_analyze(se,
-#'                         "DESeq2",
-#'                         "Mutation_Status",
-#'                         "Treatment",
-#'                         "counts")
-#' pval_summary <- BatchQC::pval_summary(DE_res = DE_res)
-#' pval_summary
 #'
 #' @export
 pval_summary <- function(DE_res) {
@@ -95,16 +74,6 @@ pval_summary <- function(DE_res) {
 #' @import ggplot2
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
-#' @examples
-#' library(scran)
-#' se <- mockSCE()
-#' DE_res <- BatchQC::DE_analyze(se,
-#'                         "DESeq2",
-#'                         "Mutation_Status",
-#'                         "Treatment",
-#'                         "counts")
-#' covariate_pval_plotter <- BatchQC::covariate_pval_plotter(DE_res = DE_res)
-#' covariate_pval_plotter
 #'
 #' @export
 covariate_pval_plotter <- function(DE_res) {
@@ -145,16 +114,6 @@ covariate_pval_plotter <- function(DE_res) {
 #' @import ggplot2
 #' @importFrom data.table data.table
 #' @return List of explained variation by batch and condition
-#' @examples
-#' library(scran)
-#' se <- mockSCE()
-#' DE_res <- BatchQC::DE_analyze(se,
-#'                         "DESeq2",
-#'                         "Mutation_Status",
-#'                         "Treatment",
-#'                         "counts")
-#' batch_pval_plotter <- BatchQC::batch_pval_plotter(DE_res = DE_res)
-#' batch_pval_plotter
 #'
 #' @export
 batch_pval_plotter <- function(DE_res) {

@@ -5,13 +5,13 @@ observeEvent(input$dend_plot, {
     req(reactivevalue$se)
 
     # Determine which values to use based on the state of the switch
-    batch_to_display <- ifelse(input$switch,
-                                input$dend_category_to_display,
-                                input$dend_batch_to_display)
-
-    category_to_display <- ifelse(input$switch,
-                                input$dend_batch_to_display,
-                                input$dend_category_to_display)
+    if (input$switch) {
+        batch_to_display <- input$dend_category_to_display
+        category_to_display <- input$dend_batch_to_display
+    } else {
+        batch_to_display <- input$dend_batch_to_display
+        category_to_display <- input$dend_category_to_display
+        }
 
     output$dendrogram <- renderPlot({
         plot(dendrogram_plotter(reactivevalue$se,

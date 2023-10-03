@@ -44,6 +44,9 @@ tabPanel("PCA Analysis",
                           value = 2,
                           min = 1,
                           max = 500),
+             checkboxInput("log_option",
+                 label = "Select to log data (recommended for sequencing counts
+                 data)", value = FALSE),
              actionButton('PCA_plot', label = 'Here we go!')
            ),
 

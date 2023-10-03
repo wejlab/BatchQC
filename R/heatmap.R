@@ -4,6 +4,9 @@
 #' @param assay normalized or corrected assay
 #' @param nfeature number of features to display
 #' @param annotation_column choose column
+#' @param log_option TRUE if data should be logged before plotting (recommended
+#' for sequencing counts), FALSE if data should not be logged (for instance,
+#' data is already logged)
 #' @import pheatmap
 #' @return heatmap plot
 #' @examples
@@ -13,7 +16,7 @@
 #'                                 assay = "counts",
 #'                                 nfeature = 15,
 #'                                 annotation_column = c("Mutation_Status",
-#'                                 "Treatment"))
+#'                                 "Treatment"), log_option = FALSE)
 #' correlation_heatmap <- heatmaps$correlation_heatmap
 #' correlation_heatmap
 #'
@@ -21,8 +24,9 @@
 #' heatmap
 #'
 #' @export
-heatmap_plotter <- function(se, assay, nfeature, annotation_column) {
-    data <- preprocess(se, assay, nfeature)
+heatmap_plotter <- function(se, assay, nfeature, annotation_column,
+    log_option) {
+    data <- preprocess(se, assay, nfeature, log_option = FALSE)
 
     for (i in seq_len(nrow(data))) {
         data[i, ] <- (data[i, ] - mean(data[i, ])) / stats::sd(data[i, ])

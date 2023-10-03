@@ -4,7 +4,7 @@
 \alias{heatmap_plotter}
 \title{This function allows you to plot a heatmap}
 \usage{
-heatmap_plotter(se, assay, nfeature, annotation_column)
+heatmap_plotter(se, assay, nfeature, annotation_column, log_option)
 }
 \arguments{
 \item{se}{SummarizedExperiment}
@@ -14,6 +14,10 @@ heatmap_plotter(se, assay, nfeature, annotation_column)
 \item{nfeature}{number of features to display}
 
 \item{annotation_column}{choose column}
+
+\item{log_option}{TRUE if data should be logged before plotting (recommended
+for sequencing counts), FALSE if data should not be logged (for instance,
+data is already logged)}
 }
 \value{
 heatmap plot
@@ -28,7 +32,7 @@ heatmaps <- BatchQC::heatmap_plotter(se,
                                 assay = "counts",
                                 nfeature = 15,
                                 annotation_column = c("Mutation_Status",
-                                "Treatment"))
+                                "Treatment"), log_option = FALSE)
 correlation_heatmap <- heatmaps$correlation_heatmap
 correlation_heatmap
 

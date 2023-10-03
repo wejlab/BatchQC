@@ -11,12 +11,13 @@ observeEvent(input$PCA_plot, {
     msg <- sprintf('Generating plot for: %s...', paste(assays, collapse = ', '))
     withProgress(message = msg, {
         results <- PCA_plotter(reactivevalue$se,
-                               input$top_n_PCA,
-                               input$variates_color,
-                               input$variates_shape,
-                               assays,
-                               input$firstPC,
-                               input$secondPC)
+                            input$top_n_PCA,
+                            input$variates_color,
+                            input$variates_shape,
+                            assays,
+                            input$firstPC,
+                            input$secondPC,
+                            input$log_option)
         setProgress(.8, 'Displaying figure...')
         output$PCA <- renderPlot({
             validate(need(input$top_n_PCA <= dim(reactivevalue$se)[1] &&

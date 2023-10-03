@@ -19,3 +19,9 @@ a summarized experiment object
 This function creates a summarized experiment object from count
 and metadata files uploaded by the user
 }
+\examples{
+data(protein_data)
+data(protein_sample_info)
+se_object <- summarized_experiment(protein_data, protein_sample_info)
+
+}

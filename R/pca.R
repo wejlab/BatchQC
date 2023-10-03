@@ -6,6 +6,11 @@
 #' @param assays array of assay names from `se`
 #' @param xaxisPC the PC to plot as the x axis
 #' @param yaxisPC the PC to plot as the y axis
+#' @param log_option TRUE if data should be logged before plotting (recommended
+#' for sequencing counts), FALSE if data should not be logged (for instance,
+#' data is already logged); FALSE by default
+#' @usage PCA_plotter(se, nfeature, color, shape, assays, xaxisPC, yaxisPC,
+#' log_option = FALSE)
 #' @return List containing PCA info, PCA variance and PCA plot
 #' @examples
 #' library(scran)
@@ -20,12 +25,13 @@
 #'                             nfeature = 2, color = "Mutation_Status",
 #'                             shape = "Treatment",
 #'                             assays = c("counts", "ComBat_Seq_Corrected"),
-#'                             xaxisPC = 1, yaxisPC = 2)
+#'                             xaxisPC = 1, yaxisPC = 2, log_option = FALSE)
 #' pca_plot$plot
 #' pca_plot$var_explained
 #'
 #' @export
-PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
+PCA_plotter <- function(se, nfeature, color, shape,
+    assays, xaxisPC, yaxisPC, log_option = FALSE) {
     pca_plot_data <- data.frame()
     var_explained_data <- NULL
     coldata <- data.frame(colData(se))
@@ -35,7 +41,7 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
             next
         }else {
             # Preprocess data
-            data <- preprocess(se, assay, nfeature)
+            data <- preprocess(se, assay, nfeature, log_option)
             centered <- data - rowMeans(data) / matrixStats::rowSds(data)
             coldata <- data.frame(colData(se))
             pca <- stats::prcomp(t(centered), center = FALSE)
@@ -50,7 +56,6 @@ PCA_plotter <- function(se, nfeature, color, shape, assays, xaxisPC, yaxisPC) {
                 var_explained_data <- cbind(var_explained_data,
                     var_explained_df)
             }
-
             # Extract PC data
             pca_data <- as.data.frame(pca$x)
 

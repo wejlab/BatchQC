@@ -23,6 +23,9 @@ tabPanel("Heatmaps",
                  value = 0,
                  min = 0,
                  max = 500),
+             checkboxInput("log_option",
+                 label = "Select to log data (recommended for sequencing counts
+                 data)", value = FALSE),
              actionButton('heatmap_plot', label = 'Here we go!')
            ),
 

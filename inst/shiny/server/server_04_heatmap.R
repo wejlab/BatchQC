@@ -8,9 +8,10 @@ observeEvent(input$heatmap_plot, {
                   "Please select between 2 and the size of your data set
                 variates to display"))
     results <- heatmap_plotter(reactivevalue$se,
-                              input$heatmap_assay_name,
-                              input$top_n_heatmap,
-                              input$variates_to_display)
+                            input$heatmap_assay_name,
+                            input$top_n_heatmap,
+                            input$variates_to_display,
+                            input$log_option)
 
     output$correlation_heatmap <- renderPlot({
         validate(need(input$top_n_heatmap <= dim(reactivevalue$se)[1] &&

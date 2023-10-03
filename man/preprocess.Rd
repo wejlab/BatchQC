@@ -4,7 +4,7 @@
 \alias{preprocess}
 \title{Preprocess assay data}
 \usage{
-preprocess(se, assay, nfeature)
+preprocess(se, assay, nfeature, log_option)
 }
 \arguments{
 \item{se}{Summarized Experiment object}
@@ -12,6 +12,8 @@ preprocess(se, assay, nfeature)
 \item{assay}{Assay from SummarizedExperiment object}
 
 \item{nfeature}{Number of variable features to use}
+
+\item{log_option}{"True" if data should be logged, "False" otherwise}
 }
 \value{
 Returns processed data

@@ -29,7 +29,11 @@ dendrogram_color_palette <- function(col, dendrogram_info) {
     # Determine color count and palette
     color_count <- length(unique_vars$.)
 
-    color_list <- color_palette(n = color_count, first_hue = 50)
+    if (color_count < 3) {
+        color_list <- c("Red", "Blue", "Green", "Yellow")
+    } else {
+        color_list <- color_palette(n = color_count)
+    }
 
     palette <- color_list %>%
         as.data.frame() %>%

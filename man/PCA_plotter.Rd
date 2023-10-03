@@ -4,7 +4,8 @@
 \alias{PCA_plotter}
 \title{This function allows you to plot PCA}
 \usage{
-PCA_plotter(se, nfeature, color, shape, assays, xaxisPC, yaxisPC)
+PCA_plotter(se, nfeature, color, shape, assays, xaxisPC, yaxisPC,
+log_option = FALSE)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
@@ -20,6 +21,10 @@ PCA_plotter(se, nfeature, color, shape, assays, xaxisPC, yaxisPC)
 \item{xaxisPC}{the PC to plot as the x axis}
 
 \item{yaxisPC}{the PC to plot as the y axis}
+
+\item{log_option}{TRUE if data should be logged before plotting (recommended
+for sequencing counts), FALSE if data should not be logged (for instance,
+data is already logged); FALSE by default}
 }
 \value{
 List containing PCA info, PCA variance and PCA plot
@@ -40,7 +45,7 @@ pca_plot <- BatchQC::PCA_plotter(se = se_object_ComBat_Seq,
                             nfeature = 2, color = "Mutation_Status",
                             shape = "Treatment",
                             assays = c("counts", "ComBat_Seq_Corrected"),
-                            xaxisPC = 1, yaxisPC = 2)
+                            xaxisPC = 1, yaxisPC = 2, log_option = FALSE)
 pca_plot$plot
 pca_plot$var_explained
 

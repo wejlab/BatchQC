@@ -295,7 +295,8 @@ method. Your batch corrected assay should have stronger clustering by condition.
 Use the following code to recreate the sample correlation heatmap:
 ```{r}
 heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts",
-    nfeature = 38, annotation_column = c("batch", "category"))
+    nfeature = 38, annotation_column = c("batch", "category"),
+    log_option = "FALSE")
 correlation_heatmap <- heatmaps$correlation_heatmap
 correlation_heatmap
 ```
@@ -312,7 +313,8 @@ correction to adjust your data.
 Use the following code to recreate the sample correlation heatmap:
 ```{r}
 heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts",
-    nfeature = 38, annotation_column = c("batch", "category"))
+    nfeature = 38, annotation_column = c("batch", "category"),
+    log_option = FALSE)
 heatmap <- heatmaps$topn_heatmap
 heatmap
 ```
@@ -339,8 +341,9 @@ samples at the top and the bottom of the chart.
 
 Use the following code to recreate the circular dendrogram: 
 ```{r}
-circular_dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object,
-    assay = "counts", batch_var = "batch", category_var = "category")
+circular_dendrogram_plot <- BatchQC::dendrogram_plotter(
+    se = se_object, assay = "counts", batch_var = "batch",
+    category_var = "category")
 circular_dendrogram_plot$circular_dendrogram
 ```
 ### 8. PCA Analysis
@@ -356,7 +359,7 @@ the explained variation of each PC:
 ```{r}
 pca_plot <- BatchQC::PCA_plotter(se = se_object, nfeature = 2, color = "batch",
     shape = "category", assays = c("counts", "Combat_Seq_corrected"),
-    xaxisPC = 1, yaxisPC = 2)
+    xaxisPC = 1, yaxisPC = 2, log_option = FALSE)
 pca_plot$plot
 pca_plot$var_explained
 ```

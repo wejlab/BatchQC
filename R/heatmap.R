@@ -1,4 +1,5 @@
-
+#' Heatmap Plotter
+#'
 #' This function allows you to plot a heatmap
 #' @param se SummarizedExperiment
 #' @param assay normalized or corrected assay
@@ -32,42 +33,38 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column,
         data[i, ] <- (data[i, ] - mean(data[i, ])) / stats::sd(data[i, ])
     }
 
-    coldata <- data.frame(colData(se))
+    col_info <- data.frame(colData(se))
 
     cor <- cor(data)
     if (!is.null(annotation_column)) {
         if (length(annotation_column) == 1) {
-            coldata <- data.frame(coldata[, annotation_column],
-                row.names = rownames(coldata))
+            col_info <- data.frame(col_info[, annotation_column],
+                                row.names = rownames(col_info))
         }else {
-            coldata <- coldata[, annotation_column]
+            col_info <- col_info[, annotation_column]
         }
-        correlation_heatmap <- pheatmap(cor, annotation_col = coldata,
-            annotation_row = coldata,
-            show_colnames = FALSE,
-            show_rownames = FALSE,
-            annotation_names_col = FALSE,
-            annotation_names_row = FALSE,
-            silent = TRUE)
 
-        topn_heatmap <- pheatmap(data, annotation_col = coldata,
-            show_colnames = FALSE,
-            annotation_names_col = FALSE,
-            show_rownames = FALSE,
-            silent = TRUE)
-    }else {
-        correlation_heatmap <- pheatmap(cor, show_colnames = FALSE,
-            show_rownames = FALSE,
-            annotation_names_col = FALSE,
-            annotation_names_row = FALSE,
-            silent = TRUE)
+        # Numeric to Character conversion
+        col_info <- heatmap_num_to_char_convertor(ann_col = col_info)
 
-        topn_heatmap <- pheatmap(data, show_colnames = FALSE,
-            annotation_names_col = FALSE,
-            show_rownames = FALSE,
-            silent = TRUE)
+        correlation_heatmap <- pheatmap(cor,
+                                        annotation_col = col_info,
+                                        # annotation_colors = ann_colors,
+                                        annotation_row = col_info,
+                                        show_colnames = FALSE,
+                                        show_rownames = FALSE,
+                                        annotation_names_col = FALSE,
+                                        annotation_names_row = FALSE,
+                                        silent = TRUE)
+
+        topn_heatmap <- pheatmap(data, annotation_col = col_info,
+                                    # annotation_colors = ann_colors,
+                                    show_colnames = FALSE,
+                                    annotation_names_col = FALSE,
+                                    show_rownames = FALSE,
+                                    silent = TRUE)
+
+        return(list(correlation_heatmap = correlation_heatmap,
+                    topn_heatmap = topn_heatmap))
     }
-
-    return(list(correlation_heatmap = correlation_heatmap,
-        topn_heatmap = topn_heatmap))
 }

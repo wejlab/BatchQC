@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmap.R
 \name{heatmap_plotter}
 \alias{heatmap_plotter}
-\title{This function allows you to plot a heatmap}
+\title{Heatmap Plotter}
 \usage{
 heatmap_plotter(se, assay, nfeature, annotation_column, log_option)
 }

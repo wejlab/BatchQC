@@ -14,10 +14,9 @@
 #' color_list
 #'
 #' @export
-color_palette <- function(n, first_hue = 25, last_hue = 1500)
-{
+color_palette <- function(n, first_hue = 25, last_hue = 360) {
     hues <- seq(first_hue, last_hue, length = n + 1)
-    color_list <- grDevices::hcl(h = hues, l = c(40, 65),
+    color_list <- grDevices::hcl(h = hues, l = c(25, 75),
                                 c = 100)[seq_len(n)]
     return(color_list)
 }

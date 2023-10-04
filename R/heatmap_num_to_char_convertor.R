@@ -8,7 +8,7 @@
 #' @examples
 #' library(scran)
 #' se <- mockSCE()
-#' col_info <- se@colData
+#' col_info <- colData(se)
 #' ann_col <- heatmap_num_to_char_convertor(ann_col = col_info)
 #' ann_col
 #'

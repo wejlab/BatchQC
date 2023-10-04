@@ -26,3 +26,8 @@ biopsy, control), and 5 outcomes (Biopsy, mTCC, sTCC-CIS, sTCC+CIS, and
 Normal). Batch 1 contains only cancer, 2 has cancer and controls, 3 has only
 controls, 4 contains only biopsy, and 5 contains cancer and biopsy
 }
+\examples{
+library(bladderbatch)
+se_object <- bladder_data_upload()
+
+}

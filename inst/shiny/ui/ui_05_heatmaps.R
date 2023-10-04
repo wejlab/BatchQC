@@ -24,8 +24,8 @@ tabPanel("Heatmaps",
                 min = 0,
                 max = 500),
              numericInput('end_n_heatmap',
-                'Choose max value for features (e.g., genes) to be used.
-                Make sure you select a range of 500 or less only, at a time.',
+                'Choose max value for features (e.g., genes) to be used
+                (we recommend 500 or less for large datasets)',
                 value = 500,
                 min = 0),
              checkboxInput("log_option",

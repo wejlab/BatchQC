@@ -22,15 +22,20 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
     analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
 
     if (method == 'DESeq2') {
+        # Check if the assay contains counts, otherwise throw an error
         colnames(data) <- rownames(analysis_design)
         data[is.na(data)] <- 0
-            dds <- DESeqDataSetFromMatrix(countData = abs(round(data)),
+            dds <- DESeqDataSetFromMatrix(countData = data,
                                         colData = analysis_design,
                                             design = stats::as.formula(
                                                 paste(" ~ ",
                                         paste(colnames(analysis_design),
                                             collapse = "+"))))
-        dds <- DESeq(dds)
+        dds <- DESeq(dds)  ## Make sure this "dds" is a SummarizedExperiment object (might be a DESeq object)
+    }
+    if (method == 'limma') { 
+        # Solomon is going to add this!!
+        # output SummarizedExperiment -> same format as DESEQ above
     }
     return(list(dds = dds))
 }

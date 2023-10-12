@@ -22,7 +22,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
     analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
 
     if (method == 'DESeq2') {
-        # Check if the assay contains counts, otherwise throw an error
+        # Check if the assay contains counts (e.g. non negative integer data), otherwise throw an error
         colnames(data) <- rownames(analysis_design)
         data[is.na(data)] <- 0
             dds <- DESeqDataSetFromMatrix(countData = data,

@@ -7,6 +7,12 @@
 #' @import reader
 #' @import EBSeq
 #' @import utils
+#'
+#' @examples
+#' data(protein_data)
+#' data(protein_sample_info)
+#' se_object <- summarized_experiment(protein_data, protein_sample_info)
+#'
 #' @export
 
 summarized_experiment <- function(counts, columndata) {

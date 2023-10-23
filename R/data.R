@@ -75,6 +75,10 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 #' @usage bladder_data_upload()
 #' @return a SE object with counts data and metadata
 #'
+#' @examples
+#' library(bladderbatch)
+#' se_object <- bladder_data_upload()
+#'
 #' @export
 bladder_data_upload <- function() {
     data(bladderdata, package = "bladderbatch", envir = environment())

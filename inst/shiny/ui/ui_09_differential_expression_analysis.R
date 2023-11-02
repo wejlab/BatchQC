@@ -65,7 +65,7 @@ tabPanel("Differential Expression Analysis",
                         textOutput('test')),
                tabPanel("P-Value Analysis",
                         tableOutput('pval_summary'),
-                        plotOutput('batch_pval_plot'),
+                        #plotOutput('batch_pval_plot'),
                         plotOutput('covariate_pval_plot')),
                tabPanel("Volcano Plot",
                         plotlyOutput('volcano', height = 'auto', width = 'auto')

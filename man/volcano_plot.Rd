@@ -4,10 +4,11 @@
 \alias{volcano_plot}
 \title{Volcano plot}
 \usage{
-volcano_plot(volcano_data, pslider, fcslider)
+volcano_plot(DE_results, pslider, fcslider)
 }
 \arguments{
-\item{volcano_data}{A dataframe of expression change and p-value data}
+\item{DE_results}{a dataframes with the results of one of the DE Analysis;
+must include "log2Foldchange" and "pvalue" columns}
 
 \item{pslider}{Magnitude of significance value threshold}
 

@@ -47,6 +47,7 @@ Imports:
     ggdendro,
     ggnewscale,
     ggplot2,
+    limma,
     matrixStats,
     pheatmap,
     RColorBrewer,

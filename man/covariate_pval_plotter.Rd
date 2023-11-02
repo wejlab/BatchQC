@@ -5,13 +5,14 @@
 \title{Covariate P-value Plotter
 This function allows you to plot covariate p-values of explained variation}
 \usage{
-covariate_pval_plotter(DE_res)
+covariate_pval_plotter(DE_results)
 }
 \arguments{
-\item{DE_res}{DE analysis results output from DE_analyze()}
+\item{DE_Results}{Differential Expression analysis result (a named list of
+dataframes corresponding to each analysis completed with a "pvalue" column)}
 }
 \value{
-List of explained variation by batch and condition
+boxplots of pvalues for each condition
 }
 \description{
 Covariate P-value Plotter

@@ -68,7 +68,7 @@ if (!require("devtools", quietly = TRUE)) {
     install.packages("devtools")   
 }
 library(devtools)
-install_github("compbiomed/BatchQC")
+install_github("wejlab/BatchQC")
 ```
 
 ### Load BatchQC and Launch Shiny App

@@ -69,6 +69,11 @@ observeEvent(input$DE_analyze, {
         choices = names(reactivevalue$DE_results),
         selected = names(reactivevalue$DE_results)[length(
             reactivevalue$DE_results)])
+    updateSelectizeInput(session = session,
+        inputId = "result_to_view",
+        choices = names(reactivevalue$DE_results),
+        selected = names(reactivevalue$DE_results)[length(
+            reactivevalue$DE_results)])
      updateSliderInput(session = session,
          inputId = "fcslider",
          min = round(min(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))), #no longer using same volcano object
@@ -95,6 +100,20 @@ observeEvent(input$DE_res_selected, {
     }
     })
 
+observeEvent(input$result_to_view, {
+    output$DE_results <- renderDT({
+        reactivevalue$DE_results[[input$result_to_view]]
+    })
+
+    output$downloadDEData <- downloadHandler(
+        filename = function() {
+            paste(input$DE_method, "_results_", input$result_to_view, ".csv", sep = "")
+        },
+        content = function(file) {
+            write.csv(reactivevalue$DE_results[[input$result_to_view]], file)
+        }
+    )
+})
 # observeEvent(input$DE_res_selected, {
 #     req(reactivevalue$DE_results)
 #

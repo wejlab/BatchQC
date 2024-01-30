@@ -24,6 +24,18 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 
     if (method == 'DESeq2') {
         # Check if the assay contains counts (e.g. non negative integer data),
+        for(item in data){
+            if(!is.integer(item)){
+                print("Error: data contains non-integers")
+                #need to throw error in shiny
+                return()
+            }
+            else if(item < 0){
+                print("Error: data contains negative integers")
+                #need to throw error in shiny
+                return()
+            }
+        }
         # otherwise throw an error
         colnames(data) <- rownames(analysis_design)
         data[is.na(data)] <- 0
@@ -65,6 +77,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
         fit2 <- eBayes(fit)
         # Extract top differentially expressed genes
         res <- topTable(fit2, number = Inf)
+
     } else if (method == 't') { #need to ensure proper output
         res <- findMarkers(data,
             analysis_design[,1],
@@ -88,7 +101,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
         res <- res[order(res[,1], decreasing=FALSE), ]
         to_plot <- cbind(AUC, pvalue) #volcano info
     }
-    return(res) #return... the se object where the rowData contains baseMean, log2FOldChange, lfcSe, stat, pvalue, and padj
+    return(res) #return... each analysis with log2FOldChange, pvalue, and padj
 }
 
 
@@ -101,12 +114,14 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 #' @export
 pval_summary <- function(res_list) {
 
-    pval_sum_table <- data.frame()
+    pval_sum_table <- vector()
     for(res_table in res_list){
-        pval_sum_table <- rbind(summary(pval_sum_table, res_table$pvalue))
+        pval_sum_table <- as.data.frame(cbind(pval_sum_table, res_table$pvalue))
+
     }
 
-    row.names(pval_sum_table) <- names(res_list)
+    colnames(pval_sum_table) <- names(res_list)
+    rownames(pval_sum_table) <- rownames(res_list[[1]])
 
     return(pval_table = pval_sum_table)
 
@@ -160,7 +175,7 @@ covariate_pval_plotter <- function(DE_results) {
         scale_x_discrete(name = "") +
         scale_y_continuous(name = "P-Values") +
         labs(title =
-                "Distribution of Covariate Effects (P-Values) Across Genes") +
+                "Distribution of Batch and Covariate Effects (P-Values) Across Genes") +
         theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
     return(covar_boxplot = covar_boxplot)
 }

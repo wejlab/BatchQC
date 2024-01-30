@@ -11,7 +11,9 @@
 #'
 #' @export
 volcano_plot <- function(DE_results, pslider, fcslider) {
-    DE_results <- as.data.frame(DE_results)
+    DE_results <- as.data.frame(DE_results) %>%
+        select("log2FoldChange", "pvalue")
+    DE_results$conditionName <- row.names(DE_results)
     pslider_factor <- pslider
 
     pslider_cond <- case_when(DE_results[, 2] < pslider_factor ~ "TRUE",
@@ -28,12 +30,12 @@ volcano_plot <- function(DE_results, pslider, fcslider) {
     Features <- NULL
     DE_results <- DE_results %>% mutate(Features = cond)
 
-    pval <- round(DE_results[, 1], digits = 2)
-    log2fc <- round(-log10(DE_results[, 2]), digits = 2)
+    log2fc <- round(DE_results[, 1], digits = 2)
+    pval <- round(-log10(DE_results[, 2]), digits = 2)
     feature <- DE_results[, 3]
 
     p <- ggplot2::ggplot(data = DE_results,
-        aes(x = pval, y = log2fc, text = feature, color = Features)) +
+        aes(x = log2fc, y = pval, text = feature, color = Features)) +
         geom_point() +
         scale_color_manual(values = c('FALSE' = 'blue',
             'TRUE' = 'red',

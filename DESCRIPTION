@@ -66,11 +66,13 @@ Suggests:
     BiocManager,
     BiocStyle,
     bladderbatch,
+    dendextend,
     devtools,
     knitr,
     lintr,
     plotly,
     rmarkdown,
+    shinythemes,
     spelling, 
     testthat (>= 3.0.0)
 VignetteBuilder: 

@@ -67,8 +67,8 @@ observeEvent(input$DE_analyze, {
     updateSelectizeInput(session = session,
         inputId = "DE_res_selected",
         choices = names(reactivevalue$DE_results),
-        selected = names(reactivevalue$DE_results)
-            [length(reactivevalue$DE_results)])
+        selected = names(reactivevalue$DE_results)[length(
+            reactivevalue$DE_results)])
      updateSliderInput(session = session,
          inputId = "fcslider",
          min = round(min(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))), #no longer using same volcano object
@@ -84,14 +84,17 @@ output$volcano <- renderPlotly({
     plotVolcanoPlotButton()
 })
 
-# observeEvent(input$DE_res_selected, {
-#     updateSliderInput(session = session,
-#         inputId = "fcslider",
-#         min = round(min(abs(reactivevalue$DE_results[[as.character(input$DE_res_selected)]][, 1]))),
-#         max = round(max(abs(reactivevalue$DE_results[[as.character(input$DE_res_selected)]][, 1]))),
-#         value = round(max(abs(reactivevalue$DE_results[[as.character(input$DE_res_selected)]][, 1])) + min(abs(reactivevalue$DE_results[[length(as.character(input$DE_res_selected))]][, 1])) / 2))
-#
-# })
+observeEvent(input$DE_res_selected, {
+    if(input$DE_res_selected != ""){
+        updateSliderInput(session = session,
+            inputId = "fcslider",
+            min = 0,
+            max = round(max(abs(reactivevalue$DE_results[[input$DE_res_selected]][, 1]))),
+            value = round(median(abs(reactivevalue$DE_results[[input$DE_res_selected]][, 1]))))
+
+    }
+    })
+
 # observeEvent(input$DE_res_selected, {
 #     req(reactivevalue$DE_results)
 #

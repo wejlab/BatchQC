@@ -24,7 +24,8 @@ observeEvent(input$DE_analyze, {
         reactivevalue$DE_results[[length(reactivevalue$DE_results)]]
     }) #this only displays the results for the last analysis; need to update to include all analysis
 
-    output$pval_summary <- renderDT({pval_summary(reactivevalue$DE_results)})
+    output$pval_summary <- renderDT({
+        pval_summary(reactivevalue$DE_results)})
 
     output$covariate_pval_plot <- renderPlot({
         covariate_pval_plotter(reactivevalue$DE_results)
@@ -65,7 +66,7 @@ output$volcano <- renderPlotly({
 })
 
 observeEvent(input$DE_res_selected, {
-    if(input$DE_res_selected != ""){
+    if (input$DE_res_selected != "") {
         updateSliderInput(session = session,
             inputId = "fcslider",
             min = 0,

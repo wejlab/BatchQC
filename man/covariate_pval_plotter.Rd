@@ -8,7 +8,7 @@ This function allows you to plot covariate p-values of explained variation}
 covariate_pval_plotter(DE_results)
 }
 \arguments{
-\item{DE_Results}{Differential Expression analysis result (a named list of
+\item{DE_results}{Differential Expression analysis result (a named list of
 dataframes corresponding to each analysis completed with a "pvalue" column)}
 }
 \value{

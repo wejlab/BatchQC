@@ -7,7 +7,7 @@
 pval_summary(res_list)
 }
 \arguments{
-\item{pvals}{Differential Expression analysis result (a named list of
+\item{res_list}{Differential Expression analysis result (a named list of
 dataframes corresponding to each analysis completed with a "pvalue" column)}
 }
 \value{

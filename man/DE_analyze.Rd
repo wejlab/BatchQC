@@ -25,5 +25,6 @@ res features the DE analysis results.
 volcano features a subset of the DE analysis results for plotting.
 }
 \description{
-This function runs DE analysis on a count matrix in the se object
+This function runs DE analysis on a count matrix (DESeq) or a normalized log
+or log-CPM matrix (limma, t-test, anova, wilcox) in the se object
 }

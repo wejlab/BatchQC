@@ -2,7 +2,8 @@ globalVariables(c("chosen"))
 
 #' Differential Expression Analysis
 #'
-#' This function runs DE analysis on a count matrix in the se object
+#' This function runs DE analysis on a count matrix (DESeq) or a normalized log
+#' or log-CPM matrix (limma, t-test, anova, wilcox) in the se object
 #' @param se SummarizedExperiment object
 #' @param method DE analysis method option
 #' @param batch Batch sample metadata column
@@ -14,6 +15,8 @@ globalVariables(c("chosen"))
 #' @import SummarizedExperiment
 #' @import DESeq2
 #' @import scran
+#' @importFrom stats model.matrix as.formula t.test aov
+#' @importFrom limma lmFit eBayes topTable makeContrasts contrasts.fit
 #'
 #' @export
 DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
@@ -24,13 +27,12 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 
     if (method == 'DESeq2') {
         # Check if the assay contains counts (e.g. non negative integer data),
-        for(item in data){
-            if(!is.integer(item)){
+        for (item in data){
+            if (!is.integer(item)) {
                 print("Error: data contains non-integers")
                 #need to throw error in shiny
                 return()
-            }
-            else if(item < 0){
+            }else if (item < 0) {
                 print("Error: data contains negative integers")
                 #need to throw error in shiny
                 return()
@@ -41,9 +43,8 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
         data[is.na(data)] <- 0
             dds <- DESeqDataSetFromMatrix(countData = data,
                                         colData = analysis_design,
-                                            design = stats::as.formula(
-                                                paste(" ~ ",
-                                        paste(colnames(analysis_design),
+                                        design = stats::as.formula(paste(" ~ ",
+                                            paste(colnames(analysis_design),
                                             collapse = "+"))))
         dds <- DESeq(dds)
 
@@ -56,13 +57,9 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
            res[[covar]] <- imp_data
         }
     }else if (method == 'limma') {
-        # Solomon is going to add this!!
-        # output SummarizedExperiment -> same format as DESEQ above
-        # output SummarizedExperiment -> same format as DESEQ above
-        # Define the design matrix
-        design <- model.matrix(stats::as.formula(
+        design <- stats::model.matrix(stats::as.formula(
             paste(
-                " ~ ",
+                " ~0 + ",
                 paste(colnames(analysis_design),
                     collapse = "+"
                 )
@@ -70,35 +67,74 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
         ), data = analysis_design)
         # Fit the linear model
         fit <- limma::lmFit(data, design)
+
+        for (i in 1:(length(colnames(coef(fit)))-1)){
+            item <- colnames(coef(fit))[[i]]
+            seconditem <- i + 1
+            if (item != "(Intercept)") {
+                for(j in seconditem:length(colnames(coef(fit)))){
+                    contr <- limma::makeContrasts(i - j, levels = colnames(coef(fit)))
+                    cont_est <- limma::contrasts.fit(fit, contr)
+                    cont_est <- limma::eBayes(cont_est)
+                    results <- limma::topTable(cont_est, number = Inf) %>%
+                        select(c(logFC, P.Value, adj.P.Val))
+                    colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
+                    contrastName <- paste0(item, "-", colnames(coef(fit))[[j]])
+                    res[[contrastName]] <- results
+                }
+            }
+        }
         # #Introducing Contracts
         # contrasts <- makeContrasts(contrasts=NULL, levels = design)
         # fit2 <- contrasts.fit(fit, contrasts)
         # Apply empirical Bayes moderation to the standard errors
-        fit2 <- eBayes(fit)
+        #fit2 <- limma::eBayes(fit)
         # Extract top differentially expressed genes
-        res <- topTable(fit2, number = Inf)
+        #res <- limma::topTable(fit2, number = Inf)
 
-    } else if (method == 't') { #need to ensure proper output
+    } else if (method == 't-test') { #need to ensure proper output
+        # loop through batch and all conditions
+        for (variable in colnames(analysis_design)) {
+            if (length(unique(analysis_design$variable)) == 2){
+                t_results <- stats::t.test(analysis_design$variable)
+            }else if (length(unique(analysis_design$variable)) > 2){
+                anova_results <- stats::aov()
+            }
+        }
+
+        # retrieve needed results form each and create a dataframe for each variable
+        # create a list of dataframes and return
+
+        # res_ttest <- findMarkers(data,
+        #     analysis_design[,1],
+        #     test.type = "t",
+        #     pval.type = "all",
+        #     lfc = 1)
+        # for(t_res in names(res_ttest)){
+        #     res_to_add <- data.frame("log2FoldChange" = res_ttest[[t_res]][4],
+        #         "pvalue" = res_ttest[[t_res]][1],
+        #         "padj" = res_ttest[[t_res]][2],
+        #         row.names = rownames(res_ttest[[t_res]]))
+        #     #res_to_add <- as.data.frame(res_to_add)
+        #     #row.names(res_to_add) <- row.names(res_ttest[[t_res]])
+        #     colnames(res_to_add) <- c("log2FoldChange", "pvalue", "padj")
+        #     res[[t_res]] <- res_to_add
+        #}
+        # res_ttest <- as.matrix(res_ttest[[1]])
+        # pvalue <- res_ttest[,2]
+        # log2FC <- res_ttest[,4]
+        # res_ttest <- res_ttest[order(res[,1], decreasing = FALSE), ]
+        # to_plot <- cbind(log2FC, pvalue) #volcano info
+    }else if (method == 'wilcox') {#need to ensure proper output #See Aug 2nd github for reference
         res <- findMarkers(data,
-            analysis_design[,1],
+            analysis_design[, 1],
             test.type = method,
             pval.type = "all",
             lfc = 1)
         res <- as.matrix(res[[1]])
-        pvalue <- res[,2]
-        log2FC <- res[,4]
-        res <- res[order(res[,1], decreasing = FALSE), ]
-        to_plot <- cbind(log2FC, pvalue) #volcano info
-    } else if (method == 'wilcox') {#need to ensure proper output #See Aug 2nd github for reference
-        res <- findMarkers(data,
-            analysis_design[,1],
-            test.type = method,
-            pval.type = "all",
-            lfc = 1)
-        res <- as.matrix(res[[1]])
-        pvalue <- res[,2]
-        AUC <- res[,3]
-        res <- res[order(res[,1], decreasing=FALSE), ]
+        pvalue <- res[, 2]
+        AUC <- res[, 3]
+        res <- res[order(res[, 1], decreasing = FALSE), ]
         to_plot <- cbind(AUC, pvalue) #volcano info
     }
     return(res) #return... each analysis with log2FOldChange, pvalue, and padj
@@ -107,7 +143,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 
 #' Returns summary table for p-values of explained variation
 #'
-#' @param pvals Differential Expression analysis result (a named list of
+#' @param res_list Differential Expression analysis result (a named list of
 #' dataframes corresponding to each analysis completed with a "pvalue" column)
 #' @return summary table for p-values of explained variation for each analysis
 #'
@@ -115,7 +151,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 pval_summary <- function(res_list) {
 
     pval_sum_table <- vector()
-    for(res_table in res_list){
+    for (res_table in res_list){
         pval_sum_table <- as.data.frame(cbind(pval_sum_table, res_table$pvalue))
 
     }
@@ -149,7 +185,7 @@ pval_summary <- function(res_list) {
 
 #' Covariate P-value Plotter
 #' This function allows you to plot covariate p-values of explained variation
-#' @param DE_Results Differential Expression analysis result (a named list of
+#' @param DE_results Differential Expression analysis result (a named list of
 #' dataframes corresponding to each analysis completed with a "pvalue" column)
 #' @import reshape2
 #' @import ggplot2
@@ -159,7 +195,7 @@ pval_summary <- function(res_list) {
 #' @export
 covariate_pval_plotter <- function(DE_results) {
     pval_table <- data.frame(row.names = row.names(DE_results[[1]])) #need to create this to be the size of the genes orinally here
-    for(covar in DE_results){
+    for (covar in DE_results){
         pval_table <- cbind(pval_table, covar$pvalue)
     }
 

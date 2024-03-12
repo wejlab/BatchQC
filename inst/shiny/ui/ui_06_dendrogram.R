@@ -24,10 +24,6 @@ tabPanel("Dendrograms",
                      choices = c(),
                      multiple = FALSE,
                      selected = NULL),
-#                 checkboxInput(inputId = "switch",
-#                               label = "Switch the choices",
-#                               value = FALSE
-#                               ),
                  actionButton('dend_plot', label = 'Here we go!')
              ),
 

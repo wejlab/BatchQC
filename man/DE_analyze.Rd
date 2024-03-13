@@ -4,7 +4,15 @@
 \alias{DE_analyze}
 \title{Differential Expression Analysis}
 \usage{
-DE_analyze(se, method, batch, conditions, assay_to_analyze)
+DE_analyze(
+  se,
+  method,
+  batch,
+  conditions,
+  assay_to_analyze,
+  include_batch = TRUE,
+  condition_of_interest = NULL
+)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
@@ -16,6 +24,10 @@ DE_analyze(se, method, batch, conditions, assay_to_analyze)
 \item{conditions}{Sample metadata columns for additional analysis covariates}
 
 \item{assay_to_analyze}{Assay for DE analysis}
+
+\item{include_batch}{boolean include batch in the analysis (default = TRUE)}
+
+\item{condition_of_interest}{sample metadata to perform limma with}
 }
 \value{
 A named list of of two matrices.

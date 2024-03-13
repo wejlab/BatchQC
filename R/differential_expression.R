@@ -1,4 +1,4 @@
-globalVariables(c("chosen"))
+globalVariables(c("chosen", "P.Value", "adj.P.Val"))
 
 #' Differential Expression Analysis
 #'
@@ -9,20 +9,35 @@ globalVariables(c("chosen"))
 #' @param batch Batch sample metadata column
 #' @param conditions Sample metadata columns for additional analysis covariates
 #' @param assay_to_analyze Assay for DE analysis
+#' @param include_batch boolean include batch in the analysis (default = TRUE)
+#' @param condition_of_interest sample metadata to perform limma with
 #' @return A named list of of two matrices.
 #' @return res features the DE analysis results.
 #' @return volcano features a subset of the DE analysis results for plotting.
 #' @import SummarizedExperiment
 #' @import DESeq2
 #' @import scran
-#' @importFrom stats model.matrix as.formula t.test aov
+#' @importFrom stats model.matrix as.formula t.test aov coef
 #' @importFrom limma lmFit eBayes topTable makeContrasts contrasts.fit
 #'
 #' @export
-DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
+DE_analyze <- function(se, method, batch, conditions, assay_to_analyze,
+    include_batch = TRUE, condition_of_interest = NULL) {
     data <- assays(se)[[assay_to_analyze]]
     rownames(data) <- names(se)
-    analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
+
+    if (include_batch & (!is.null(condition_of_interest) & condition_of_interest != "")) {
+        analysis_design <- as.data.frame(colData(se)[c(condition_of_interest,
+            conditions, batch)])
+    }else if (include_batch & (is.null(condition_of_interest) | condition_of_interest == "")) {
+        analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
+    }else if (!include_batch & (!is.null(condition_of_interest) & condition_of_interest != "")) {
+        analysis_design <- as.data.frame(colData(se)[c(condition_of_interest,
+            conditions)])
+    }else {
+        analysis_design <- as.data.frame(colData(se)[c(conditions)])
+    }
+
     res <- list()
 
     if (method == 'DESeq2') {
@@ -57,47 +72,92 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
            res[[covar]] <- imp_data
         }
     }else if (method == 'limma') {
-        design <- stats::model.matrix(stats::as.formula(
-            paste(
-                " ~0 + ",
-                paste(colnames(analysis_design),
-                    collapse = "+"
-                )
-            )
-        ), data = analysis_design)
-        # Fit the linear model
-        fit <- limma::lmFit(data, design)
-
-        for (i in 1:(length(colnames(coef(fit)))-1)){
-            item <- colnames(coef(fit))[[i]]
-            seconditem <- i + 1
-            if (item != "(Intercept)") {
-                for(j in seconditem:length(colnames(coef(fit)))){
-                    contr <- limma::makeContrasts(i - j, levels = colnames(coef(fit)))
-                    cont_est <- limma::contrasts.fit(fit, contr)
-                    cont_est <- limma::eBayes(cont_est)
-                    results <- limma::topTable(cont_est, number = Inf) %>%
-                        select(c(logFC, P.Value, adj.P.Val))
-                    colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
-                    contrastName <- paste0(item, "-", colnames(coef(fit))[[j]])
-                    res[[contrastName]] <- results
-                }
-            }
+        if (condition_of_interest == "") {
+           print("Error: must provide condition of interest")
+            #need to throw error in shiny
+            return()
         }
+    #     analysis_design <- tidyr::unite(analysis_design,
+    #         col = "group",
+    #         sep = "_",
+    #         remove = FALSE)
+
+        design <- stats::model.matrix(stats::as.formula(paste(" ~0 + ",
+               paste(colnames(analysis_design), collapse = "+"))),
+            data = analysis_design)
+        # Fit the linear model
+
+         fit <- limma::lmFit(data, design)
+
+         #create contrasts
+         cond_factors <- unique(colData(se)[[condition_of_interest]])
+         contr_string <- list()
+         for (i in 1:(length(cond_factors) - 1)) {
+             k <- i + 1
+             for (j in k:length(cond_factors)){
+                 contr_string <- c(contr_string, paste(colnames(stats::coef(fit))[[i]], "-", colnames(stats::coef(fit))[[j]]))
+             }
+         }
+         myargs <- list(contrasts = contr_string, levels = design)
+         contr <- do.call(makeContrasts, myargs)
+         #contr <- limma::makeContrasts(colnames(coef(fit))[[i]] - colnames(coef(fit))[[j]], levels = colnames(design))
+                 cont_est <- limma::contrasts.fit(fit, contr)
+                 cont_est <- limma::eBayes(cont_est)
+
+                 total_contrasts <- match("AveExpr", names(topTable(cont_est))) - 1
+                 for (i in 1:total_contrasts){
+                     results <- limma::topTable(cont_est, number = Inf) %>%
+                         select(c(i, P.Value, adj.P.Val))
+                     colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
+                     res[[contr_string[[i]]]] <- results #show Evan here and ask if this is a good way to display the results, logfoldchange is what differs
+                 }
+                 # results <- limma::topTable(cont_est, number = Inf) %>%
+                 #     select(c(logFC, P.Value, adj.P.Val))
+                 # colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
+                 # res[[contr_string[[1]]]] <- results
+                 #contrastName <- paste0(item, "-", colnames(coef(fit))[[j]])
+                 #res[[contrastName]] <- results
+
+        # contr <- limma::makeContrasts(i - j, levels = colnames(design))
+        # cont_est <- limma::contrasts.fit(fit, contr)
+        # cont_est <- limma::eBayes(cont_est)
+        # results <- limma::topTable(cont_est, number = Inf) %>%
+        #     select(c(logFC, P.Value, adj.P.Val))
+        # colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
+        # contrastName <- paste0(item, "-", colnames(coef(fit))[[j]])
+        # res[[contrastName]] <- results
+
+        # for (i in 1:(length(colnames(coef(fit)))-1)){
+        #     item <- colnames(coef(fit))[[i]]
+        #     seconditem <- i + 1
+        #     if (item != "(Intercept)") {
+        #         for(j in seconditem:length(colnames(coef(fit)))){
+        #             contr <- limma::makeContrasts(i - j, levels = colnames(coef(fit)))
+        #             cont_est <- limma::contrasts.fit(fit, contr)
+        #             cont_est <- limma::eBayes(cont_est)
+        #             results <- limma::topTable(cont_est, number = Inf) %>%
+        #                 select(c(logFC, P.Value, adj.P.Val))
+        #             colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
+        #             contrastName <- paste0(item, "-", colnames(coef(fit))[[j]])
+        #             res[[contrastName]] <- results
+        #         }
+        #     }
+        # }
         # #Introducing Contracts
         # contrasts <- makeContrasts(contrasts=NULL, levels = design)
         # fit2 <- contrasts.fit(fit, contrasts)
         # Apply empirical Bayes moderation to the standard errors
         #fit2 <- limma::eBayes(fit)
         # Extract top differentially expressed genes
-        #res <- limma::topTable(fit2, number = Inf)
+        #lim_res <- limma::topTable(fit2, number = Inf)
+        #res <-
 
     } else if (method == 't-test') { #need to ensure proper output
         # loop through batch and all conditions
         for (variable in colnames(analysis_design)) {
-            if (length(unique(analysis_design$variable)) == 2){
+            if (length(unique(analysis_design$variable)) == 2) {
                 t_results <- stats::t.test(analysis_design$variable)
-            }else if (length(unique(analysis_design$variable)) > 2){
+            }else if (length(unique(analysis_design$variable)) > 2) {
                 anova_results <- stats::aov()
             }
         }

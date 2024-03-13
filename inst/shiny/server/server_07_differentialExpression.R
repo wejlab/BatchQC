@@ -3,10 +3,30 @@ observeEvent(input$DE_batch, {
     req(reactivevalue$se, input$DE_batch)
     DE_covariate_choices <- covariates_not_confounded(reactivevalue$se,
         input$DE_batch)
+    updateSelectizeInput(session = session, inputId = "condition_of_interest",
+        choices = DE_covariate_choices, selected = NULL)
+    updateSelectizeInput(session = session, inputId = "DE_conditions",
+        choices = DE_covariate_choices, selected = NULL)
+})
+observeEvent(input$condition_of_interest, {
+    req(reactivevalue$se, input$DE_batch)
+    DE_covariate_choices <- covariates_not_confounded(reactivevalue$se,
+        input$DE_batch)
+    DE_covariate_choices <- DE_covariate_choices[!DE_covariate_choices ==
+            input$condition_of_interest]
     updateSelectizeInput(session = session, inputId = "DE_conditions",
         choices = DE_covariate_choices, selected = NULL)
 })
 
+observeEvent(input$DE_method, {
+    req(reactivevalue$se, input$DE_batch)
+    DE_covariate_choices <- covariates_not_confounded(reactivevalue$se,
+        input$DE_batch)
+    updateSelectizeInput(session = session, inputId = "condition_of_interest",
+        choices = DE_covariate_choices, selected = NULL)
+    updateSelectizeInput(session = session, inputId = "DE_conditions",
+        choices = DE_covariate_choices, selected = NULL)
+})
 observeEvent(input$DE_analyze, {
     req(reactivevalue$se, input$DE_analyze)
 
@@ -14,7 +34,7 @@ observeEvent(input$DE_analyze, {
         setProgress(0.5, 'Calculating...')
         reactivevalue$DE_results <- DE_analyze(reactivevalue$se,
             input$DE_method, input$DE_batch, input$DE_conditions,
-            input$DE_assay)
+            input$DE_assay, input$include_batch, input$condition_of_interest)
         setProgress(1, 'Complete!')
     })
 

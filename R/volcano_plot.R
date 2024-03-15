@@ -1,7 +1,8 @@
 #' Volcano plot
 #'
 #' This function allows you to plot DE analysis results as a volcano plot
-#' @param volcano_data A dataframe of expression change and p-value data
+#' @param DE_results a dataframes with the results of one of the DE Analysis;
+#' must include "log2Foldchange" and "pvalue" columns
 #' @param pslider Magnitude of significance value threshold
 #' @param fcslider Magnitude of expression change value threshold
 #' @return A volcano plot of expression change and significance value data
@@ -9,30 +10,32 @@
 #' @import scran
 #'
 #' @export
-volcano_plot <- function(volcano_data, pslider, fcslider) {
-    volcano_data <- as.data.frame(volcano_data)
+volcano_plot <- function(DE_results, pslider, fcslider) {
+    DE_results <- as.data.frame(DE_results) %>%
+        select("log2FoldChange", "pvalue")
+    DE_results$conditionName <- row.names(DE_results)
     pslider_factor <- pslider
 
-    pslider_cond <- case_when(volcano_data[, 2] < pslider_factor ~ "TRUE",
-        volcano_data[, 2] >= pslider_factor ~ "FALSE",
+    pslider_cond <- case_when(DE_results[, 2] < pslider_factor ~ "TRUE",
+        DE_results[, 2] >= pslider_factor ~ "FALSE",
         TRUE ~ 'NA')
     fcslider_factor <- fcslider
-    fcslider_cond <- case_when(abs(volcano_data[, 1]) <
+    fcslider_cond <- case_when(abs(DE_results[, 1]) <
             fcslider_factor ~ "FALSE",
-        abs(volcano_data[, 1]) >=
+        abs(DE_results[, 1]) >=
             fcslider_factor ~ "TRUE",
         TRUE ~ 'NA')
     filters <- cbind(pslider_cond, fcslider_cond)
     cond <- apply(filters, 1, function(x)(length(which(x == TRUE)) == 2))
     Features <- NULL
-    volcano_data <- volcano_data %>% mutate(Features = cond)
+    DE_results <- DE_results %>% mutate(Features = cond)
 
-    pval <- round(volcano_data[, 1], digits = 2)
-    log2fc <- round(-log10(volcano_data[, 2]), digits = 2)
-    feature <- volcano_data[, 3]
+    log2fc <- round(DE_results[, 1], digits = 2)
+    pval <- round(-log10(DE_results[, 2]), digits = 2)
+    feature <- DE_results[, 3]
 
-    p <- ggplot2::ggplot(data = volcano_data,
-        aes(x = pval, y = log2fc, text = feature, color = Features)) +
+    p <- ggplot2::ggplot(data = DE_results,
+        aes(x = log2fc, y = pval, text = feature, color = Features)) +
         geom_point() +
         scale_color_manual(values = c('FALSE' = 'blue',
             'TRUE' = 'red',

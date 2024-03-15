@@ -4,13 +4,14 @@
 \alias{pval_summary}
 \title{Returns summary table for p-values of explained variation}
 \usage{
-pval_summary(DE_res)
+pval_summary(res_list)
 }
 \arguments{
-\item{DE_res}{DE analysis results output from DE_analyze()}
+\item{res_list}{Differential Expression analysis result (a named list of
+dataframes corresponding to each analysis completed with a "pvalue" column)}
 }
 \value{
-List of explained variation by batch and condition
+summary table for p-values of explained variation for each analysis
 }
 \description{
 Returns summary table for p-values of explained variation

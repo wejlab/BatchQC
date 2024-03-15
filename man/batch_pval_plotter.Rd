@@ -4,10 +4,10 @@
 \alias{batch_pval_plotter}
 \title{This function allows you to plot batch p-values of explained variation}
 \usage{
-batch_pval_plotter(DE_res)
+batch_pval_plotter(dds)
 }
 \arguments{
-\item{DE_res}{DE analysis results output from DE_analyze()}
+\item{dds}{DESeq2 analysis results output}
 }
 \value{
 List of explained variation by batch and condition

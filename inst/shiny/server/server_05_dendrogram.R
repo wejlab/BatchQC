@@ -4,29 +4,22 @@
 observeEvent(input$dend_plot, {
     req(reactivevalue$se)
 
-    # Determine which values to use based on the state of the switch
-    if (input$switch) {
-        batch_to_display <- input$dend_category_to_display
-        category_to_display <- input$dend_batch_to_display
-    } else {
-        batch_to_display <- input$dend_batch_to_display
-        category_to_display <- input$dend_category_to_display
-        }
+    batch_to_display <- input$dend_batch_to_display
+    category_to_display <- input$dend_category_to_display
+
+    den_results <- dendrogram_plotter(reactivevalue$se,
+        input$dend_assay_name,
+        batch_to_display,
+        category_to_display)
 
     output$dendrogram <- renderPlot({
-        plot(dendrogram_plotter(reactivevalue$se,
-                                input$dend_assay_name,
-                                batch_to_display,
-                                category_to_display)$dendrogram)
+        plot(den_results$dendrogram)
     }, height = function() {
         session$clientData$output_dendrogram_width
     })
 
     output$circular_dendrogram <- renderPlot({
-        plot(dendrogram_plotter(reactivevalue$se,
-                                input$dend_assay_name,
-                                batch_to_display,
-                                category_to_display)$circular_dendrogram)
+        plot(den_results$circular_dendrogram)
     }, height = function() {
         session$clientData$output_circular_dendrogram_width
     })

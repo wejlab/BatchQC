@@ -3,27 +3,14 @@ observeEvent(input$DE_batch, {
     req(reactivevalue$se, input$DE_batch)
     DE_covariate_choices <- covariates_not_confounded(reactivevalue$se,
         input$DE_batch)
-   # updateSelectizeInput(session = session, inputId = "condition_of_interest",
-    #    choices = DE_covariate_choices, selected = NULL)
     updateSelectizeInput(session = session, inputId = "DE_conditions",
         choices = DE_covariate_choices, selected = NULL)
 })
-# observeEvent(input$condition_of_interest, {
-#     req(reactivevalue$se, input$DE_batch)
-#     DE_covariate_choices <- covariates_not_confounded(reactivevalue$se,
-#         input$DE_batch)
-#     DE_covariate_choices <- DE_covariate_choices[!DE_covariate_choices ==
-#             input$condition_of_interest]
-#     updateSelectizeInput(session = session, inputId = "DE_conditions",
-#         choices = DE_covariate_choices, selected = NULL)
-# })
 
 observeEvent(input$DE_method, {
     req(reactivevalue$se, input$DE_batch)
     DE_covariate_choices <- covariates_not_confounded(reactivevalue$se,
         input$DE_batch)
-    #updateSelectizeInput(session = session, inputId = "condition_of_interest",
-     #   choices = DE_covariate_choices, selected = NULL)
     updateSelectizeInput(session = session, inputId = "DE_conditions",
         choices = DE_covariate_choices, selected = NULL)
 })

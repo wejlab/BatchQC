@@ -86,40 +86,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
              colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
              res[[colnames(eBayes_res$coefficients)[[i]]]] <- results
         }
-    } else if (method == 't-test') { #need to ensure proper output
-        # loop through batch and all conditions
-        for (variable in colnames(analysis_design)) {
-            if (length(unique(analysis_design$variable)) == 2) {
-                t_results <- stats::t.test(analysis_design$variable)
-            }else if (length(unique(analysis_design$variable)) > 2) {
-                anova_results <- stats::aov()
-            }
-        }
-
-        # retrieve needed results form each and create a dataframe for each variable
-        # create a list of dataframes and return
-
-        # res_ttest <- findMarkers(data,
-        #     analysis_design[,1],
-        #     test.type = "t",
-        #     pval.type = "all",
-        #     lfc = 1)
-        # for(t_res in names(res_ttest)){
-        #     res_to_add <- data.frame("log2FoldChange" = res_ttest[[t_res]][4],
-        #         "pvalue" = res_ttest[[t_res]][1],
-        #         "padj" = res_ttest[[t_res]][2],
-        #         row.names = rownames(res_ttest[[t_res]]))
-        #     #res_to_add <- as.data.frame(res_to_add)
-        #     #row.names(res_to_add) <- row.names(res_ttest[[t_res]])
-        #     colnames(res_to_add) <- c("log2FoldChange", "pvalue", "padj")
-        #     res[[t_res]] <- res_to_add
-        #}
-        # res_ttest <- as.matrix(res_ttest[[1]])
-        # pvalue <- res_ttest[,2]
-        # log2FC <- res_ttest[,4]
-        # res_ttest <- res_ttest[order(res[,1], decreasing = FALSE), ]
-        # to_plot <- cbind(log2FC, pvalue) #volcano info
-    }else if (method == 'wilcox') {#need to ensure proper output #See Aug 2nd github for reference
+    } else if (method == 'wilcox') {#need to ensure proper output #See Aug 2nd github for reference
         res <- findMarkers(data,
             analysis_design[, 1],
             test.type = method,

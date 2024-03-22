@@ -21,10 +21,15 @@ tabPanel(
     ),
     mainPanel(
         tabsetPanel(
-            tabPanel("Variation Analysis",
+            tabPanel("Explained Variation - Individual Variable",
+                h5("The boxplot and p-value table display the individual, or raw variation, explained by each variable."),
                      plotOutput('EV_show_plot'),
                      dataTableOutput('EV_show_table')
-            )
+            ),
+            tabPanel("Explained Variation - Residual",
+                h5("The boxplot and p-value table display the type 2 variation, or residual varaition."),
+                plotOutput('EV_residual_show_plot'),
+                dataTableOutput('EV_residual_show_table'))
         )
         )
     )

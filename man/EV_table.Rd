@@ -5,16 +5,10 @@
 \title{EV Table
 Returns table with percent variation explained for specified number of genes}
 \usage{
-EV_table(se, batch, condition, assay_name)
+EV_table(batchqc_ev)
 }
 \arguments{
-\item{se}{Summarized experiment object}
-
-\item{batch}{Batch Covariates}
-
-\item{condition}{Condition covariate(s) of interest}
-
-\item{assay_name}{Name of chosen assay}
+\item{batchqc_ev}{explained variation results from batchqc_explained_variation}
 }
 \value{
 List of explained variation by batch and condition
@@ -26,9 +20,11 @@ Returns table with percent variation explained for specified number of genes
 \examples{
 library(scran)
 se <- mockSCE()
-EV_table <- BatchQC::EV_table(se, batch = "Mutation_Status",
+exp_var_result <- BatchQC::EV_table(se, batch = "Mutation_Status",
                                     condition = "Treatment",
                                     assay_name = "counts")
+EV_table <- BatchQC::EV_table(exp_var_result[[1]])
+
 EV_table
 
 }

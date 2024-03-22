@@ -4,19 +4,13 @@
 \alias{EV_plotter}
 \title{This function allows you to plot explained variation}
 \usage{
-EV_plotter(se, batch, condition, assay_name)
+EV_plotter(batchqc_ev)
 }
 \arguments{
-\item{se}{Summarized experiment object}
-
-\item{batch}{Batch covariate}
-
-\item{condition}{Condition covariate of interest}
-
-\item{assay_name}{Assay of choice}
+\item{batchqc_ev}{table of explained variation from batchqc_explained_variation}
 }
 \value{
-List of explained variation by batch and condition
+boxplot of explained variation
 }
 \description{
 This function allows you to plot explained variation
@@ -24,8 +18,9 @@ This function allows you to plot explained variation
 \examples{
 library(scran)
 se <- mockSCE()
-EV_boxplot <- BatchQC::EV_plotter(se, batch = "Mutation_Status",
+expl_var_result <- batchqc_explained_variation(se, batch = "Mutation_Status",
                             condition = "Treatment", assay_name = "counts")
+EV_boxplot <- BatchQC::EV_plotter(expl_var_result[[1]])
 EV_boxplot
 
 }

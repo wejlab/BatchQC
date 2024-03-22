@@ -20,23 +20,10 @@ globalVariables(c("chosen", "P.Value", "adj.P.Val"))
 #'
 #' @export
 DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
-    #include_batch = TRUE, condition_of_interest = NULL) {
     data <- assays(se)[[assay_to_analyze]]
     rownames(data) <- names(se)
 
     analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
-
-    # if (include_batch & (!is.null(condition_of_interest) & condition_of_interest != "")) {
-    #     analysis_design <- as.data.frame(colData(se)[c(condition_of_interest,
-    #         conditions, batch)])
-    # }else if (include_batch & (is.null(condition_of_interest) | condition_of_interest == "")) {
-    #     analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
-    # }else if (!include_batch & (!is.null(condition_of_interest) & condition_of_interest != "")) {
-    #     analysis_design <- as.data.frame(colData(se)[c(condition_of_interest,
-    #         conditions)])
-    # }else {
-    #     analysis_design <- as.data.frame(colData(se)[c(conditions)])
-    # }
 
     res <- list()
 
@@ -86,17 +73,9 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
              colnames(results) <- c("log2FoldChange", "pvalue", "padj" )
              res[[colnames(eBayes_res$coefficients)[[i]]]] <- results
         }
-    } else if (method == 'wilcox') {#need to ensure proper output #See Aug 2nd github for reference
-        res <- findMarkers(data,
-            analysis_design[, 1],
-            test.type = method,
-            pval.type = "all",
-            lfc = 1)
-        res <- as.matrix(res[[1]])
-        pvalue <- res[, 2]
-        AUC <- res[, 3]
-        res <- res[order(res[, 1], decreasing = FALSE), ]
-        to_plot <- cbind(AUC, pvalue) #volcano info
+
+    } else{
+        "Error: Please select a method 'DESeq2' or 'limma'"
     }
     return(res) #return... each analysis with log2FOldChange, pvalue, and padj
 }
@@ -121,26 +100,6 @@ pval_summary <- function(res_list) {
     rownames(pval_sum_table) <- rownames(res_list[[1]])
 
     return(pval_table = pval_sum_table)
-
-    # pval_table <- rbind(summary(results(dds)[, 'pvalue']))
-    #
-    # row_count <- 1
-    # for (i in seq_len(length(resultsNames(dds)))) {
-    #     if (resultsNames(dds)[i] == 'Intercept') {
-    #         next
-    #     }else if (i == length(resultsNames(dds))) {
-    #         next
-    #     }else {
-    #         pval_table <- rbind(pval_table, summary(
-    #             results(dds, name = resultsNames(dds)[i])$pvalue))
-    #         rownames(pval_table)[row_count + 1] <- resultsNames(dds)[i]
-    #         row_count <- row_count + 1
-    #     }
-    # }
-    #
-    # rownames(pval_table)[1] <- "Batch"
-    #
-    # return(list(pval_table = pval_table))
 }
 
 

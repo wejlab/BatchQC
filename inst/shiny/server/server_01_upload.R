@@ -140,7 +140,6 @@ observeEvent(input$se, {
     se <- readRDS(input$se$datapath)
     reactivevalue$se <- se
     output$counts_header <- renderDT(datatable(assays(reactivevalue$se)$counts))
-    #output$counts_header <- renderDT((datatable(reactivevalue$counts)))
     output$counts_dimensions <- renderText(paste(dim(reactivevalue$se),
         c('observations and', 'samples')))
 
@@ -170,8 +169,7 @@ observeEvent(input$exampleData, {
             c('observations and', 'samples')))
 
         data(batch_indicator)
-        rownames(batch_indicator) <- batch_indicator$samples
-        reactivevalue$metadata <- batch_indicator[2:3]
+        reactivevalue$metadata <- batch_indicator
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }else if (input$exampleData == "bladderData") {
         bladder_data <- bladder_data_upload()
@@ -188,7 +186,6 @@ observeEvent(input$exampleData, {
 ## Create summarized experiment object and set up plot options
 observeEvent(input$submit, {
     withBusyIndicatorServer("submit", {
-        #need to clear all previous selections
         if (input$uploadChoice == "countFile" &
                 !is.null(reactivevalue$counts_location) &
                 !is.null(reactivevalue$metadata_location)) {

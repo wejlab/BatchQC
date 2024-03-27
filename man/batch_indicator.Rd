@@ -5,9 +5,8 @@
 \alias{batch_indicator}
 \title{Batch and Condition indicator for signature data}
 \format{
-A data frame with 89 rows and 3 variables:
+A data frame with 89 rows and 2 variables:
 \describe{
-\item{samples}{sample ID}
 \item{batch}{batch}
 \item{condition}{condition}
 }

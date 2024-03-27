@@ -40,9 +40,8 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 #'
 #' @name batch_indicator
 #' @docType data
-#' @format A data frame with 89 rows and 3 variables:
+#' @format A data frame with 89 rows and 2 variables:
 #' \describe{
-#'     \item{samples}{sample ID}
 #'     \item{batch}{batch}
 #'     \item{condition}{condition}
 #' }

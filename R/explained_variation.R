@@ -6,6 +6,8 @@
 #' @examples
 #' library(scran)
 #' se <- mockSCE()
+#' se$Mutation_Status <- as.factor(se$Mutation_Status)
+#' se$Treatment <- as.factor(se$Treatment)
 #' expl_var_result <- batchqc_explained_variation(se, batch = "Mutation_Status",
 #'                             condition = "Treatment", assay_name = "counts")
 #' EV_boxplot <- BatchQC::EV_plotter(expl_var_result[[1]])
@@ -34,7 +36,9 @@ EV_plotter <- function(batchqc_ev) {
 #' @examples
 #' library(scran)
 #' se <- mockSCE()
-#' exp_var_result <- BatchQC::EV_table(se, batch = "Mutation_Status",
+#' se$Mutation_Status <- as.factor(se$Mutation_Status)
+#' se$Treatment <- as.factor(se$Treatment)
+#' exp_var_result <- BatchQC::batchqc_explained_variation(se, batch = "Mutation_Status",
 #'                                     condition = "Treatment",
 #'                                     assay_name = "counts")
 #' EV_table <- BatchQC::EV_table(exp_var_result[[1]])
@@ -71,45 +75,64 @@ EV_table <- function(batchqc_ev) {
 #'
 #' @export
 batchqc_explained_variation <- function(se, batch, condition = NULL, assay_name) {
+    if (!is.factor(se[[batch]])) {
+        print("The batch variable contianed in your se object must be a factor.")
+        return()
+    }else if (!is.null(condition)) {
+        for (variable in condition){
+            if (!is.factor(se[[variable]])) {
+                print("All condition variables in your se object must be a factor.")
+                return()
+            }
+        }
+    }
+
+
+
     sample_info <- SummarizedExperiment::colData(se)
-    assay_dat <- t(assay(se_object,assay_name))
+    assay_dat <- t(assay(se, assay_name))
 
     ### Check if batch and conditions are linearly independent
     ### Check if batch and condition variables are factors (in Shiny, only let the user choose batch and conditions that are factors)
 
     ## Total RSS
-    mus <- matrix(colMeans(assay_dat), nrow(assay_dat), ncol(assay_dat), byrow=T)
+    mus <- matrix(colMeans(assay_dat),
+        nrow(assay_dat),
+        ncol(assay_dat),
+        byrow = TRUE)
     res_total <- colSums((assay_dat - mus)^2)
 
     ## Full RSS and SST
     covs <- c(batch, condition)
-    model_full <- stats::formula(paste("~",paste(covs, collapse = " + ")))
-    design_full <- stats::model.matrix(model_full, data=sample_info)
-    res_full <- get.res(assay_dat,design_full)
-    EV_table_ind <- EV_table_type2 <- data.frame(Explained = res_total-res_full)
+    model_full <- stats::formula(paste("~", paste(covs, collapse = " + ")))
+    design_full <- stats::model.matrix(model_full, data = sample_info)
+    res_full <- get.res(assay_dat, design_full)
+    EV_table_ind <- EV_table_type2 <- data.frame(Explained = res_total -
+            res_full)
 
     ### individual SSE and Type 2 SSE
     for (j in 1:length(covs)){
         ### individual
-        model_ind <- stats::formula(paste("~ ",covs[j],sep=''))
-        design_ind <- stats::model.matrix(model_ind,data=sample_info)
-        res_ind <-  get.res(assay_dat,design_ind)
-        EV_table_ind[covs[j]] <- res_total-res_ind
+        model_ind <- stats::formula(paste("~ ", covs[j], sep = ''))
+        design_ind <- stats::model.matrix(model_ind, data = sample_info)
+        res_ind <-  get.res(assay_dat, design_ind)
+        EV_table_ind[covs[j]] <- res_total - res_ind
 
         ### Type2
-        if(is.null(condition)){
+        if (is.null(condition)) {
             EV_table_type2[covs[j]] <- EV_table_ind[covs[j]]
-        } else{
-            model_alt <- stats::formula(paste("~",paste(covs[-j], collapse = " + ")))
-            design_alt <- stats::model.matrix(model_alt,data=sample_info)
-            res_alt <- get.res(assay_dat,design_alt)
-            EV_table_type2[covs[j]] <- res_alt-res_full
+        } else {
+            model_alt <- stats::formula(paste("~",
+                paste(covs[-j], collapse = " + ")))
+            design_alt <- stats::model.matrix(model_alt, data = sample_info)
+            res_alt <- get.res(assay_dat, design_alt)
+            EV_table_type2[covs[j]] <- res_alt - res_full
         }
     }
 
     EV_table_ind["Unexplained"] <- EV_table_type2["Unexplained"] <- res_full
-    EV_table_ind <- round(100*EV_table_ind/res_total,2)
-    EV_table_type2 <- round(100*EV_table_type2/res_total,2)
+    EV_table_ind <- round(100 * EV_table_ind / res_total, 2)
+    EV_table_type2 <- round(100 * EV_table_type2 / res_total, 2)
 
     return(list(EV_table_ind = EV_table_ind, EV_table_type2 = EV_table_type2))
 }
@@ -119,6 +142,6 @@ batchqc_explained_variation <- function(se, batch, condition = NULL, assay_name)
 #' @param y assay
 #' @param X model matrix design
 #' @return residuals
-get.res <- function(y,X){
+get.res <- function(y, X) {
     colSums((y - X %*% solve(t(X) %*% X) %*% t(X) %*% y)^2)
 }

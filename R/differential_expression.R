@@ -74,7 +74,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
              res[[colnames(eBayes_res$coefficients)[[i]]]] <- results
         }
 
-    } else{
+    } else {
         "Error: Please select a method 'DESeq2' or 'limma'"
     }
     return(res) #return... each analysis with log2FOldChange, pvalue, and padj

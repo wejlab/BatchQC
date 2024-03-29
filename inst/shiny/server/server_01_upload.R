@@ -180,6 +180,8 @@ observeEvent(input$exampleData, {
 
         reactivevalue$metadata <- as.data.frame(colData(bladder_data))
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
+    }else if (input$exampleData == "TbData") {
+        #Add Indian Data Set
     }
 })
 
@@ -199,6 +201,13 @@ observeEvent(input$submit, {
         } else if (input$uploadChoice == "example") {
             se <- summarized_experiment(reactivevalue$counts,
                 reactivevalue$metadata)
+            if (input$exampleData == "proteinData") {
+                assayNames(se) <- "mass-to-charge_ratio"
+            }else if (input$exampleData == "signatureData") {
+                assayNames(se) <- "log_CPM"
+            }else if (input$exampleData == "bladderData") {
+                assayNames(se) <- "log_CPM"
+            }
         }
 
         reactivevalue$se <- se

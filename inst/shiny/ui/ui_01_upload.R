@@ -55,7 +55,7 @@ tabPanel("Upload Data",
                              selectInput("exampleData",
                                  "Example Data",
                                  choices = c("", "proteinData", "signatureData",
-                                     "bladderData", "TbData", "No Selection"),
+                                     "bladderData", "No Selection"), #"TbData",
                                  selected = ""), ),
             withBusyIndicatorUI(actionButton(inputId = 'submit',
                                             label = 'Upload'))

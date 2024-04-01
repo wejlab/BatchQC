@@ -180,9 +180,9 @@ observeEvent(input$exampleData, {
 
         reactivevalue$metadata <- as.data.frame(colData(bladder_data))
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
-    }else if (input$exampleData == "TbData") {
-        #Add Indian Data Set
-    }
+        } #else if (input$exampleData == "TbData") {
+    #     #Add Indian Data Set
+    # }
 })
 
 ## Create summarized experiment object and set up plot options

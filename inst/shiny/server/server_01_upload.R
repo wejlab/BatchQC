@@ -140,7 +140,6 @@ observeEvent(input$se, {
     se <- readRDS(input$se$datapath)
     reactivevalue$se <- se
     output$counts_header <- renderDT(datatable(assays(reactivevalue$se)$counts))
-    #output$counts_header <- renderDT((datatable(reactivevalue$counts)))
     output$counts_dimensions <- renderText(paste(dim(reactivevalue$se),
         c('observations and', 'samples')))
 
@@ -170,8 +169,7 @@ observeEvent(input$exampleData, {
             c('observations and', 'samples')))
 
         data(batch_indicator)
-        rownames(batch_indicator) <- batch_indicator$samples
-        reactivevalue$metadata <- batch_indicator[2:3]
+        reactivevalue$metadata <- batch_indicator
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
     }else if (input$exampleData == "bladderData") {
         bladder_data <- bladder_data_upload()
@@ -182,13 +180,14 @@ observeEvent(input$exampleData, {
 
         reactivevalue$metadata <- as.data.frame(colData(bladder_data))
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
-    }
+        } #else if (input$exampleData == "TbData") {
+    #     #Add Indian Data Set
+    # }
 })
 
 ## Create summarized experiment object and set up plot options
 observeEvent(input$submit, {
     withBusyIndicatorServer("submit", {
-        #need to clear all previous selections
         if (input$uploadChoice == "countFile" &
                 !is.null(reactivevalue$counts_location) &
                 !is.null(reactivevalue$metadata_location)) {
@@ -202,6 +201,13 @@ observeEvent(input$submit, {
         } else if (input$uploadChoice == "example") {
             se <- summarized_experiment(reactivevalue$counts,
                 reactivevalue$metadata)
+            if (input$exampleData == "proteinData") {
+                assayNames(se) <- "mass-to-charge_ratio"
+            }else if (input$exampleData == "signatureData") {
+                assayNames(se) <- "log_CPM"
+            }else if (input$exampleData == "bladderData") {
+                assayNames(se) <- "log_CPM"
+            }
         }
 
         reactivevalue$se <- se

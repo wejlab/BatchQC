@@ -53,7 +53,6 @@ Imports:
     RColorBrewer,
     reader,
     reshape2,
-    rlist,
     scran,
     shiny,
     SummarizedExperiment,

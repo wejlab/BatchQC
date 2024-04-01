@@ -15,11 +15,11 @@ observeEvent(input$variation, {
         input$variation_assay, reactivevalue$se)
     withBusyIndicatorServer("variation", {
         tryCatch({
-            if(is.null(input$variation_condition)){
+            if (is.null(input$variation_condition)) {
                 EV_results <- batchqc_explained_variation(se = reactivevalue$se,
                     batch = input$variation_batch,
                     assay_name = input$variation_assay)
-            } else{
+            } else {
                 EV_results <- batchqc_explained_variation(se = reactivevalue$se,
                     batch = input$variation_batch,
                     condition = input$variation_condition,

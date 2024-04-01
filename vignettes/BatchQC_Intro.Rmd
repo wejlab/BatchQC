@@ -265,17 +265,23 @@ likely to be associated with your condition of interest rather than the batch.
 To recreate the variation analysis plot for the counts assay, use the
 following code:
 ```{r}
-EV_boxplot <- BatchQC::EV_plotter(se = se_object, batch = "batch",
-    condition = "category", assay_name = "counts")
+ex_variation <- batchqc_explained_variation(se = se_object,
+    batch = "batch", condition = "category", assay_name = "counts")
+EV_boxplot <- BatchQC::EV_plotter(batchqc_ev = ex_variation[[1]])
 EV_boxplot
+EV_boxplot_type_2 <- BatchQC::EV_plotter(batchqc_ev = ex_variation[[2]])
+EV_boxplot_type_2
 ```
 
 To recreate the variation analysis table for the counts assay, use the
 following code:
 ```{r}
-EV_table <- BatchQC::EV_table(se = se_object, batch = "batch",
-    condition = "category", assay_name = "counts")
+ex_variation <- batchqc_explained_variation(se = se_object,
+    batch = "batch", condition = "category", assay_name = "counts")
+EV_table <- BatchQC::EV_table(batchqc_ev = ex_variation[[1]])
 EV_table
+EV_table_type_2 <- BatchQC::EV_table(batchqc_ev = ex_variation[[2]])
+EV_table_type_2
 ```
 
 ### 6. Heatmaps

@@ -20,7 +20,9 @@ Returns table with percent variation explained for specified number of genes
 \examples{
 library(scran)
 se <- mockSCE()
-exp_var_result <- BatchQC::EV_table(se, batch = "Mutation_Status",
+se$Mutation_Status <- as.factor(se$Mutation_Status)
+se$Treatment <- as.factor(se$Treatment)
+exp_var_result <- BatchQC::batchqc_explained_variation(se, batch = "Mutation_Status",
                                     condition = "Treatment",
                                     assay_name = "counts")
 EV_table <- BatchQC::EV_table(exp_var_result[[1]])

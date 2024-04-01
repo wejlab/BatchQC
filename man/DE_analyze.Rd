@@ -9,22 +9,18 @@ DE_analyze(se, method, batch, conditions, assay_to_analyze)
 \arguments{
 \item{se}{SummarizedExperiment object}
 
-\item{method}{DE analysis method option}
+\item{method}{DE analysis method option (either 'DESeq' or 'limma')}
 
-\item{batch}{Batch sample metadata column}
+\item{batch}{metadata column in the se object representing batch}
 
-\item{conditions}{Sample metadata columns for additional analysis covariates}
+\item{conditions}{metadata columns in the se object representing additional analysis covariates}
 
-\item{assay_to_analyze}{Assay for DE analysis}
+\item{assay_to_analyze}{Assay in the se object (either counts for DESeq or normalized data for limma) for DE analysis}
 }
 \value{
-A named list of of two matrices.
-
-res features the DE analysis results.
-
-volcano features a subset of the DE analysis results for plotting.
+A named list containing the log2FoldChange, pvalue and adjusted pvalue (padj) for each analysis returned by DESeq or limma
 }
 \description{
 This function runs DE analysis on a count matrix (DESeq) or a normalized log
-or log-CPM matrix (limma, t-test, anova, wilcox) in the se object
+or log-CPM matrix (limma) contained in the se object
 }

@@ -3,15 +3,13 @@ globalVariables(c("chosen", "P.Value", "adj.P.Val"))
 #' Differential Expression Analysis
 #'
 #' This function runs DE analysis on a count matrix (DESeq) or a normalized log
-#' or log-CPM matrix (limma, t-test, anova, wilcox) in the se object
+#' or log-CPM matrix (limma) contained in the se object
 #' @param se SummarizedExperiment object
-#' @param method DE analysis method option
-#' @param batch Batch sample metadata column
-#' @param conditions Sample metadata columns for additional analysis covariates
-#' @param assay_to_analyze Assay for DE analysis
-#' @return A named list of of two matrices.
-#' @return res features the DE analysis results.
-#' @return volcano features a subset of the DE analysis results for plotting.
+#' @param method DE analysis method option (either 'DESeq' or 'limma')
+#' @param batch metadata column in the se object representing batch
+#' @param conditions metadata columns in the se object representing additional analysis covariates
+#' @param assay_to_analyze Assay in the se object (either counts for DESeq or normalized data for limma) for DE analysis
+#' @return A named list containing the log2FoldChange, pvalue and adjusted pvalue (padj) for each analysis returned by DESeq or limma
 #' @import SummarizedExperiment
 #' @import DESeq2
 #' @import scran
@@ -77,7 +75,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
     } else {
         "Error: Please select a method 'DESeq2' or 'limma'"
     }
-    return(res) #return... each analysis with log2FOldChange, pvalue, and padj
+    return(res)
 }
 
 

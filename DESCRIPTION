@@ -2,11 +2,12 @@ Type: Package
 Package: BatchQC
 Title: Batch Effects Quality Control Software
 Version: 1.99.00
-Date: 2020-10-11
+Date: 2024-04-02
 Authors@R: c(
-    person("Solaiappan", "Manimaran", , "manimaran_1975@hotmail.com", role = "aut"),
-    person("W. Evan", "Johnson", , "wej@bu.edu", role = c("aut", "cre"), 
+    person("Jessica", "McClintock", , "jessica.mcclintock@rutgers.edu", role = c("aut", "cre")),
+    person("W. Evan", "Johnson", , "wj183@njms.rutgers.edu", role = c("aut"), 
     comment = c(ORCID = "0000-0002-6247-6595")),
+    person("Solaiappan", "Manimaran", , "manimaran_1975@hotmail.com", role = "aut"),
     person("Heather", "Selby", , "selbyh@bu.edu", role = "ctb"),
     person("Claire", "Ruberman", , "claireruberman@gmail.com", role = "ctb"),
     person("Kwame", "Okrah", , "kwame.okrah@gmail.com", role = "ctb"),
@@ -14,8 +15,7 @@ Authors@R: c(
     person("Michael", "Silverstein", , "msilver4@bu.edu", role = "ctb"),
     person("Regan", "Conrad", , "rdconrad@bu.edu", role = "ctb"),
     person("Zhaorong", "Li", , "zhaorong@bu.edu", role = "ctb"),
-    person("Evan", "Holmes", , "evanjh19@gmail.com", role = "aut"),
-    person("Jessica", "McClintock", , "jessmcc@bu.edu", role = "aut")
+    person("Evan", "Holmes", , "evanjh19@gmail.com", role = "aut")
   )
 Description: Sequencing and microarray samples often are collected or
     processed in multiple batches or at different times. This often

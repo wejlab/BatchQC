@@ -76,12 +76,12 @@ EV_table <- function(batchqc_ev) {
 #' @export
 batchqc_explained_variation <- function(se, batch, condition = NULL, assay_name) {
     if (!is.factor(se[[batch]])) {
-        print("The batch variable contianed in your se object must be a factor.")
+        #"The batch variable contianed in your se object must be a factor."
         return()
     }else if (!is.null(condition)) {
         for (variable in condition){
             if (!is.factor(se[[variable]])) {
-                print("All condition variables in your se object must be a factor.")
+                #"All condition variables in your se object must be a factor."
                 return()
             }
         }
@@ -111,7 +111,7 @@ batchqc_explained_variation <- function(se, batch, condition = NULL, assay_name)
             res_full)
 
     ### individual SSE and Type 2 SSE
-    for (j in 1:length(covs)){
+    for (j in seq_len(length(covs))){
         ### individual
         model_ind <- stats::formula(paste("~ ", covs[j], sep = ''))
         design_ind <- stats::model.matrix(model_ind, data = sample_info)

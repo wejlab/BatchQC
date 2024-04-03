@@ -29,11 +29,11 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
         # Check if the assay contains counts (e.g. non negative integer data),
         for (item in data){
             if (!is.integer(item)) {
-                print("Error: data contains non-integers")
+                #"Error: data contains non-integers"
                 #need to throw error in shiny
                 return()
             }else if (item < 0) {
-                print("Error: data contains negative integers")
+                #"Error: data contains negative integers"
                 #need to throw error in shiny
                 return()
             }
@@ -65,7 +65,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
          fit <- limma::lmFit(data, design)
          eBayes_res <- limma::eBayes(fit)
 
-         for (i in 1:length(colnames(eBayes_res$coefficients))){
+         for (i in seq_len(length(colnames(eBayes_res$coefficients)))){
              results <- limma::topTable(eBayes_res, coef = i, number = Inf) %>%
                  select(c(1, P.Value, adj.P.Val))
              colnames(results) <- c("log2FoldChange", "pvalue", "padj" )

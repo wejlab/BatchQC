@@ -45,7 +45,7 @@ heatmap_plotter <- function(se, assay, nfeature, annotation_column,
         }
 
         # Numeric to Character conversion
-        col_info <- heatmap_num_to_char_convertor(ann_col = col_info)
+        col_info <- heatmap_num_to_char_converter(ann_col = col_info)
 
         correlation_heatmap <- pheatmap(cor,
                                         annotation_col = col_info,

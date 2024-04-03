@@ -1,4 +1,4 @@
-#' Heatmap numeric to character convertor
+#' Heatmap numeric to character converter
 #'
 #' This function converts any found numerics to characters
 #' @param ann_col column data of heatmap
@@ -9,12 +9,12 @@
 #' library(scran)
 #' se <- mockSCE()
 #' col_info <- colData(se)
-#' ann_col <- heatmap_num_to_char_convertor(ann_col = col_info)
+#' ann_col <- heatmap_num_to_char_converter(ann_col = col_info)
 #' ann_col
 #'
 #' @export
 #'
-heatmap_num_to_char_convertor <- function(ann_col) {
+heatmap_num_to_char_converter <- function(ann_col) {
 
     # Loop through each column in ann_col
     for (col_name in names(ann_col)) {

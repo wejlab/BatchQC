@@ -8,7 +8,7 @@ volcano_plot(DE_results, pslider, fcslider)
 }
 \arguments{
 \item{DE_results}{a dataframes with the results of one of the DE Analysis;
-must include "log2Foldchange" and "pvalue" columns}
+must include "log2FoldChange" and "pvalue" columns}
 
 \item{pslider}{Magnitude of significance value threshold}
 

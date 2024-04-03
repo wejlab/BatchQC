@@ -2,7 +2,7 @@
 #'
 #' This function allows you to plot DE analysis results as a volcano plot
 #' @param DE_results a dataframes with the results of one of the DE Analysis;
-#' must include "log2Foldchange" and "pvalue" columns
+#' must include "log2FoldChange" and "pvalue" columns
 #' @param pslider Magnitude of significance value threshold
 #' @param fcslider Magnitude of expression change value threshold
 #' @return A volcano plot of expression change and significance value data

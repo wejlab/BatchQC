@@ -122,6 +122,8 @@ summarized experiment object with the following:
 data(protein_data)
 data(protein_sample_info)
 se_object <- BatchQC::summarized_experiment(protein_data, protein_sample_info)
+se_object$batch <- as.factor(se_object$batch)
+se_object$category <- as.factor(se_object$category)
 ```
 
 ### 2. Apply Normalization methods
@@ -374,9 +376,9 @@ pca_plot$var_explained
 Not currently working....
 
 ```{r}
-#differential_expression <- BatchQC::DE_analyze(se = se_object,
-#    method = "DESeq2", batch = "batch", conditions = c("category"),
-#    assay_to_analyze = "counts")
+differential_expression <- BatchQC::DE_analyze(se = se_object,
+    method = "limma", batch = "batch", conditions = c("category"),
+    assay_to_analyze = "counts")
 ```
 
 ### 10. Data Download

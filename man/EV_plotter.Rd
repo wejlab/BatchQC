@@ -7,7 +7,8 @@
 EV_plotter(batchqc_ev)
 }
 \arguments{
-\item{batchqc_ev}{table of explained variation from batchqc_explained_variation}
+\item{batchqc_ev}{table of explained variation from
+batchqc_explained_variation}
 }
 \value{
 boxplot of explained variation

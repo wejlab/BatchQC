@@ -2,13 +2,29 @@
 #'
 #' This function allows you to plot DE analysis results as a volcano plot
 #' @param DE_results a dataframes with the results of one of the DE Analysis;
-#' must include "log2Foldchange" and "pvalue" columns
+#' must include "log2FoldChange" and "pvalue" columns
 #' @param pslider Magnitude of significance value threshold
 #' @param fcslider Magnitude of expression change value threshold
 #' @return A volcano plot of expression change and significance value data
 #' @import ggplot2
 #' @import scran
 #'
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' differential_expression <- BatchQC::DE_analyze(se = se,
+#'                                                 method = "DESeq2",
+#'                                                 batch = "Treatment",
+#'                                                 conditions = c(
+#'                                                 "Mutation_Status",
+#'                                                 "Cell_Cycle"),
+#'                                                 assay_to_analyze = "counts")
+#' value = round((max(abs(
+#'     differential_expression[[length(differential_expression)]][, 1]))
+#'     + min(abs(
+#'     differential_expression[[length(differential_expression)]][, 1]))) / 2)
+#'
+#' volcano_plot(differential_expression[[1]], pslider = 0.05, fcslider = value)
 #' @export
 volcano_plot <- function(DE_results, pslider, fcslider) {
     DE_results <- as.data.frame(DE_results) %>%

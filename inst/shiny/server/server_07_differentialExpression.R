@@ -21,7 +21,7 @@ observeEvent(input$DE_analyze, {
         setProgress(0.5, 'Calculating...')
         reactivevalue$DE_results <- DE_analyze(reactivevalue$se,
             input$DE_method, input$DE_batch, input$DE_conditions,
-            input$DE_assay) #, input$include_batch, input$condition_of_interest)
+            input$DE_assay)
         setProgress(1, 'Complete!')
     })
 
@@ -29,13 +29,13 @@ observeEvent(input$DE_analyze, {
 
     output$DE_results <- renderDT({
         reactivevalue$DE_results[[length(reactivevalue$DE_results)]]
-    }) #this only displays the results for the last analysis; need to update to include all analysis
+    })
 
     output$pval_summary <- renderDT({
         pval_summary(reactivevalue$DE_results)})
 
-    output$covariate_pval_plot <- renderPlot({
-        covariate_pval_plotter(reactivevalue$DE_results)
+    output$pval_plot <- renderPlot({
+        pval_plotter(reactivevalue$DE_results)
     })
 
     output$downloadDEData <- downloadHandler(
@@ -59,9 +59,10 @@ observeEvent(input$DE_analyze, {
             reactivevalue$DE_results)])
      updateSliderInput(session = session,
          inputId = "fcslider",
-         min = round(min(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))), #no longer using same volcano object
+         min = round(min(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))),
          max = round(max(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))),
-         value = round((max(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1])) + min(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))) / 2))
+         value = round((max(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))
+             + min(abs(reactivevalue$DE_results[[length(reactivevalue$DE_results)]][, 1]))) / 2))
 })
 
 plotVolcanoPlotButton <- eventReactive(input$volcano_plot, {

@@ -204,7 +204,7 @@ observeEvent(input$submit, {
             if (input$exampleData == "proteinData") {
                 assayNames(se) <- "mass-to-charge_ratio"
             }else if (input$exampleData == "signatureData") {
-                assayNames(se) <- "log_CPM"
+                assayNames(se) <- "log_intensity"
             }else if (input$exampleData == "bladderData") {
                 assayNames(se) <- "log_CPM"
             }

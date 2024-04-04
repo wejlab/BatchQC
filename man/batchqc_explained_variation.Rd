@@ -12,7 +12,8 @@ batchqc_explained_variation(se, batch, condition = NULL, assay_name)
 
 \item{batch}{Batch covariate}
 
-\item{condition}{Condition covariate(s) of interest if desired, default is NULL}
+\item{condition}{Condition covariate(s) of interest if desired, default is
+NULL}
 
 \item{assay_name}{Assay of choice}
 }

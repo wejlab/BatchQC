@@ -16,3 +16,15 @@ summary table for p-values of explained variation for each analysis
 \description{
 Returns summary table for p-values of explained variation
 }
+\examples{
+library(scran)
+se <- mockSCE()
+differential_expression <- BatchQC::DE_analyze(se = se,
+                                                method = "DESeq2",
+                                                batch = "Treatment",
+                                                conditions = c(
+                                                "Mutation_Status"),
+                                                assay_to_analyze = "counts")
+pval_summary(differential_expression)
+
+}

@@ -9,6 +9,22 @@
 #' @import ggplot2
 #' @import scran
 #'
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' differential_expression <- BatchQC::DE_analyze(se = se,
+#'                                                 method = "DESeq2",
+#'                                                 batch = "Treatment",
+#'                                                 conditions = c(
+#'                                                 "Mutation_Status",
+#'                                                 "Cell_Cycle"),
+#'                                                 assay_to_analyze = "counts")
+#' value = round((max(abs(
+#'     differential_expression[[length(differential_expression)]][, 1]))
+#'     + min(abs(
+#'     differential_expression[[length(differential_expression)]][, 1]))) / 2)
+#'
+#' volcano_plot(differential_expression[[1]], pslider = 0.05, fcslider = value)
 #' @export
 volcano_plot <- function(DE_results, pslider, fcslider) {
     DE_results <- as.data.frame(DE_results) %>%

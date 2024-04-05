@@ -10,6 +10,9 @@ author:
   affiliation: 
   - Division of Infectious Disease, Department of Medicine, Rutgers University 
   email: jessica.mcclintock@rutgers.edu
+- name: Solaiappan Manimaran
+  affiliation:
+  - Computational Biomedicine, Department of Medicine, Boston University
 package: BatchQC
 output:
   BiocStyle::html_document

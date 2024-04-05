@@ -1,43 +1,70 @@
-#' Produce heatmap plots for the given data
-#' 
-#' @param data.matrix Given data or simulated data from rnaseq_sim()
-#' @param batch Batch covariate 
-#' @param mod Model matrix for outcome of interest and other covariates 
-#'     besides batch
-#' @param max_display Maximum number of rows to display in heat map 
-#' @return Heatmap plots for the given data 
-#' @export
+#' Heatmap Plotter
+#'
+#' This function allows you to plot a heatmap
+#' @param se SummarizedExperiment
+#' @param assay normalized or corrected assay
+#' @param nfeature number of features to display
+#' @param annotation_column choose column
+#' @param log_option TRUE if data should be logged before plotting (recommended
+#' for sequencing counts), FALSE if data should not be logged (for instance,
+#' data is already logged)
+#' @import pheatmap
+#' @return heatmap plot
 #' @examples
-#' nbatch <- 3
-#' ncond <- 2
-#' npercond <- 10
-#' data.matrix <- rnaseq_sim(ngenes=50, nbatch=nbatch, ncond=ncond, npercond=
-#'     npercond, basemean=10000, ggstep=50, bbstep=2000, ccstep=800, 
-#'     basedisp=100, bdispstep=-10, swvar=1000, seed=1234)
-#' batch <- rep(1:nbatch, each=ncond*npercond)
-#' condition <- rep(rep(1:ncond, each=npercond), nbatch)
-#' pdata <- data.frame(batch, condition)
-#' modmatrix = model.matrix(~as.factor(condition), data=pdata)
-#' batchqc_heatmap(data.matrix, batch, mod=modmatrix)
-batchqc_heatmap <- function(data.matrix, batch, mod = NULL, max_display = 50) {
-    size <- dim(data.matrix)[1]
-    reduced.data.matrix <- data.matrix
-    if (size > max_display) {
-        reduced.data.matrix <- data.matrix[1:max_display, ]
+#' library(scran)
+#' se <- mockSCE()
+#' heatmaps <- BatchQC::heatmap_plotter(se,
+#'                                 assay = "counts",
+#'                                 nfeature = 15,
+#'                                 annotation_column = c("Mutation_Status",
+#'                                 "Treatment"), log_option = FALSE)
+#' correlation_heatmap <- heatmaps$correlation_heatmap
+#' correlation_heatmap
+#'
+#' heatmap <- heatmaps$topn_heatmap
+#' heatmap
+#'
+#' @export
+heatmap_plotter <- function(se, assay, nfeature, annotation_column,
+    log_option) {
+    data <- preprocess(se, assay, nfeature, log_option = FALSE)
+
+    for (i in seq_len(nrow(data))) {
+        data[i, ] <- (data[i, ] - mean(data[i, ])) / stats::sd(data[i, ])
     }
-    lcpm <- log2CPM(reduced.data.matrix)
-    lcounts <- lcpm$y
-    
-    fbatch <- as.factor(batch)
-    nbatch <- nlevels(fbatch)
-    bc <- rainbow(nbatch)
-    intbatch <- as.integer(fbatch)
-    colorfun <- function(i) {
-        return(bc[i])
+
+    col_info <- data.frame(colData(se))
+
+    cor <- cor(data)
+    if (!is.null(annotation_column)) {
+        if (length(annotation_column) == 1) {
+            col_info <- data.frame(col_info[, annotation_column],
+                                row.names = rownames(col_info))
+        }else {
+            col_info <- col_info[, annotation_column]
+        }
+
+        # Numeric to Character conversion
+        col_info <- heatmap_num_to_char_converter(ann_col = col_info)
+
+        correlation_heatmap <- pheatmap(cor,
+                                        annotation_col = col_info,
+                                        # annotation_colors = ann_colors,
+                                        annotation_row = col_info,
+                                        show_colnames = FALSE,
+                                        show_rownames = FALSE,
+                                        annotation_names_col = FALSE,
+                                        annotation_names_row = FALSE,
+                                        silent = TRUE)
+
+        topn_heatmap <- pheatmap(data, annotation_col = col_info,
+                                    # annotation_colors = ann_colors,
+                                    show_colnames = FALSE,
+                                    annotation_names_col = FALSE,
+                                    show_rownames = FALSE,
+                                    silent = TRUE)
+
+        return(list(correlation_heatmap = correlation_heatmap,
+                    topn_heatmap = topn_heatmap))
     }
-    cc <- sapply(intbatch, colorfun, simplify = TRUE)
-    if (!is.null(mod)) {
-        # print ('Need to implement this part') do something here
-    }
-    hcbHeatmap(lcounts, ColSideColors = cc)
-} 
+}

@@ -1,186 +1,108 @@
-#' Performs principal component analysis and 
-#' produces plot of the first two principal components
-#' 
-#' @param data.matrix Given data or simulated data from rnaseq_sim()
-#' @param batch Batch covariate 
-#' @param mod Model matrix for outcome of interest and other covariates 
-#' besides batch
-#' @return PCA object from principal component analysis
-#' @export
+#' This function allows you to plot PCA
+#' @param se SummarizedExperiment object
+#' @param nfeature number of features
+#' @param color choose a color
+#' @param shape choose a shape
+#' @param assays array of assay names from `se`
+#' @param xaxisPC the PC to plot as the x axis
+#' @param yaxisPC the PC to plot as the y axis
+#' @param log_option TRUE if data should be logged before plotting (recommended
+#' for sequencing counts), FALSE if data should not be logged (for instance,
+#' data is already logged); FALSE by default
+#' @usage PCA_plotter(se, nfeature, color, shape, assays, xaxisPC, yaxisPC,
+#' log_option = FALSE)
+#' @return List containing PCA info, PCA variance and PCA plot
 #' @examples
-#' nbatch <- 3
-#' ncond <- 2
-#' npercond <- 10
-#' data.matrix <- rnaseq_sim(ngenes=50, nbatch=nbatch, ncond=ncond, npercond=
-#'     npercond, basemean=10000, ggstep=50, bbstep=2000, ccstep=800, 
-#'     basedisp=100, bdispstep=-10, swvar=1000, seed=1234)
-#' batch <- rep(1:nbatch, each=ncond*npercond)
-#' condition <- rep(rep(1:ncond, each=npercond), nbatch)
-#' pdata <- data.frame(batch, condition)
-#' modmatrix = model.matrix(~as.factor(condition), data=pdata)
-#' batchqc_pca(data.matrix, batch, mod=modmatrix)
-batchqc_pca <- function(data.matrix, batch, mod = NULL) {
-    fbatch <- as.factor(batch)
-    nbatch <- nlevels(fbatch)
-    bc <- rainbow(nbatch)
-    intbatch <- as.integer(fbatch)
-    colorfun <- function(i) {
-        return(bc[i])
-    }
-    cc <- sapply(intbatch, colorfun, simplify = TRUE)
-    if (!is.null(mod)) {
-        # print ('Need to implement this part') do something here
-    }
-    pca <- tryCatch({
-        prcomp(t(data.matrix), retx = TRUE, center = TRUE, 
-            scale = TRUE)
-    }, error = function(err) {
-        prcomp(t(data.matrix), retx = TRUE, center = TRUE, 
-            scale = FALSE)
-    })
-    pc <- pca$x
-    xlab <- "Principal Component PC1"
-    ylab <- "Principal Component PC2"
-    plot(pc[, 1], pc[, 2], col = cc, xlab = xlab, ylab = ylab)
-    
-    # legend('bottomright', pch=c(2,2), col=cc, c('Batch1',
-    # 'Batch2'), bty='o', cex=.8, box.col='darkgreen')
-    
-    return(pca)
-}
-
-#' Performs PCA svd variance decomposition and 
-#' produces plot of the first two principal components
-#' 
-#' @param data.matrix Given data or simulated data from rnaseq_sim()
-#' @param batch Batch covariate 
-#' @param mod Model matrix for outcome of interest and other covariates 
-#' besides batch
-#' @return res PCA list with two components v and d.
+#' library(scran)
+#' se <- mockSCE()
+#' se_object_ComBat_Seq <- BatchQC::batch_correct(se, method = "ComBat-Seq",
+#'                                             assay_to_normalize = "counts",
+#'                                             batch = "Mutation_Status",
+#'                                             covar = "Treatment",
+#'                                             output_assay_name =
+#'                                                 "ComBat_Seq_Corrected")
+#' pca_plot <- BatchQC::PCA_plotter(se = se_object_ComBat_Seq,
+#'                             nfeature = 2, color = "Mutation_Status",
+#'                             shape = "Treatment",
+#'                             assays = c("counts", "ComBat_Seq_Corrected"),
+#'                             xaxisPC = 1, yaxisPC = 2, log_option = FALSE)
+#' pca_plot$plot
+#' pca_plot$var_explained
+#'
 #' @export
-#' @examples
-#' nbatch <- 3
-#' ncond <- 2
-#' npercond <- 10
-#' data.matrix <- rnaseq_sim(ngenes=50, nbatch=nbatch, ncond=ncond, npercond=
-#'     npercond, basemean=10000, ggstep=50, bbstep=2000, ccstep=800, 
-#'     basedisp=100, bdispstep=-10, swvar=1000, seed=1234)
-#' batch <- rep(1:nbatch, each=ncond*npercond)
-#' condition <- rep(rep(1:ncond, each=npercond), nbatch)
-#' pdata <- data.frame(batch, condition)
-#' modmatrix = model.matrix(~as.factor(condition), data=pdata)
-#' batchqc_pca_svd(data.matrix, batch, mod=modmatrix)
-batchqc_pca_svd <- function(data.matrix, batch, mod = NULL) {
-    res <- makeSVD(data.matrix)
-    condition <- NULL
-    if (!is.null(mod)) {
-        condition = mod[, 2]
+PCA_plotter <- function(se, nfeature, color, shape,
+    assays, xaxisPC, yaxisPC, log_option = FALSE) {
+    pca_plot_data <- data.frame()
+    var_explained_data <- NULL
+    coldata <- data.frame(colData(se))
+    for (assay in assays){
+        if (! assay %in%  names(se@assays)) {
+            warning(sprintf('"%s" is not an available assay', assay))
+            next
+        }else {
+            # Preprocess data
+            data <- preprocess(se, assay, nfeature, log_option)
+            centered <- data - rowMeans(data) / matrixStats::rowSds(data)
+            coldata <- data.frame(colData(se))
+            pca <- stats::prcomp(t(centered), center = FALSE)
+
+            # Get variance explained
+            var_explained <- summary(pca)$importance["Proportion of Variance", ]
+            var_explained_df <- stats::setNames(as.data.frame(var_explained),
+                assay)
+            if (is.null(var_explained_data)) {
+                var_explained_data <- var_explained_df
+            }else {
+                var_explained_data <- cbind(var_explained_data,
+                    var_explained_df)
+            }
+            # Extract PC data
+            pca_data <- as.data.frame(pca$x)
+
+            # Annotate with assay name
+            pca_data['assay'] <- assay
+
+            # Merge metadata
+            pca_md <- cbind(coldata, pca_data)
+            pca_md$sample <- rownames(coldata)
+
+            # Add to data
+            pca_plot_data <- rbind(pca_plot_data, pca_md)
+        }
     }
-    res1 <- pcRes(res$v, res$d, condition, batch)
-    fcond <- as.factor(condition)
-    ncond <- nlevels(fcond)
-    bc <- rainbow(ncond)
-    intcond <- as.integer(fcond)
-    colorfun <- function(i) {
-        return(bc[i])
-    }
-    cc <- sapply(intcond, colorfun, simplify = TRUE)
-    # fbatch <- as.factor(batch) nbatch <- nlevels(fbatch) bc <-
-    # rainbow(nbatch) intbatch <- as.integer(fbatch) colorfun <-
-    # function(i) { return(bc[i]) } cc <- sapply(intbatch,
-    # colorfun, simplify=TRUE)
-    plotPC(res$v, res$d, col = cc, pch = 19, main = "PCA plot", 
-        xlim = c(min(res$v[, 1]) - 0.08, max(res$v[, 1]) + 0.08), 
-        ylim = c(min(res$v[, 2]) - 0.08, max(res$v[, 2]) + 0.08))
-    text(res$v[, 1], res$v[, 2], batch, pos = 1, cex = 0.6)
-    return(res1)
+    # Reorder data
+    pca_plot_data$assay <- factor(pca_plot_data$assay, levels = assays)
+    var_explained_data <- var_explained_data[c(xaxisPC, yaxisPC), ,
+                                            drop = FALSE]
+    plot <- plot_data(pca_plot_data, color, shape, xaxisPC, yaxisPC)
+
+    return(list(PCA = pca_plot_data, var_explained = var_explained_data,
+        plot = plot))
 }
 
-#' Compute singular value decomposition
-#'
-#' @param x matrix of genes by sample (ie. the usual data matrix)
-#' @return returns a list of svd components v and d
-#' @import corpcor
-makeSVD <- function(x) {
-    x <- as.matrix(x)
-    s <- fast.svd(x - rowMeans(x))
-    
-    v <- s$v
-    rownames(v) <- colnames(x)
-    
-    s <- list(v = v, d = s$d)
-    return(s)
+#' This function formats the PCA plot using ggplot
+#' @param pca_plot_data Data for all assays to plot
+#' @param color variable that will be plotted as color
+#' @param shape variable that will be plotted as shape
+#' @param xaxisPC the PC to plot as the x axis
+#' @param yaxisPC the PC to plot as the y axis
+#' @import ggplot2
+#' @return PCA plot
+
+plot_data <- function(pca_plot_data, color, shape, xaxisPC, yaxisPC) {
+    pca_plot_data[, c(color)] <- factor(pca_plot_data[, color])
+    pca_plot_data[, c(shape)] <- factor(pca_plot_data[, shape])
+
+    xaxisPC <- paste0('PC', xaxisPC)
+    yaxisPC <- paste0('PC', yaxisPC)
+    PCAplot <- ggplot(pca_plot_data,
+        aes_string(x = xaxisPC,
+            y = yaxisPC,
+            color = color,
+            shape = shape,
+            sample = 'sample')) +
+        geom_point(size = 3) +
+        facet_wrap(vars(assay), ncol = 2, scales = 'free')
+
+    return(PCAplot)
 }
-
-
-#' Compute variance of each principal component and how they correlate with 
-#' batch and cond  
-#'
-#' @param v from makeSVD
-#' @param d from makeSVD
-#' @param condition factor describing experiment
-#' @param batch factor describing batch
-#' @return A dataframe containig variance, cum. variance, cond.R-sqrd, 
-#' batch.R-sqrd
-pcRes <- function(v, d, condition = NULL, batch = NULL) {
-    pcVar <- round((d^2)/sum(d^2) * 100, 2)
-    cumPcVar <- cumsum(pcVar)
-    
-    if (!is.null(condition)) {
-        cond.R2 <- function(y) round(summary(lm(y ~ condition))$r.squared * 
-            100, 2)
-        cond.R2 <- apply(v, 2, cond.R2)
-    }
-    
-    if (!is.null(batch)) {
-        batch.R2 <- function(y) round(summary(lm(y ~ batch))$r.squared * 
-            100, 2)
-        batch.R2 <- apply(v, 2, batch.R2)
-    }
-    
-    if (is.null(condition) & is.null(batch)) {
-        res <- data.frame(propVar = pcVar, cumPropVar = cumPcVar)
-        colnames(res) <- c("Percentage Variation", 
-            "Cumulative Percentage Variation")
-    }
-    
-    if (!is.null(batch) & is.null(condition)) {
-        res <- data.frame(propVar = pcVar, cumPropVar = cumPcVar, 
-            batch.R2 = batch.R2)
-        colnames(res) <- c("Percentage Variation", 
-            "Cumulative Percentage Variation", "Batch Correlation")
-    }
-    
-    if (!is.null(condition) & is.null(batch)) {
-        res <- data.frame(propVar = pcVar, cumPropVar = cumPcVar, 
-            cond.R2 = cond.R2)
-        colnames(res) <- c("Percentage Variation", 
-            "Cumulative Percentage Variation", "Condition Correlation")
-    }
-    
-    if (!is.null(condition) & !is.null(batch)) {
-        res <- data.frame(propVar = pcVar, cumPropVar = cumPcVar, 
-            cond.R2 = cond.R2, batch.R2 = batch.R2)
-        colnames(res) <- c("Percentage Variation", 
-            "Cumulative Percentage Variation", "Condition Correlation", 
-            "Batch Correlation")
-    }
-    rownames(res) <- 1:length(d)
-    # print(res)
-    return(res)
-}
-
-#' Plot first 2 principal components
-#'
-#' @param v from makeSVD
-#' @param d from makeSVD
-#' @param ... pass options to internal plot fct.
-#' @return a plot 
-plotPC <- function(v, d, ...) {
-    pcVar <- round((d^2)/sum(d^2) * 100, 2)
-    
-    xl <- sprintf("pc 1: %.2f%% variance", pcVar[1])
-    yl <- sprintf("pc 2: %.2f%% variance", pcVar[2])
-    
-    plot(v[, 1], v[, 2], xlab = xl, ylab = yl, ...)
-} 

@@ -1,0 +1,404 @@
+---
+title: "Introduction to BatchQC"
+author: 
+- name: W. Evan Johnson
+  affiliation:
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
+  - Director, Center for Data Science, Rutgers University
+  email: wj183@njms.rutgers.edu 
+- name: Jessica McClintock
+  affiliation: 
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
+  email: jessica.mcclintock@rutgers.edu
+date: '`r format(Sys.Date(), "%B %e, %Y")`'
+package: BatchQC
+output: 
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Introdution to BatchQC}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+## Introduction
+Sequencing and microarray samples are often collected or processed in multiple 
+batches or at different times. This often produces technical biases that can 
+lead to incorrect results in the downstream analysis. BatchQC is a software tool
+that streamlines batch preprocessing and evaluation by providing interactive 
+diagnostics, visualizations, and statistical analyses to explore the extent to 
+which batch variation impacts the data. BatchQC diagnostics help determine 
+whether batch adjustment needs to be done, and how correction should be applied 
+before proceeding with a downstream analysis. Moreover, BatchQC interactively 
+applies multiple common batch effect approaches to the data, and the user can 
+quickly see the benefits of each method. BatchQC is developed as a Shiny App. 
+The output is organized into multiple tabs, and each tab features an important 
+part of the batch effect analysis and visualization of the data. The BatchQC 
+interface has the following analysis groups: Upload Data, Experimental Design,
+Variation Analysis, Heatmaps, Dendrograms, PCA Analysis, Differential Expression
+Analysis, and Data Download. 
+
+The package includes:
+
+1. Upload Data; apply desired Normalization and Batch Effect Correction (incl. 
+ComBat and ComBat-Seq)
+2. Experimental Design to view summary of data
+3. Variation Analysis
+4. Heatmap plot of gene expressions
+5. Median Correlation Plot
+6. Circular Dendrogram clustered and colored by batch, condition, and covariates
+7. Principal Component Analysis and plots
+8. Differential Expression Plots and Analysis using DESeq2
+9. Data Download to export any corrections or normalizations as an SE object
+
+`BatchQC()` is the function that launches the Shiny App in interactive mode.
+
+## Installation
+### Bioconductor Version
+When pushed to Bioconductor (aka not yet possible, this will download the old 
+version of BatchQC):
+To begin, install [Bioconductor](http://www.bioconductor.org/) and then install
+BatchQC:
+
+```{R, eval = FALSE}
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("BatchQC")
+```
+
+### Github Version
+To install the most up-to-date version of BatchQC, please install directly from
+github. You will need the devtools package. You can install both of these with
+the following commands:
+```{R, eval = FALSE}
+if (!require("devtools", quietly = TRUE)) {
+    install.packages("devtools")   
+}
+library(devtools)
+install_github("wejlab/BatchQC")
+```
+
+### Load BatchQC and Launch Shiny App
+You should now be able to load BatchQC and launch the shiny app.
+
+```{R, echo = FALSE}
+library(BatchQC)
+#BatchQC()
+```
+
+## Example Usage
+Below is an example of how you may use the shiny app to analyze your data:
+
+### 1. Upload data set 
+Upon launching the shiny app, you will be on the "Upload Data" screen. From
+here, you may upload the following data:
+1. **Your own data w/Count and Metadata file.** Count file should have sample
+ID as column and item of interest as row. Metadata should have sample ID as row
+and all meta data labeled in the column. Both files should be uploaded as .csv
+by selecting "Browse" and selecting the appropriate files from your computer.
+2. **Your own data as a Summarized Experiment object.** Upload should be a .RDS
+file type and can be uploaded by selecting "Browse" and then the appropriate 
+files from your computer
+3. **An example data set.** See the examples vignette for additional
+information on each example data set
+
+A preview of the selected data will show up under the "Input Summary" and "Full
+Metadata" tab. Input summary shows the counts file/assay on the Input summary
+tab and the metadata on the "Full Metadata" tab. If a preview does not load
+properly, please ensure your dataset is structured properly and a valid file
+type.
+
+**You MUST hit "Upload" for your data to be available to interact with the shiny
+app.**
+
+All shiny app functions can also be run from the command line; all command line
+execution requires that your data is in a Summarized Experiment object. You
+can create a summarized experiment object from a counts and metadata matrix. 
+The remainder of this documentation will utilize the signature data example data
+set included in the package. This can be loaded from the command line as a
+summarized experiment object with the following:
+```{r}
+data(protein_data)
+data(protein_sample_info)
+se_object <- BatchQC::summarized_experiment(protein_data, protein_sample_info)
+se_object$batch <- as.factor(se_object$batch)
+se_object$category <- as.factor(se_object$category)
+```
+
+### 2. Apply Normalization methods
+After you have successfully uploaded your data set of interest, you can apply
+one of the following Normalization methods if appropriate:
+1. **CPM or counts per million.** CPM calculates the counts mapped to a feature 
+relative to the total counts mapped to a sample times one million. CPM may be 
+used to adjust expression count biases introduced by sequencing depth. CPM 
+adjusted values are not recommended for differential expression analysis or 
+within sample comparison.
+2. **DESeq.** DESeq calculates the counts mapped to a feature divided by sample-
+specific size factors. Size factors are determined by the median ratio of gene 
+counts relative to the geometric mean per feature. DESeq may be used to adjust
+expression count biases introduced by sequencing depth and RNA composition. 
+DESeq adjusted values are not recommended for within sample comparison.
+
+To use one of these two methods, select it from the normalization method drop 
+down, select an assay to perform the normalization on from the drop down, and
+name the new assay (the prepopulated name can be changed to your preference).
+You may also choose to log-transform the results of either of these
+normalization methods by selecting the "Log transform" box. Hit "Normalize" to
+complete the analysis. Your new assay will not be available for further
+analysis.
+
+Alternatively, this can be called directly from the command line on an SE
+object and will return the same SE object with an additional assay with the name
+that you provide as the output_assay_name.
+```{r}
+# CPM Normalization
+se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM",
+    assay_to_normalize = "counts", output_assay_name = "CPM_normalized_counts")
+
+# DESeq Normalization
+se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq",
+    assay_to_normalize = "counts", "DESeq_normalized_counts")
+
+# log adjust
+SummarizedExperiment::assays(se_object)$log_counts <-
+                log(SummarizedExperiment::assays(se_object)$counts)
+```
+
+### 3. Apply Batch Effect Correction
+Select the appropriate Batch Effect correction model to create a batch-corrected
+assay for your data. You may select one of the following:
+1. **Combat-Seq.** Combat-Seq uses a negative binomial regression to model batch
+effects. It requires untransformed, raw count data to adjust for batch effect. 
+Only use this model on an untransformed raw counts assay (not any normalized 
+assays).
+2. **Combat.** Combat corrects for Batch effect using a parametric empirical 
+Bayes framework and data should be cleaned and normalized. Select a normalized 
+assay to run this on.
+
+To apply your desired batch effect correction model, select the method from the 
+drop down menu, then select the appropriate assay in the second drop down menu,
+select your batch variable (labeled batch in all built-in examples), and the 
+covariates that you would like to preserve (not including the batch variable).
+If desired, revise the name for the corrected assay and then hit "Correct."
+
+A progress bar will pop up in the bottom right hand corner and a message will 
+state "Correction Complete" in the bottom right hand corner.
+
+You are now ready to analyze your raw and batch effect corrected data sets! 
+
+To run from the command line use the following:
+
+```{r}
+# Combat-Seq correction
+se_object <- BatchQC::batch_correct(se = se_object, method = "ComBat-Seq",
+    assay_to_normalize = "counts", batch = "batch",
+    covar = "category", output_assay_name = "Combat_Seq_corrected")
+
+# Combat correction
+se_object <- BatchQC::batch_correct(se = se_object, method = "Combat",
+    assay_to_normalize = "", batch = "batch",
+    covar = c("category"), output_assay_name = "Combat_corrected")
+```
+
+### 4. Experimental Design
+#### Batch Design
+This tab allows you to view the batch status of each condition. Select the 
+variable that represents your batch variable and then select the variable that 
+represents the condition. A table will then appear listing each condition in the
+row and how many samples in each condition are in each batch (displayed in the 
+columns).
+
+To recreate this table, run the following code, which will produce a tibble
+as output:
+```{R}
+batch_design_tibble <- BatchQC::batch_design(se = se_object, batch = "batch", 
+    covariate = "category")
+batch_design_tibble
+```
+#### Confounding Statistics
+This tab displays the Pearson correlation coefficient and Cramer's V estimation
+based on the selected batch and condition.
+
+This table can be recreated with the following code:
+```{R}
+confound_table <- BatchQC::confound_metrics(se = se_object, batch = "batch")
+confound_table
+```
+
+##### Pearson Correlation Coefficient
+Pearson correlation coefficient indicates the strength of the linear 
+relationship between your batch and condition variables. It can range from -1 to
+1. The closer the value is to 0, the less likely there is a batch effect. The 
+closer the value is to -1 or 1, the more likely there is a batch effect.
+
+To calculate only the pearson correlation coefficient, run the following:
+```{R}
+pearson_cor_result <- BatchQC::std_pearson_corr_coef(batch_design_tibble)
+pearson_cor_result
+```
+##### Cramer's V
+This is an additional metric for batch effect and will be between 0 and 1. The 
+closer the value is to 0, the lower the batch effect. The closer the value is to
+1, the greater the batch effect
+
+To calculate only Cramer's V, run the following:
+```{R}
+cramers_v_result <- BatchQC::cramers_v(batch_design_tibble)
+cramers_v_result
+```
+
+If both the Pearson Correlation Coefficient and the Cramer's V test indicate low
+batch effect, you likely do not need to adjust your results for batch. However,
+if one or both metrics indicate some or high batch effect, you should use
+additional analysis tools (listed below) to explore the need for a batch
+correction for your results.
+
+### 5. Variation Analysis
+First, select your raw count assay, your batch variate and the covariate 
+representing condition and notice the amount of variation explained by
+the individual batch, individual condition and batch and condition combined. 
+Next, use your batch corrected assay, with the same batch and condition
+variable and observe any changes. When batch effect is being properly corrected,
+you should notice that the variation explained by the batch has decreased in 
+the batch corrected assay, indicating that the variation in the data is now more
+likely to be associated with your condition of interest rather than the batch.
+
+To recreate the variation analysis plot for the counts assay, use the
+following code:
+```{r}
+ex_variation <- batchqc_explained_variation(se = se_object,
+    batch = "batch", condition = "category", assay_name = "counts")
+EV_boxplot <- BatchQC::EV_plotter(batchqc_ev = ex_variation[[1]])
+EV_boxplot
+EV_boxplot_type_2 <- BatchQC::EV_plotter(batchqc_ev = ex_variation[[2]])
+EV_boxplot_type_2
+```
+
+To recreate the variation analysis table for the counts assay, use the
+following code:
+```{r}
+ex_variation <- batchqc_explained_variation(se = se_object,
+    batch = "batch", condition = "category", assay_name = "counts")
+EV_table <- BatchQC::EV_table(batchqc_ev = ex_variation[[1]])
+EV_table
+EV_table_type_2 <- BatchQC::EV_table(batchqc_ev = ex_variation[[2]])
+EV_table_type_2
+```
+
+### 6. Heatmaps
+Select your assay of interest and the batch and condition(s) of interest. We
+recommend viewing no more than 50 elements at a time (or the max number in your
+data set, which is 38 for the protein sample data). 
+
+#### Sample Correlations
+This heat map shows how similar each sample is to each other sample in your
+data (samples are plotted on both the x and y axis, so are identical to 
+their self). The samples are clustered together based on similarity. Ideally, 
+you would expect your samples to cluster and be more similar to samples from
+the same condition rather than from the sample batch. If there is clear visual 
+clustering of the batch in your raw data, you should apply a batch correction 
+method. Your batch corrected assay should have stronger clustering by condition.
+
+Use the following code to recreate the sample correlation heatmap:
+```{r}
+heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts",
+    nfeature = 38, annotation_column = c("batch", "category"),
+    log_option = "FALSE")
+correlation_heatmap <- heatmaps$correlation_heatmap
+correlation_heatmap
+```
+
+#### Heatmap
+The heatmap shoes the sample clustering on the x axis and the y axis is each
+gene. The values on the heatmap represent gene expression. The dendrogram on the
+x axis is the same clustering arrangement as was seen in the sample
+correlations. This heatmap allows the viewer to see patterns of gene expression
+across the samples based on the selected variables. Remember that if batch is
+clustering together on your raw data, you should perform a batch effect 
+correction to adjust your data.
+
+Use the following code to recreate the sample correlation heatmap:
+```{r}
+heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = "counts",
+    nfeature = 38, annotation_column = c("batch", "category"),
+    log_option = FALSE)
+heatmap <- heatmaps$topn_heatmap
+heatmap
+```
+
+### 7. Dendrograms
+#### Dendrogram
+This tab shows a more detailed dendrogram as seen in the heatmap. When samples
+cluster together by batch, you are likely to have a strong batch effect in your
+data and you should consider a batch correction method for your raw data.
+Samples are clustered based on similarity of gene expression and other metadata
+using a Euclidian distance metric. Currently, you may only select one covariate 
+to display at a time.
+
+Use the following code to recreate the dendrogram: 
+```{r}
+dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object, assay = "counts",
+    batch_var = "batch", category_var = "category")
+dendrogram_plot$dendrogram
+```
+#### Circular Dendrogram
+This circularizes the previous dendrogram to better show relatedness of all 
+branches on the dendrogram without the appearance of great distance of the 
+samples at the top and the bottom of the chart.
+
+Use the following code to recreate the circular dendrogram: 
+```{r}
+circular_dendrogram_plot <- BatchQC::dendrogram_plotter(
+    se = se_object, assay = "counts", batch_var = "batch",
+    category_var = "category")
+circular_dendrogram_plot$circular_dendrogram
+```
+### 8. PCA Analysis
+You may select multiple assays to plot PCS analysis side by side. Therefore, 
+select your raw count assay and batch corrected assay, the batch variable as 
+shape, condition as color, and 2 top variable features. Review the clustering 
+pattern. In data sets where a strong batch effect is seen, similar shapes will 
+all cluster together. Whereas if batch effect is not seen, shapes should be 
+dispersed throughout and hopefully you see clustering by condition (color).
+
+Use the following code to recreate the PCA plot and associated table that lists
+the explained variation of each PC:
+```{r}
+pca_plot <- BatchQC::PCA_plotter(se = se_object, nfeature = 2, color = "batch",
+    shape = "category", assays = c("counts", "Combat_Seq_corrected"),
+    xaxisPC = 1, yaxisPC = 2, log_option = FALSE)
+pca_plot$plot
+pca_plot$var_explained
+```
+
+### 9. Differential Expression Analysis
+Not currently working....
+
+```{r}
+differential_expression <- BatchQC::DE_analyze(se = se_object,
+    method = "limma", batch = "batch", conditions = c("category"),
+    assay_to_analyze = "counts")
+```
+
+### 10. Data Download
+You may download the data set that you have been working with, including the 
+assays you added in the "Normalization" or "Batch Effect Correction" steps when
+you uploaded your data. A preview is provided that shows the Summarized 
+Experiment (SE) object, including the dimensions, metadata table, assays, 
+rownames and colNames.
+
+Click the "Download" button and you can save this SE object to your computer for
+additional analysis outside of the BatchQC shiny app. The object is saved as a
+.RDS Summarized Experiment object in the folder of your choice. You should give
+it a descriptive name (default is "se.RDS").
+
+If you run code from the command line according to the above instructions, all
+assays will be saved to your original SE object and available for your use in
+other applications.
+
+# Session info {.unnumbered}
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```

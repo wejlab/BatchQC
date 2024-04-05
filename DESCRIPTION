@@ -1,52 +1,88 @@
-Package: BatchQC
 Type: Package
+Package: BatchQC
 Title: Batch Effects Quality Control Software
-Version: 1.17.3
-Date: 2020-10-11
-Maintainer: Solaiappan Manimaran <manimaran_1975@hotmail.com>
+Version: 1.99.00
+Date: 2024-04-02
+Authors@R: c(
+    person("Jessica", "McClintock", , "jessica.mcclintock@rutgers.edu", 
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0542-9872")),
+    person("W. Evan", "Johnson", , "wj183@njms.rutgers.edu", role = c("aut"), 
+    comment = c(ORCID = "0000-0002-6247-6595")),
+    person("Solaiappan", "Manimaran", , "manimaran_1975@hotmail.com", role = "aut"),
+    person("Heather", "Selby", , "selbyh@bu.edu", role = "ctb"),
+    person("Claire", "Ruberman", , "claireruberman@gmail.com", role = "ctb"),
+    person("Kwame", "Okrah", , "kwame.okrah@gmail.com", role = "ctb"),
+    person("Hector Corrada", "Bravo", , "hcorrada@gmail.com", role = "ctb"),
+    person("Michael", "Silverstein", , "msilver4@bu.edu", role = "ctb"),
+    person("Regan", "Conrad", , "rdconrad@bu.edu", role = "ctb"),
+    person("Zhaorong", "Li", , "zhaorong@bu.edu", role = "ctb"),
+    person("Evan", "Holmes", , "evanjh19@gmail.com", role = "aut")
+  )
 Description: Sequencing and microarray samples often are collected or
-        processed in multiple batches or at different times. This often
-        produces technical biases that can lead to incorrect results in
-        the downstream analysis. BatchQC is a software tool that
-        streamlines batch preprocessing and evaluation by providing
-        interactive diagnostics, visualizations, and statistical
-        analyses to explore the extent to which batch variation impacts
-        the data. BatchQC diagnostics help determine whether batch
-        adjustment needs to be done, and how correction should be
-        applied before proceeding with a downstream analysis. Moreover,
-        BatchQC interactively applies multiple common batch effect
-        approaches to the data, and the user can quickly see the
-        benefits of each method. BatchQC is developed as a Shiny App.
-        The output is organized into multiple tabs, and each tab
-        features an important part of the batch effect analysis and
-        visualization of the data. The BatchQC interface has the
-        following analysis groups: Summary, Differential Expression,
-        Median Correlations, Heatmaps, Circular Dendrogram, PCA
-        Analysis, Shape, ComBat and SVA.
-Author: Solaiappan Manimaran <manimaran_1975@hotmail.com>, W. Evan
-        Johnson <wej@bu.edu>, Heather Selby <selbyh@bu.edu>, Claire
-        Ruberman <claireruberman@gmail.com>, Kwame Okrah
-        <kwame.okrah@gmail.com>, Hector Corrada Bravo
-        <hcorrada@gmail.com>
-URL: https://github.com/mani2012/BatchQC
-BugReports: https://github.com/mani2012/BatchQC/issues
-License: GPL (>= 2)
-Depends: R (>= 3.5.0)
-Collate: 'simulate_data.R' 'heatmap.R' 'pca.R' 'batchtest.R'
-        'batchQC.R' 'correlation.R' 'utils.R' 'sva.R' 'Circos.R'
-        'shapeAnalysis.R' 'lmfitC.R'
-Suggests: testthat
-Imports: utils, rmarkdown, knitr, pander, gplots, MCMCpack, shiny, sva,
-        corpcor, moments, matrixStats, ggvis, heatmaply, 
-        reshape2, limma, grDevices, graphics, stats, methods, Matrix
-biocViews: BatchEffect, GraphAndNetwork, Microarray,
-        PrincipalComponent, Sequencing, Software, Visualization,
-        QualityControl, RNASeq, Preprocessing, DifferentialExpression,
-        ImmunoOncology
-SystemRequirements: pandoc (http://pandoc.org/installing.html) for
-        generating reports from markdown files.
-VignetteBuilder: knitr
-RoxygenNote: 7.1.0
-NeedsCompilation: no
-Packaged: 2017-04-25 00:20:25 UTC; biocbuild
+    processed in multiple batches or at different times. This often
+    produces technical biases that can lead to incorrect results in the
+    downstream analysis. BatchQC is a software tool that streamlines batch
+    preprocessing and evaluation by providing interactive diagnostics,
+    visualizations, and statistical analyses to explore the extent to
+    which batch variation impacts the data. BatchQC diagnostics help
+    determine whether batch adjustment needs to be done, and how
+    correction should be applied before proceeding with a downstream
+    analysis. Moreover, BatchQC interactively applies multiple common
+    batch effect approaches to the data and the user can quickly see the
+    benefits of each method. BatchQC is developed as a Shiny App. The
+    output is organized into multiple tabs and each tab features an
+    important part of the batch effect analysis and visualization of the
+    data. The BatchQC interface has the following analysis groups:
+    Summary, Differential Expression, Median Correlations, Heatmaps,
+    Circular Dendrogram, PCA Analysis, Shape, ComBat and SVA.
+License: MIT + file LICENSE
+URL: https://github.com/wejlab/BatchQC
+BugReports: https://github.com/wejlab/BatchQC/issues
+Depends:
+    R (>= 4.3.0)
+Imports:
+    data.table,
+    DESeq2,
+    dplyr,
+    EBSeq,
+    ggdendro,
+    ggnewscale,
+    ggplot2,
+    limma,
+    matrixStats,
+    pheatmap,
+    RColorBrewer,
+    reader,
+    reshape2,
+    scran,
+    shiny,
+    stats,
+    SummarizedExperiment,
+    sva,
+    tibble,
+    tidyr,
+    tidyverse,
+    utils
+Suggests:
+    BiocManager,
+    BiocStyle,
+    bladderbatch,
+    dendextend,
+    devtools,
+    knitr,
+    lintr,
+    plotly,
+    rmarkdown,
+    shinythemes,
+    spelling, 
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+biocViews: BatchEffect, GraphAndNetwork, Microarray, Normalization, PrincipalComponent,
+    Sequencing, Software, Visualization, QualityControl, RNASeq,
+    Preprocessing, DifferentialExpression, ImmunoOncology
+Config/testthat/edition: 3
 Encoding: UTF-8
+Language: en-US
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

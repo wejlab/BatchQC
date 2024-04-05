@@ -37,3 +37,5 @@ inst/doc
 .RData
 .Rhistory
 .Ruserdata
+.project
+.git

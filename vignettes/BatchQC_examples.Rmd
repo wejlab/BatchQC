@@ -1,97 +1,65 @@
 ---
 title: "BatchQC Examples"
-author: "Solaiappan Manimaran"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-    %\VignetteIndexEntry{BatchQC_examples}
-    %\VignetteEngine{knitr::rmarkdown}
-    \usepackage[utf8]{inputenc}
+author:
+- name: W. Evan Johnson
+  affiliation:
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
+  - Director, Center for Data Science, Rutgers University
+  email: wj183@njms.rutgers.edu 
+- name: Jessica McClintock
+  affiliation: 
+  - Division of Infectious Disease, Department of Medicine, Rutgers University 
+  email: jessica.mcclintock@rutgers.edu
+- name: Solaiappan Manimaran
+  affiliation:
+  - Computational Biomedicine, Department of Medicine, Boston University
+package: BatchQC
+output:
+  BiocStyle::html_document
+vignette: |
+  %\VignetteIndexEntry{BatchQC Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-### Example 1: Simulated dataset
-The simulated data consists of three batches and two conditions, 
-and expression measurements for 50 genes
-```r
-library(BatchQC)
-nbatch <- 3
-ncond <- 2
-npercond <- 10
-data.matrix <- rnaseq_sim(ngenes=50, nbatch=nbatch, ncond=ncond, npercond=
-    npercond, basemean=10000, ggstep=50, bbstep=2000, ccstep=800, 
-    basedisp=100, bdispstep=-10, swvar=1000, seed=1234)
-batch <- rep(1:nbatch, each=ncond*npercond)
-condition <- rep(rep(1:ncond, each=npercond), nbatch)
-batchQC(data.matrix, batch=batch, condition=condition, 
-        report_file="batchqc_report.html", report_dir=".", 
-        report_option_binary="111111111",
-        view_report=FALSE, interactive=TRUE, batchqc_output=TRUE)
 
+# Example 1: Protein Data
+This data set is from protein expression data captured for 39 proteins.
+It has two batches and two conditions corresponding to case and control.
+
+```{r}
+library(BatchQC)
+data(protein_data)
+data(protein_sample_info)
+se_object <- BatchQC::summarized_experiment(protein_data, protein_sample_info)
 ```
 
-### Example 2: Real signature dataset
-This dataset is from signature data captured when activating different growth 
+# Example 2: Signature Data
+This data set is from signature data captured when activating different growth 
 pathway genes in human mammary epithelial cells (GEO accession: GSE73628). 
 This data consists of three batches and ten different conditions corresponding 
 to control and nine different pathways
-```r
-library(BatchQC)
-data(example_batchqc_data)
-batch <- batch_indicator$V1
-condition <- batch_indicator$V2
-batchQC(signature_data, batch=batch, condition=condition, 
-        report_file="batchqc_signature_data_report.html", report_dir=".", 
-        report_option_binary="111111111",
-        view_report=FALSE, interactive=TRUE)
+
+```{r}
+data(signature_data)
+data(batch_indicator)
+se_object <- BatchQC::summarized_experiment(signature_data, batch_indicator)
 ```
 
-### Example 3: Real bladderbatch dataset
-This dataset has 5 batches, 3 covariate levels. Batch 1 contains 
-only cancer, 2 and 3 have cancer and controls, 4 contains only biopsy, and 
-5 contains cancer and biopsy
-```r
-library(BatchQC)
-library(bladderbatch)
-data(bladderdata)
-pheno <- pData(bladderEset)
-edata <- exprs(bladderEset)
-batch <- pheno$batch  
-condition <- pheno$cancer
-batchQC(edata, batch=batch, condition=condition, 
-        report_file="batchqc_report.html", report_dir=".", 
-        report_option_binary="111111111",
-        view_report=FALSE, interactive=TRUE)
-```
-### Example 4: Real protein expression dataset
-This dataset is from protein expression data captured for 39 proteins.
-It has two batches and two conditions corresponding to case and control.
-```r
-library(BatchQC)
-data(protein_example_data)
-batchQC(protein_data, protein_sample_info$Batch, protein_sample_info$category,
-        report_file="batchqc_protein_data_report.html", report_dir=".", 
-        report_option_binary="111111111",
-        view_report=FALSE, interactive=TRUE)
-```
-### Example 5: Second simulated dataset with only batch variance difference
-The simulated data consists of three batches and two conditions, 
-and expression measurements for 50 genes. In this dataset, there is no
-difference in batch mean but only difference in batch variance from
-batch to batch.
-```r
-library(BatchQC)
-nbatch <- 3
-ncond <- 2
-npercond <- 10
-data.matrix <- rnaseq_sim(ngenes=50, nbatch=nbatch, ncond=ncond, npercond=
-    npercond, basemean=5000, ggstep=50, bbstep=0, ccstep=2000, 
-    basedisp=10, bdispstep=-4, swvar=1000, seed=1234)
+# Example 3: Bladderbatch Data
+This data set is from bladder cancer data. This dataset has 57 bladder samples
+with 5 batches and 3 covariate levels (cancer, biopsy, control). Batch 1 
+contains only cancer, 2 has cancer and controls, 3 has only controls, 4 contains
+only biopsy, and 5 contains cancer and biopsy. This data set is from the
+bladderbatch package which must be installed to use this data example set (Leek 
+JT (2023). bladderbatch: Bladder gene expression data illustrating batch 
+effects. R package version 1.38.0).
 
-### apply BatchQC
-batch <- rep(1:nbatch, each=ncond*npercond)
-condition <- rep(rep(1:ncond, each=npercond), nbatch)
-batchQC(data.matrix, batch=batch, condition=condition, 
-        report_file="batchqc_report.html", report_dir=".", 
-        report_option_binary="111111111",
-        view_report=FALSE, interactive=TRUE, batchqc_output=TRUE)
+```{r, eval = FALSE}
+se_object <- BatchQC::bladder_data_upload()
+```
 
+# Session info {.unnumbered}
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
 ```

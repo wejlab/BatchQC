@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 ^.*\.Rproj$
 ^\.Rproj\.user$
-=======
-^BatchQC\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^.git
 ^README\.Rmd$
->>>>>>> BatchQC/main
+

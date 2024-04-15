@@ -1,6 +1,9 @@
 #' This function allows you to add normalized count matrix to the SE object
 #' @param se SummarizedExperiment Object
-#' @param method Normalization Method, either 'CPM' or 'DESeq'
+#' @param method Normalization Method, either 'CPM' or 'DESeq' or 'none' for
+#'   log only
+#' @param log_bool True or False; True to log normalize the data set after
+#'   normalization method
 #' @param assay_to_normalize Which SE assay to do normalization on
 #' @param output_assay_name name for the resulting normalized assay
 #' @return the original SE object with normalized assay appended
@@ -22,7 +25,8 @@
 #' se_DESeq_normalized
 #'
 #' @export
-normalize_SE <- function(se, method, assay_to_normalize, output_assay_name) {
+normalize_SE <- function(se, method, log_bool, assay_to_normalize,
+    output_assay_name) {
     se <- se
     if (method == 'CPM') {
         assays(se)[[output_assay_name]] <-
@@ -33,7 +37,12 @@ normalize_SE <- function(se, method, assay_to_normalize, output_assay_name) {
         assays(se)[[output_assay_name]] <- GetNormalizedMat(
             assays(se)[[assay_to_normalize]],
             MedianNorm(assays(se)[[assay_to_normalize]]))
+    }else {
+        assays(se)[[output_assay_name]] <- assays(se)[[assay_to_normalize]]
+    }
 
+    if (log_bool) {
+        assays(se)[[output_assay_name]] <- log(assays(se)[[output_assay_name]])
     }
     return(se)
 }

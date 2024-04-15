@@ -56,8 +56,6 @@ ComBat and ComBat-Seq)
 
 ## Installation
 ### Bioconductor Version
-When pushed to Bioconductor (aka not yet possible, this will download the old 
-version of BatchQC):
 To begin, install [Bioconductor](http://www.bioconductor.org/) and then install
 BatchQC:
 
@@ -82,9 +80,12 @@ install_github("wejlab/BatchQC")
 ### Load BatchQC and Launch Shiny App
 You should now be able to load BatchQC and launch the shiny app.
 
-```{R, echo = FALSE}
+```{R load}
 library(BatchQC)
-#BatchQC()
+```
+
+```{R, eval = FALSE}
+BatchQC()
 ```
 
 ## Example Usage
@@ -99,7 +100,7 @@ and all meta data labeled in the column. Both files should be uploaded as .csv
 by selecting "Browse" and selecting the appropriate files from your computer.
 2. **Your own data as a Summarized Experiment object.** Upload should be a .RDS
 file type and can be uploaded by selecting "Browse" and then the appropriate 
-files from your computer
+file from your computer
 3. **An example data set.** See the examples vignette for additional
 information on each example data set
 
@@ -113,7 +114,7 @@ type.
 app.**
 
 All shiny app functions can also be run from the command line; all command line
-execution requires that your data is in a Summarized Experiment object. You
+execution require that your data is in a Summarized Experiment object. You
 can create a summarized experiment object from a counts and metadata matrix. 
 The remainder of this documentation will utilize the signature data example data
 set included in the package. This can be loaded from the command line as a
@@ -126,9 +127,14 @@ se_object$batch <- as.factor(se_object$batch)
 se_object$category <- as.factor(se_object$category)
 ```
 
+Likewise, you can upload your own data into a summarized experiment object for
+use with command line functions by provising a data matrix and sample info
+matrix to the summarized_experiment function.
+
 ### 2. Apply Normalization methods
 After you have successfully uploaded your data set of interest, you can apply
 one of the following Normalization methods if appropriate:
+
 1. **CPM or counts per million.** CPM calculates the counts mapped to a feature 
 relative to the total counts mapped to a sample times one million. CPM may be 
 used to adjust expression count biases introduced by sequencing depth. CPM 
@@ -145,7 +151,7 @@ down, select an assay to perform the normalization on from the drop down, and
 name the new assay (the prepopulated name can be changed to your preference).
 You may also choose to log-transform the results of either of these
 normalization methods by selecting the "Log transform" box. Hit "Normalize" to
-complete the analysis. Your new assay will not be available for further
+complete the analysis. Your new assay will now be available for further
 analysis.
 
 Alternatively, this can be called directly from the command line on an SE
@@ -154,15 +160,25 @@ that you provide as the output_assay_name.
 ```{r}
 # CPM Normalization
 se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM",
-    assay_to_normalize = "counts", output_assay_name = "CPM_normalized_counts")
+    log_bool = FALSE, assay_to_normalize = "counts",
+    output_assay_name = "CPM_normalized_counts")
+
+# CPM Normalization w/log
+se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM",
+    log_bool = TRUE, assay_to_normalize = "counts",
+    output_assay_name = "CPM_normalized_counts")
 
 # DESeq Normalization
 se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq",
-    assay_to_normalize = "counts", "DESeq_normalized_counts")
+    log_bool = FALSE, assay_to_normalize = "counts", "DESeq_normalized_counts")
+
+# DESeq Normalization w/log
+se_object <- BatchQC::normalize_SE(se = se_object, method = "DESeq",
+    log_bool = TRUE, assay_to_normalize = "counts", "DESeq_normalized_counts")
 
 # log adjust
-SummarizedExperiment::assays(se_object)$log_counts <-
-                log(SummarizedExperiment::assays(se_object)$counts)
+se_object <- BatchQC::normalize_SE(se = se_object, method = "none",
+    log_bool = TRUE, assay_to_normalize = "counts", "log_normalized_counts")
 ```
 
 ### 3. Apply Batch Effect Correction

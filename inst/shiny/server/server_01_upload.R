@@ -248,12 +248,9 @@ observeEvent(input$normalize, {
     withBusyIndicatorServer("normalize", {
         reactivevalue$se <- normalize_SE(reactivevalue$se,
             input$normalization_method,
+            input$log,
             input$normalization_assay,
             input$normalized_assay_name)
-        if (input$log) {
-            reactivevalue$se@assays@data[[input$normalized_assay_name]] <-
-                log(reactivevalue$se@assays@data[[input$normalized_assay_name]])
-        }
         setupSelections()
     })
 })

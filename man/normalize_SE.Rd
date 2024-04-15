@@ -4,12 +4,16 @@
 \alias{normalize_SE}
 \title{This function allows you to add normalized count matrix to the SE object}
 \usage{
-normalize_SE(se, method, assay_to_normalize, output_assay_name)
+normalize_SE(se, method, log_bool, assay_to_normalize, output_assay_name)
 }
 \arguments{
 \item{se}{SummarizedExperiment Object}
 
-\item{method}{Normalization Method, either 'CPM' or 'DESeq'}
+\item{method}{Normalization Method, either 'CPM' or 'DESeq' or 'none' for
+log only}
+
+\item{log_bool}{True or False; True to log normalize the data set after
+normalization method}
 
 \item{assay_to_normalize}{Which SE assay to do normalization on}
 

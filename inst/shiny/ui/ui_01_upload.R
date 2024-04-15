@@ -107,7 +107,7 @@ tabPanel("Upload Data",
                          selectizeInput('normalization_method',
                              'Choose normalization method',
                                         multiple = FALSE,
-                                        choices = c('CPM', 'DESeq'),
+                                        choices = c('CPM', 'DESeq', 'none'),
                                         selected = NULL,
                                         options = list(placeholder =
                                             'Please select an option below',

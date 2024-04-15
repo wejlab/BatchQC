@@ -86,7 +86,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
 #' Returns summary table for p-values of explained variation
 #'
 #' @param res_list Differential Expression analysis result (a named list of
-#' dataframes corresponding to each analysis completed with a "pvalue" column)
+#'   dataframes corresponding to each analysis completed with a "pvalue" column)
 #' @return summary table for p-values of explained variation for each analysis
 #'
 #' @examples

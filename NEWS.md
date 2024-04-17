@@ -4,6 +4,9 @@
 * Fixed various errors for the Bioconductor build
 
 ## Major Changes
+* Created interactive Shiny interface
+* Allow user upload of data
+* Allow user download of Batch corrected and/or normalized data
 * Added Example Data Functionality
 
 ## Minor Changes

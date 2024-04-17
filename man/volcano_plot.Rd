@@ -4,13 +4,13 @@
 \alias{volcano_plot}
 \title{Volcano plot}
 \usage{
-volcano_plot(DE_results, pslider, fcslider)
+volcano_plot(DE_results, pslider = 0.05, fcslider)
 }
 \arguments{
-\item{DE_results}{a dataframes with the results of one of the DE Analysis;
+\item{DE_results}{a dataframe with the results of one of the DE Analysis;
 must include "log2FoldChange" and "pvalue" columns}
 
-\item{pslider}{Magnitude of significance value threshold}
+\item{pslider}{Magnitude of significance value threshold, default is 0.05}
 
 \item{fcslider}{Magnitude of expression change value threshold}
 }
@@ -30,7 +30,7 @@ differential_expression <- BatchQC::DE_analyze(se = se,
                                                 "Mutation_Status",
                                                 "Cell_Cycle"),
                                                 assay_to_analyze = "counts")
-value = round((max(abs(
+value <- round((max(abs(
     differential_expression[[length(differential_expression)]][, 1]))
     + min(abs(
     differential_expression[[length(differential_expression)]][, 1]))) / 2)

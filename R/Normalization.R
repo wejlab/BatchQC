@@ -14,10 +14,12 @@
 #' library(scran)
 #' se <- mockSCE()
 #' se_CPM_normalized <- BatchQC::normalize_SE(se, method = "CPM",
+#'                                 log_bool = FALSE,
 #'                                 assay_to_normalize = "counts",
 #'                                 output_assay_name =
 #'                                     "CPM_normalized_counts")
 #' se_DESeq_normalized <- BatchQC::normalize_SE(se, method = "DESeq",
+#'                                 log_bool = FALSE,
 #'                                 assay_to_normalize = "counts",
 #'                                 output_assay_name =
 #'                                     "DESeq_normalized_counts")

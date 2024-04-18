@@ -462,7 +462,7 @@ completed analysis by running this code:
 names(differential_expression)
 ```
 
-You can then view the log2 foldchange, p-value and adjusted p-value table for a
+You can then view the log2 fold change, p-value and adjusted p-value table for a
 specific analysis of interest, by running the following:
 ```{r}
 differential_expression[["batch2"]]

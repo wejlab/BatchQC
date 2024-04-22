@@ -26,20 +26,19 @@ editor_options:
 Sequencing and microarray samples are often collected or processed in multiple 
 batches or at different times. This often produces technical biases that can 
 lead to incorrect results in the downstream analysis. BatchQC is a software tool
-that streamlines batch preprocessing and evaluation by providing interactive 
-diagnostics, visualizations, and statistical analyses to explore the extent to 
-which batch variation impacts the data. BatchQC diagnostics help determine 
-whether batch adjustment needs to be done, and how correction should be applied 
-before proceeding with a downstream analysis. Moreover, BatchQC interactively 
-applies multiple common batch effect approaches to the data, and the user can 
-quickly see the benefits of each method. BatchQC is developed as a Shiny App. 
-The output is organized into multiple tabs, and each tab features an important 
+that streamlines batch preprocessing and evaluation by providing shiny app
+interactive diagnostics, visualizations, and statistical analyses to explore
+the extent to which batch variation impacts the data. This is contained in a
+full R package which allows reproducibility of all shiny evaluations and
+analyses.  BatchQC diagnostics help determine whether batch adjustment needs to
+be done, and how correction should be applied before proceeding with a
+downstream analysis. Moreover, BatchQC interactively applies multiple common
+batch effectapproaches to the data, and the user can quickly see the benefits of
+each method. BatchQC is developed as a Shiny App, but is reproducible at the
+command line through the functions contained int he R package. The output of the
+shiny app is organized into multiple tabs, and each tab features an important 
 part of the batch effect analysis and visualization of the data. The BatchQC 
-interface has the following analysis groups: Upload Data, Experimental Design,
-Variation Analysis, Heatmaps, Dendrograms, PCA Analysis, Differential Expression
-Analysis, and Data Download. 
-
-The package includes:
+interface has the following features:
 
 1. Upload Data; apply desired Normalization and Batch Effect Correction (incl. 
 ComBat and ComBat-Seq)
@@ -538,4 +537,3 @@ saveRDS(object = se_object, file = file_location)
 ```{r sessionInfo, echo=FALSE}
 sessionInfo()
 ```
-

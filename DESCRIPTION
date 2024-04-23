@@ -1,7 +1,7 @@
 Type: Package
 Package: BatchQC
 Title: Batch Effects Quality Control Software
-Version: 1.99.01
+Version: 1.99.02
 Date: 2024-04-02
 Authors@R: c(
     person("Jessica", "McClintock", , "jessica.mcclintock@rutgers.edu", 

@@ -22,7 +22,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Introduction
+# Introduction
 Sequencing and microarray samples are often collected or processed in multiple 
 batches or at different times. This often produces technical biases that can 
 lead to incorrect results in the downstream analysis. BatchQC is a software tool
@@ -53,8 +53,8 @@ ComBat and ComBat-Seq)
 
 `BatchQC()` is the function that launches the Shiny App in interactive mode.
 
-## Installation
-### Bioconductor Version
+# Installation
+## Bioconductor Version
 To begin, install [Bioconductor](http://www.bioconductor.org/) and then install
 BatchQC:
 
@@ -64,7 +64,7 @@ if (!requireNamespace("BiocManager", quietly=TRUE))
 BiocManager::install("BatchQC")
 ```
 
-### Github Version
+## Github Version
 To install the most up-to-date version of BatchQC, please install directly from
 github. You will need the devtools package. You can install both of these with
 the following commands:
@@ -76,7 +76,7 @@ library(devtools)
 install_github("wejlab/BatchQC")
 ```
 
-### Load BatchQC and Launch Shiny App
+## Load BatchQC and Launch Shiny App
 You should now be able to load BatchQC and launch the shiny app.
 
 ```{R load}
@@ -87,12 +87,13 @@ library(BatchQC)
 BatchQC()
 ```
 
-## Example Usage
+# Example Usage
 Below is an example of how you may use the shiny app to analyze your data:
 
-### 1. Upload data set 
+## 1. Upload data set 
 Upon launching the shiny app, you will be on the "Upload Data" screen. From
 here, you may upload the following data:
+
 1. **Your own data w/Count and Metadata file.** Count file should have sample
 ID as column and item of interest as row. Metadata should have sample ID as row
 and all meta data labeled in the column. Both files should be uploaded as .csv
@@ -131,7 +132,7 @@ Likewise, you can upload your own data into a summarized experiment object for
 use with command line functions by providing a data matrix and sample info
 matrix to the summarized_experiment function.
 
-### 2. Apply Normalization methods
+## 2. Apply Normalization methods
 After you have successfully uploaded your data set of interest, you can apply
 one of the following Normalization methods if appropriate:
 
@@ -189,7 +190,7 @@ se_object <- BatchQC::normalize_SE(se = se_object, method = "none",
     output_assay_name = "log_normalized_counts")
 ```
 
-### 3. Apply Batch Effect Correction
+## 3. Apply Batch Effect Correction
 Select the appropriate Batch Effect correction model to create a batch-corrected
 assay for your data. You may select one of the following:
 
@@ -225,8 +226,8 @@ se_object <- BatchQC::batch_correct(se = se_object, method = "ComBat",
 Combat-Seq can be applied to a data set by providing "Combat-Seq" to the method
 parameter in the function call.
 
-### 4. Experimental Design
-#### Batch Design
+## 4. Experimental Design
+### Batch Design
 This tab allows you to view the batch status of each condition. Select the 
 variable that represents your batch variable and then select the variable that 
 represents the condition. A table will then appear listing each condition in the
@@ -241,7 +242,7 @@ batch_design_tibble <- BatchQC::batch_design(se = se_object, batch = "batch",
 batch_design_tibble
 ```
 
-#### Confounding Statistics
+### Confounding Statistics
 This tab displays the Pearson correlation coefficient and Cramer's V estimation
 based on the selected batch and condition.
 
@@ -251,7 +252,7 @@ confound_table <- BatchQC::confound_metrics(se = se_object, batch = "batch")
 confound_table
 ```
 
-##### Pearson Correlation Coefficient
+#### Pearson Correlation Coefficient
 Pearson correlation coefficient indicates the strength of the linear 
 relationship between your batch and condition variables. It can range from -1 to
 1. The closer the value is to 0, the less likely there is a batch effect. The 
@@ -263,7 +264,7 @@ pearson_cor_result <- BatchQC::std_pearson_corr_coef(batch_design_tibble)
 pearson_cor_result
 ```
 
-##### Cramer's V
+#### Cramer's V
 This is an additional metric for batch effect and will be between 0 and 1. The 
 closer the value is to 0, the lower the batch effect. The closer the value is to
 1, the greater the batch effect
@@ -280,7 +281,7 @@ if one or both metrics indicate some or high batch effect, you should use
 additional analysis tools (listed below) to explore the need for a batch
 correction for your results.
 
-### 5. Variation Analysis
+## 5. Variation Analysis
 First, select your unadjusted assay, your batch variable and any covariates of
 interest. Click "Here we go!" to see the variation analysis results. The
 "Individual Variable" tab shows the individual, or raw variation, explained
@@ -335,12 +336,12 @@ EV_table_type_2 <- BatchQC::EV_table(batchqc_ev = ex_variation[[2]])
 EV_table_type_2
 ```
 
-### 6. Heatmaps
+## 6. Heatmaps
 Select your assay of interest and the batch and condition(s) of interest. We
 recommend viewing no more than 500 elements at a time (or the max number in your
 data set). 
 
-#### Sample Correlations
+### Sample Correlations
 This heat map shows how similar each sample is to each other sample in your
 data (samples are plotted on both the x and y axis, so are identical to 
 their self). The samples are clustered together based on similarity. Ideally, 
@@ -361,7 +362,7 @@ correlation_heatmap <- heatmaps$correlation_heatmap
 correlation_heatmap
 ```
 
-#### Heatmap
+### Heatmap
 The heatmap shoes the sample clustering on the x axis and the y axis is each
 gene. The values on the heatmap represent gene expression. The dendrogram on the
 x axis is the same clustering arrangement as was seen in the sample
@@ -379,8 +380,8 @@ heatmap <- heatmaps$topn_heatmap
 heatmap
 ```
 
-### 7. Dendrograms
-#### Dendrogram
+## 7. Dendrograms
+### Dendrogram
 This tab shows a more detailed dendrogram than seen in the heatmap. When samples
 cluster together by batch, you are likely to have a strong batch effect in your
 data and you should consider a batch correction method for your data. Samples
@@ -397,7 +398,7 @@ dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object,
 dendrogram_plot$dendrogram
 ```
 
-#### Circular Dendrogram
+### Circular Dendrogram
 This circularizes the previous dendrogram to better show relatedness of all 
 branches on the dendrogram without the appearance of great distance of the 
 samples at the top and the bottom of the chart.
@@ -410,7 +411,7 @@ circular_dendrogram_plot <- BatchQC::dendrogram_plotter(
 circular_dendrogram_plot$circular_dendrogram
 ```
 
-### 8. PCA Analysis
+## 8. PCA Analysis
 You may select multiple assays to plot PCA analysis side by side. Therefore, 
 select your raw data assay and batch corrected assay, the batch variable as 
 shape, condition as color, and the number of top variable features you are
@@ -429,7 +430,7 @@ pca_plot$plot
 pca_plot$var_explained
 ```
 
-### 9. Differential Expression Analysis
+## 9. Differential Expression Analysis
 To explore which features are differentially expressed between conditions, use
 the differential expression tab. DE_Seq2 should be used for count data
 (non-negative, integer values) while limma can be used for all other data. 
@@ -464,7 +465,7 @@ names(differential_expression)
 You can then view the log2 fold change, p-value and adjusted p-value table for a
 specific analysis of interest, by running the following:
 ```{r}
-differential_expression[["batch2"]]
+head(differential_expression[["batch2"]])
 ```
 
 After running a differential expression analysis, you may replicate the p-value
@@ -472,10 +473,10 @@ box plot and table from the command line by running the following code:
 
 ```{r}
 pval_plotter(differential_expression)
-pval_summary(differential_expression)
+head(pval_summary(differential_expression))
 ```
 
-#### Volcano Plot
+### Volcano Plot
 The "Volcano Plot" is based on the limma or DESeq2 analysis results and must be
 run after completing the differential expression analysis. You should select the
 analysis result that you are interested in, specific the threshold for p-value
@@ -510,7 +511,7 @@ volcano_plot(DE_results = differential_expression[["batch2"]],
     fcslider = value)
 ```
 
-### 10. Data Download
+## 10. Data Download
 You may download the data set that you have been working with int he shiny app,
 including the  assays you added in the "Normalization" or "Batch Effect
 Correction" steps when you uploaded your data. A preview is provided that shows

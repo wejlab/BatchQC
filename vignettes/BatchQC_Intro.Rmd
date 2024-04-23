@@ -501,9 +501,9 @@ following code:
 
 ```{r}
 value <- round((max(abs(
-     differential_expression[[length(differential_expression)]][, 1]))
-     + min(
-         abs(differential_expression[[length(differential_expression)]][, 1])))
+    differential_expression[[length(differential_expression)]][, 1]))
+    + min(
+        abs(differential_expression[[length(differential_expression)]][, 1])))
     / 2)
 volcano_plot(DE_results = differential_expression[["batch2"]],
     pslider = 0.05,

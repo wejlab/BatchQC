@@ -1,8 +1,8 @@
 Type: Package
 Package: BatchQC
 Title: Batch Effects Quality Control Software
-Version: 1.99.02
-Date: 2024-04-02
+Version: 2.00.01
+Date: 2024-04-30
 Authors@R: c(
     person("Jessica", "McClintock", , "jessica.mcclintock@rutgers.edu", 
     role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0542-9872")),
@@ -57,6 +57,8 @@ Imports:
     reshape2,
     scran,
     shiny,
+    shinyjs,
+    shinythemes,
     stats,
     SummarizedExperiment,
     sva,
@@ -68,13 +70,11 @@ Suggests:
     BiocManager,
     BiocStyle,
     bladderbatch,
-    dendextend,
     devtools,
     knitr,
     lintr,
     plotly,
     rmarkdown,
-    shinythemes,
     spelling, 
     testthat (>= 3.0.0)
 VignetteBuilder: 

@@ -29,21 +29,17 @@ observeEvent(input$variation, {
 
         output$EV_show_plot <- renderPlot({
             EV_plotter(EV_results$EV_table_ind)
-            #ev_plot_reactive()
         })
 
         output$EV_show_table <- renderDataTable({
             EV_table(EV_results$EV_table_ind)
-            #ev_table_reactive()
         })
         output$EV_residual_show_plot <- renderPlot({
             EV_plotter(EV_results$EV_table_type2)
-            #ev_plot_reactive()
         })
 
         output$EV_residual_show_table <- renderDataTable({
             EV_table(EV_results$EV_table_type2)
-            #ev_table_reactive()
         })
     })
 })

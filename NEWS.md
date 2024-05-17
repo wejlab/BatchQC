@@ -1,4 +1,10 @@
-# BatchQC (Development)
+# Version 2.1.1
+## Bug Fixes
+* Updated imports to include shinyjs
+* Updated imports to remove dendextend which is no longer utilized
+* Corrected typos in Intro vignette
+
+# Version 1.99.00
 
 ## Bug Fixes
 * Fixed various errors for the Bioconductor build
@@ -12,7 +18,6 @@
 ## Minor Changes
 * Added a `NEWS.md` file to track changes to the package.
 
-# Version 1.99.00
 ## Changes made to dendrogram
 * Added `dendrogram_color_palette.R` for coloring dendrogram
 * Updated `dendrogram.R` allowing batch & category to plot together

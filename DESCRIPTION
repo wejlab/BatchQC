@@ -1,7 +1,7 @@
 Type: Package
 Package: BatchQC
 Title: Batch Effects Quality Control Software
-Version: 1.99.02
+Version: 2.1.1
 Date: 2024-04-02
 Authors@R: c(
     person("Jessica", "McClintock", , "jessica.mcclintock@rutgers.edu", 
@@ -57,6 +57,7 @@ Imports:
     reshape2,
     scran,
     shiny,
+    shinyjs,
     stats,
     SummarizedExperiment,
     sva,
@@ -68,7 +69,6 @@ Suggests:
     BiocManager,
     BiocStyle,
     bladderbatch,
-    dendextend,
     devtools,
     knitr,
     lintr,

@@ -1,3 +1,11 @@
+# Version 2.1.2
+## Major Changes
+* Added Variation Ratio Statistic to the explained variation tab
+
+## Minor Changes
+* Removed extra "Samples" column from example data
+* Uploaded bladder example data batch variable as a factor
+
 # Version 2.1.1
 ## Bug Fixes
 * Updated imports to include shinyjs

@@ -33,8 +33,8 @@ full R package which allows reproducibility of all shiny evaluations and
 analyses.  BatchQC diagnostics help determine whether batch adjustment needs to
 be done, and how correction should be applied before proceeding with a
 downstream analysis. Moreover, BatchQC interactively applies multiple common
-batch effectapproaches to the data, and the user can quickly see the benefits of
-each method. BatchQC is developed as a Shiny App, but is reproducible at the
+batch effect approaches to the data, and the user can quickly see the benefits
+of each method. BatchQC is developed as a Shiny App, but is reproducible at the
 command line through the functions contained int he R package. The output of the
 shiny app is organized into multiple tabs, and each tab features an important 
 part of the batch effect analysis and visualization of the data. The BatchQC 
@@ -292,13 +292,20 @@ ascending or descending order. Notice the amount of variation attributed to
 batch. In our signature data set, most of the variation is attributed to batch
 rather than the condition. This indicates a need for a batch correction.
 
+The "Individual Variation Variable/Batch Ratio" tab displays the individual, or
+raw variation, divided by the batch. A ratio greater that 1 indicates that batch
+has a stronger affect than the variable of interest. And the "Residual Variation Variable/Batch Ratio" displays the residual, or type 2 variation, divided by the
+batch. A ratio greater that 1 indicates that batch has a stronger affect than
+the variable of interest.
+
 Next, select the batch corrected assay, with the same batch and condition
 variable and observe the changes in variation. When batch effect is being
 properly corrected, you should notice that the variation explained by the batch
 variable has decreased in the batch corrected assay, indicating that the
 variation in the data is now more likely to be associated with your condition of
-interest rather than the batch. This is visible in our example data set and
-confirms the need for batch adjustment.
+interest rather than the batch. The ratio statistics should also be less than 1.
+This is visible in our example data set and confirms the need for batch
+adjustment.
 
 To recreate the variation analysis plot for the log_intensity assay, use the
 following code:

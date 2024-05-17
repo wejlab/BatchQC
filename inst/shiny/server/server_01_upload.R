@@ -179,7 +179,9 @@ observeEvent(input$exampleData, {
             c('observations and', 'samples')))
 
         reactivevalue$metadata <- as.data.frame(colData(bladder_data))
+        reactivevalue$metadata[["batch"]] <- as.factor(reactivevalue$metadata[["batch"]])
         output$metadata_header <- renderDT(datatable(reactivevalue$metadata))
+
     } #else if (input$exampleData == "TbData") {
     #     #Add Indian Data Set
     # }

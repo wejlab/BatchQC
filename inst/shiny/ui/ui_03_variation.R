@@ -29,7 +29,24 @@ tabPanel(
             tabPanel("Explained Variation - Residual",
                 h5("The boxplot and p-value table display the type 2 variation, or residual varaition."),
                 plotOutput('EV_residual_show_plot'),
-                dataTableOutput('EV_residual_show_table'))
+                dataTableOutput('EV_residual_show_table')
+            ),
+            tabPanel("Individual Variation Variable/Batch Ratio",
+                h5("The boxplot and table display the individual, or raw
+                    variation, divided by the batch. A ratio greater that 1
+                    indicates that batch has a stronger affect than the
+                    variable of interest."),
+                plotOutput('EV_ratio_plot'),
+                dataTableOutput('EV_ratio_table')
+            ),
+            tabPanel("Residual Variation Variable/Batch Ratio",
+                h5("The boxplot and table display the residual, or type 2
+                    variation, divided by the batch. A ratio greater that 1
+                    indicates that batch has a stronger affect than the
+                    variable of interest."),
+                plotOutput('EV_residual_ratio_plot'),
+                dataTableOutput('EV_residual_ratio_table')
+            )
         )
         )
     )

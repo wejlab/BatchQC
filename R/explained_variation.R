@@ -1,61 +1,3 @@
-#' This function allows you to plot explained variation
-#' @param batchqc_ev table of explained variation from
-#'   batchqc_explained_variation
-#' @import reshape2
-#' @import ggplot2
-#' @return boxplot of explained variation
-#' @examples
-#' library(scran)
-#' se <- mockSCE()
-#' se$Mutation_Status <- as.factor(se$Mutation_Status)
-#' se$Treatment <- as.factor(se$Treatment)
-#' expl_var_result <- batchqc_explained_variation(se, batch = "Mutation_Status",
-#'                             condition = "Treatment", assay_name = "counts")
-#' EV_boxplot <- BatchQC::EV_plotter(expl_var_result[[1]])
-#' EV_boxplot
-#'
-#' @export
-EV_plotter <- function(batchqc_ev) {
-    EV_boxplot <- ggplot(data =
-            melt(as.data.frame(batchqc_ev),
-                id.vars = NULL),
-        aes(x = variable, y = value, fill = variable)) +
-        geom_boxplot() +
-        scale_x_discrete(name = "") +
-        scale_y_continuous(name = "Percent Explained Variation") +
-        labs(title = "Percent of Variation Explained by Source") +
-        theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
-    return(EV_boxplot)
-}
-
-#' EV Table
-#' Returns table with percent variation explained for specified number of genes
-#'
-#' @param batchqc_ev explained variation results from
-#'   batchqc_explained_variation
-#' @importFrom data.table data.table
-#' @return List of explained variation by batch and condition
-#' @examples
-#' library(scran)
-#' se <- mockSCE()
-#' se$Mutation_Status <- as.factor(se$Mutation_Status)
-#' se$Treatment <- as.factor(se$Treatment)
-#' exp_var_result <- BatchQC::batchqc_explained_variation(se,
-#'                                     batch = "Mutation_Status",
-#'                                     condition = "Treatment",
-#'                                     assay_name = "counts")
-#' EV_table <- BatchQC::EV_table(exp_var_result[[1]])
-#'
-#' EV_table
-#'
-#' @export
-EV_table <- function(batchqc_ev) {
-    EV_table <- data.table(batchqc_ev,
-        keep.rownames = TRUE)
-    colnames(EV_table)[1] <- "Gene Name"
-    return(EV_table = EV_table)
-}
-
 #' Returns a list of explained variation by batch and condition
 #' combinations
 #'
@@ -164,4 +106,62 @@ check_valid_input <- function(se, batch, condition) {
     }
 
     return(TRUE)
+}
+
+#' This function allows you to plot explained variation
+#' @param batchqc_ev table of explained variation from
+#'   batchqc_explained_variation
+#' @import reshape2
+#' @import ggplot2
+#' @return boxplot of explained variation
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' se$Mutation_Status <- as.factor(se$Mutation_Status)
+#' se$Treatment <- as.factor(se$Treatment)
+#' expl_var_result <- batchqc_explained_variation(se, batch = "Mutation_Status",
+#'                             condition = "Treatment", assay_name = "counts")
+#' EV_boxplot <- BatchQC::EV_plotter(expl_var_result[[1]])
+#' EV_boxplot
+#'
+#' @export
+EV_plotter <- function(batchqc_ev) {
+    EV_boxplot <- ggplot(data =
+            melt(as.data.frame(batchqc_ev),
+                id.vars = NULL),
+        aes(x = variable, y = value, fill = variable)) +
+        geom_boxplot() +
+        scale_x_discrete(name = "") +
+        scale_y_continuous(name = "Percent Explained Variation") +
+        labs(title = "Percent of Variation Explained by Source") +
+        theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+    return(EV_boxplot)
+}
+
+#' EV Table
+#' Returns table with percent variation explained for specified number of genes
+#'
+#' @param batchqc_ev explained variation results from
+#'   batchqc_explained_variation
+#' @importFrom data.table data.table
+#' @return List of explained variation by batch and condition
+#' @examples
+#' library(scran)
+#' se <- mockSCE()
+#' se$Mutation_Status <- as.factor(se$Mutation_Status)
+#' se$Treatment <- as.factor(se$Treatment)
+#' exp_var_result <- BatchQC::batchqc_explained_variation(se,
+#'                                     batch = "Mutation_Status",
+#'                                     condition = "Treatment",
+#'                                     assay_name = "counts")
+#' EV_table <- BatchQC::EV_table(exp_var_result[[1]])
+#'
+#' EV_table
+#'
+#' @export
+EV_table <- function(batchqc_ev) {
+    EV_table <- data.table(batchqc_ev,
+        keep.rownames = TRUE)
+    colnames(EV_table)[1] <- "Gene Name"
+    return(EV_table = EV_table)
 }

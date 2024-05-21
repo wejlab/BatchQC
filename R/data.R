@@ -82,7 +82,7 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 bladder_data_upload <- function() {
     data(bladderdata, package = "bladderbatch", envir = environment())
     bladderEset <- bladderEset
-    pheno <- pData(bladderEset)
+    pheno <- pData(bladderEset) %>% select(-sample)
     edata <- exprs(bladderEset)
     se_object <- BatchQC::summarized_experiment(edata, pheno)
 

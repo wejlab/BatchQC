@@ -1,7 +1,8 @@
 #' Run BatchQC shiny app
 #'
 #' @return The shiny app will open
-#'
+#' @rawNamespace import(shinyjs, except=show)
+#' @import shinythemes
 #' @param dev Run the application in developer mode
 #'
 #' @examples

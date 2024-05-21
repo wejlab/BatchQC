@@ -1,7 +1,16 @@
-# Devel Version
+# Version 2.1.2
+## Major Changes
+* Added Variation Ratio Statistic to the explained variation tab
+
+## Minor Changes
+* Removed extra "Samples" column from example data
+* Uploaded bladder example data batch variable as a factor
+
+# Version 2.1.1
 ## Bug Fixes
-* Added 'shinyjs' and 'shinythemes' to required packages
-* removed 'dendextend' from suggested packages
+* Updated imports to include shinyjs
+* Updated imports to remove dendextend which is no longer utilized
+* Corrected typos in Intro vignette
 
 # Version 2.0.0
 

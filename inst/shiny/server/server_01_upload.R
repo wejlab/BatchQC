@@ -18,6 +18,25 @@ setupSelections <- function() {
         options = list(placeholder = "Please select an option below",
             onInitialize = I('function() { this.setValue(""); }')))
 
+    # Negative Binomial Check
+    updateSelectizeInput(session = session, inputId = "counts_matrix",
+        choices = assayNames((reactivevalue$se)),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
+
+    updateSelectizeInput(session = session, inputID = "nb_batch",
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
+
+    updateSelectizeInput(session = session, inputID = "condition",
+        choices = colnames(colData(reactivevalue$se)),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
+
     # Batch Correction
     updateSelectizeInput(session = session,
         inputId = "correction_batch",
@@ -243,6 +262,14 @@ observe({
             input$normalization_method, sep = '_'))
 })
 
+## Complete NB Check
+observeEvent(input$nb_check, {
+    req(input$nb_test, input$counts_matrix, input$nb_batch,
+        input$condition_of_interest)
+    withBusyIndicatorServer("nb_check", {
+        ## start here
+    })
+})
 ## Normalize a selected assay
 observeEvent(input$normalize, {
     req(input$normalization_method, input$normalization_assay,

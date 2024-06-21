@@ -8,19 +8,11 @@
 #' @importFrom stats pnbinom ks.test
 #' @return a p-value based on estimated NB size and mean
 #' @keywords internal
-#' @examples
-#' library(scran)
-#' se <- mockSCE()
-#' counts <- assays(se)["counts"]
-#' size <- 5
-#' mu <- 0.51
-#' pval <- counts2pvalue(counts, size = n, mu = m)
-#' pval
 
-counts2pvalue <- function(counts, size, mu){
-    if (max(counts) <= 3){
+counts2pvalue <- function(counts, size, mu) {
+    if (max(counts) <= 3) {
         p.fit <- NA
-    }else{
+    }else {
         p <- pnbinom(counts, size = size, mu = mu)
         p.fit <- ks.test(p, 'punif')$p.value
     }
@@ -43,31 +35,28 @@ counts2pvalue <- function(counts, size, mu){
 #' # example code
 #' library(scran)
 #' se <- mockSCE()
-#' counts <- assays(se)["counts"]
-#' condition <- se$Treatment
-#' batch <- se$Mutation_Status
-#' nb_results <- goodness_of_fit_DESeq2(count_matrix = counts,
-#'   condition = condition, batch = batch)
+#' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
+#'   condition = "Treatment", batch = "Mutation_Status")
 #' nb_results
 
-goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch){
+goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch) {
     # Obtain needed data from se object
     count_matrix <- SummarizedExperiment::assays(se)[[count_matrix]]
     condition <- SummarizedExperiment::colData(se)[[condition]]
     batch <- SummarizedExperiment::colData(se)[[batch]]
 
     # Use DESeq2 to fit the NB model
-    if (length(unique(batch)) == 1){
+    if (length(unique(batch)) == 1) {
         dds <- DESeqDataSetFromMatrix(count_matrix,
             S4Vectors::DataFrame(condition, batch), ~ condition)
-    }else{
+    }else {
         dds <- DESeqDataSetFromMatrix(count_matrix,
             S4Vectors::DataFrame(condition, batch), ~ condition + batch)
     }
     dds <- DESeq(dds)
 
     # The size parameters estimated by DESeq2 for each gene
-    size <- 1/dispersions(dds)
+    size <- 1 / dispersions(dds)
 
     # The mu parameters estimated by DESeq2 for each count
     mu_matrix <- assays(dds)[["mu"]]
@@ -77,12 +66,12 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch){
     num_unique_conditions <- length(unique_conditions)
 
     # For each condition level, get the goodness-of-fit p-values for each genes
-    all_pvalues <- sapply(seq_len(length(unique_conditions)), function(j){
+    all_pvalues <- sapply(seq_len(length(unique_conditions)), function(j) {
         index_j <- which(condition == unique_conditions[j])
         # For one condition level, calculate the goodness-of-fit p-values
-        pvalues_level <-  sapply(seq_len(length(size)), function(i){
-            mu_gene <- mu_matrix[i,index_j]
-            count_condition <- count_matrix[i,index_j]
+        pvalues_level <-  sapply(seq_len(length(size)), function(i) {
+            mu_gene <- mu_matrix[i, index_j]
+            count_condition <- count_matrix[i, index_j]
             pvalue <- counts2pvalue(counts = count_condition, size = size[i],
                 mu = mu_gene)
             return(pvalue)

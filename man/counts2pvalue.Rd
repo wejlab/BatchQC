@@ -22,13 +22,4 @@ a p-value based on estimated NB size and mean
 This function calculates p-values for each gene given counts, estimated NB
 size, and estimated NB mean
 }
-\examples{
-library(scran)
-se <- mockSCE()
-counts <- assays(se)["counts"]
-size <- 5
-mu <- 0.51
-pval <- counts2pvalue(counts, size = n, mu = m)
-pval
-}
 \keyword{internal}

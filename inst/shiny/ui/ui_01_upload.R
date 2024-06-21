@@ -163,7 +163,7 @@ tabPanel("Upload Data",
                         'Select the variable you are interested in analyzing',
                         multiple = FALSE,
                         choices = c(''),
-                        selected = NULL,options = list(placeholder =
+                        selected = NULL, options = list(placeholder =
                                 'Please select an option below',
                             onInitialize = I(
                                 'function() { this.setValue(""); }'

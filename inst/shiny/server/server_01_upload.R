@@ -25,14 +25,14 @@ setupSelections <- function() {
         options = list(placeholder = "Please select an option below",
             onInitialize = I('function() { this.setValue(""); }')))
 
-    updateSelectizeInput(session = session, inputID = "nb_batch",
-        choices = colnames(colData(reactivevalue$se)),
+    updateSelectizeInput(session = session, inputId = "nb_batch",
+        choices = names(colData(reactivevalue$se)),
         selected = NULL,
         options = list(placeholder = "Please select an option below",
             onInitialize = I('function() { this.setValue(""); }')))
 
-    updateSelectizeInput(session = session, inputID = "condition",
-        choices = colnames(colData(reactivevalue$se)),
+    updateSelectizeInput(session = session, inputId = "condition_of_interest",
+        choices = names(colData(reactivevalue$se)),
         selected = NULL,
         options = list(placeholder = "Please select an option below",
             onInitialize = I('function() { this.setValue(""); }')))
@@ -267,7 +267,10 @@ observeEvent(input$nb_check, {
     req(input$nb_test, input$counts_matrix, input$nb_batch,
         input$condition_of_interest)
     withBusyIndicatorServer("nb_check", {
-        ## start here
+        output$nb_pvals <- renderDataTable(datatable(goodness_of_fit_DESeq2(reactivevalue$se,
+            input$counts_matrix,
+            input$condition_of_interest,
+            input$nb_batch)))
     })
 })
 ## Normalize a selected assay

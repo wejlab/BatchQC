@@ -133,24 +133,44 @@ tabPanel("Upload Data",
                         'Choose the test to perform',
                         multiple = FALSE,
                         choices = c('nb_DESeq2'),
-                        selected = NULL),
+                        selected = NULL,
+                        options = list(placeholder =
+                                'Please select an option below',
+                            onInitialize = I(
+                                'function() { this.setValue(""); }'
+                            ))),
                     selectizeInput('counts_matrix',
                         'Choose the array data to check',
                         multiple = FALSE,
                         choices = c(''),
-                        selected = NULL),
+                        selected = NULL,
+                        options = list(placeholder =
+                                'Please select an option below',
+                            onInitialize = I(
+                                'function() { this.setValue(""); }'
+                            ))),
                     selectizeInput('nb_batch',
                         'Select the variable representing batch',
                         multiple = FALSE,
                         choices = c(''),
-                        selected = NULL),
+                        selected = NULL,
+                        options = list(placeholder =
+                                'Please select an option below',
+                            onInitialize = I(
+                                'function() { this.setValue(""); }'
+                            ))),
                     selectizeInput('condition_of_interest',
                         'Select the variable you are interested in analyzing',
                         multiple = FALSE,
                         choices = c(''),
-                        selected = NULL),
+                        selected = NULL,options = list(placeholder =
+                                'Please select an option below',
+                            onInitialize = I(
+                                'function() { this.setValue(""); }'
+                            ))),
                     withBusyIndicatorUI(actionButton(inputId = 'nb_check',
                         label = 'Check Distribution')),
+                    DTOutput('nb_pvals'),
                     br()
                 ),
                 tabPanel('Batch Effect Correction',

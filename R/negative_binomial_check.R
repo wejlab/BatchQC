@@ -30,10 +30,12 @@ counts2pvalue <- function(counts, size, mu){
 #' This function calculates goodness-of-fit pvalues for all genes by looking at
 #' how the NB model by DESeq2 fit the data
 #' @import DESeq2
+#' @import SummarizedExperiment
 #' @importFrom S4Vectors DataFrame
-#' @param count_matrix gene expression matrix (in counts)
-#' @param condition a vector of the condition status of all samples
-#' @param batch a vector containing batch information for each sample
+#' @param se the se object where all the data is contained
+#' @param count_matrix name of the se assay with gene expression matrix (in counts)
+#' @param condition name of the se colData with the condition status
+#' @param batch name of the se colData containing batch information
 #' @return a matrix of pvalues where each row is a gene and each column is a
 #'   level within the condition of interest
 #' @export
@@ -48,8 +50,12 @@ counts2pvalue <- function(counts, size, mu){
 #'   condition = condition, batch = batch)
 #' nb_results
 
-# The output all_pvalues is a matrix of p-values, each row
-goodness_of_fit_DESeq2 <- function(count_matrix, condition, batch){
+goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch){
+    # Obtain needed data from se object
+    count_matrix <- SummarizedExperiment::assays(se)[[count_matrix]]
+    condition <- SummarizedExperiment::colData(se)[[condition]]
+    batch <- SummarizedExperiment::colData(se)[[batch]]
+
     # Use DESeq2 to fit the NB model
     if (length(unique(batch)) == 1){
         dds <- DESeqDataSetFromMatrix(count_matrix,
@@ -71,10 +77,10 @@ goodness_of_fit_DESeq2 <- function(count_matrix, condition, batch){
     num_unique_conditions <- length(unique_conditions)
 
     # For each condition level, get the goodness-of-fit p-values for each genes
-    all_pvalues <- vapply(seq_len(length(num_unique_conditions)), function(j){
+    all_pvalues <- sapply(seq_len(length(unique_conditions)), function(j){
         index_j <- which(condition == unique_conditions[j])
         # For one condition level, calculate the goodness-of-fit p-values
-        pvalues_level <-  vapply(seq_len(length(size)), function(i){
+        pvalues_level <-  sapply(seq_len(length(size)), function(i){
             mu_gene <- mu_matrix[i,index_j]
             count_condition <- count_matrix[i,index_j]
             pvalue <- counts2pvalue(counts = count_condition, size = size[i],

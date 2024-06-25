@@ -84,3 +84,33 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch) {
     colnames(all_pvalues) <- unique_conditions
     return(all_pvalues)
 }
+
+#' This function creates a histogram from the negative binomial goodness-of-fit
+#' pvalues.
+#' @import tibble
+#' @import tidyr
+#' @import ggplot2
+#' @param p_val_table table of p-values from the nb test
+#' @return a histogram of the number of genes within a p-value range
+#' @export
+#' @examples
+#' # example code
+#' library(scran)
+#' se <- mockSCE()
+#' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
+#'   condition = "Treatment", batch = "Mutation_Status")
+#' nb_histogram(nb_results)
+nb_histogram <- function(p_val_table) {
+    # tidy the data so there is a gene, condition and pval column
+    p_val_table <- tibble::rownames_to_column(p_val_table, "features")
+    p_val_table <- tidyr::pivot_longer(p_val_table,
+        cols = 2:length(colnames(p_val_table)),
+        names_to = "condition",
+        values_to = "p_val")
+
+    nb_histogram <- ggplot2::ggplot(p_val_table, aes(x = p_val)) +
+            ggplot2::geom_histogram() +
+            ggplot2::facet_grid(condition ~ .)
+
+    return(nb_histogram)
+    }

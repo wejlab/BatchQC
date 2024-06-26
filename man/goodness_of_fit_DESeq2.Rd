@@ -10,7 +10,7 @@ goodness_of_fit_DESeq2(se, count_matrix, condition, batch)
 \arguments{
 \item{se}{the se object where all the data is contained}
 
-\item{count_matrix}{name of the se assay with gene expression matrix (in counts)}
+\item{count_matrix}{name of the assay with gene expression matrix (in counts)}
 
 \item{condition}{name of the se colData with the condition status}
 

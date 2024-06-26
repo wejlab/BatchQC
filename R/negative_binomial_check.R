@@ -25,7 +25,7 @@ counts2pvalue <- function(counts, size, mu) {
 #' @import SummarizedExperiment
 #' @importFrom S4Vectors DataFrame
 #' @param se the se object where all the data is contained
-#' @param count_matrix name of the se assay with gene expression matrix (in counts)
+#' @param count_matrix name of the assay with gene expression matrix (in counts)
 #' @param condition name of the se colData with the condition status
 #' @param batch name of the se colData containing batch information
 #' @return a matrix of pvalues where each row is a gene and each column is a
@@ -108,9 +108,46 @@ nb_histogram <- function(p_val_table) {
         names_to = "condition",
         values_to = "p_val")
 
-    nb_histogram <- ggplot2::ggplot(p_val_table, aes(x = p_val)) +
+    nb_histogram <- ggplot2::ggplot(p_val_table, aes_string(x = "p_val")) +
             ggplot2::geom_histogram() +
             ggplot2::facet_grid(condition ~ .)
 
     return(nb_histogram)
+}
+
+#' This function determines the proportion of p-values below a specific value
+#' and compares to the previously determined threshold of 0.42 for extreme low
+#' values.
+#' @import tibble
+#' @import tidyr
+#' @import ggplot2
+#' @param p_val_table table of p-values from the nb test
+#' @param low_pval value of the p-value cut off to use in proportion
+#' @param threshold the value to compare the p-values to
+#' @return a statement about whether DESeq2 is appropriate to use for analysis
+#' @export
+#' @examples
+#' # example code
+#' library(scran)
+#' se <- mockSCE()
+#' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
+#'   condition = "Treatment", batch = "Mutation_Status")
+#' nb_proportion(nb_results, low_pval = 0.01, threshold = 0.42)
+
+nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42) {
+    proportion_below_value <- mean(p_val_table < low_pval, na.rm = TRUE)
+    nb_fit <- proportion_below_value < threshold
+
+    if (nb_fit) {
+        recommendation <- "can use DESeq2 for your analysis."
+    }else {
+        recommendation <- "should not use DESeq2 for your analysis."
     }
+
+    commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
+        round(proportion_below_value, 2),
+        "% of your features are below the cutoff.",
+        "Thus based on a threshold of ",
+        threshold, ", you ", recommendation)
+    return(commentary)
+}

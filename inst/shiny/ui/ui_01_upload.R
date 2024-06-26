@@ -170,6 +170,7 @@ tabPanel("Upload Data",
                             ))),
                     withBusyIndicatorUI(actionButton(inputId = 'nb_check',
                         label = 'Check Distribution')),
+                    textOutput('recommendation'),
                     plotOutput('nb_histogram'),
                     DTOutput('nb_pvals'),
                     br()

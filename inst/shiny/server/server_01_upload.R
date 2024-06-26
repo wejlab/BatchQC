@@ -271,6 +271,7 @@ observeEvent(input$nb_check, {
             input$counts_matrix,
             input$condition_of_interest,
             input$nb_batch)
+        output$recommendation <- renderText(nb_proportion(pvals, 0.01, 0.42))
         output$nb_histogram <- renderPlot(nb_histogram(pvals))
         output$nb_pvals <- renderDataTable(datatable(pvals))
     })

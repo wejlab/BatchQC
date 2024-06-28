@@ -55,6 +55,8 @@ JT (2023). bladderbatch: Bladder gene expression data illustrating batch
 effects. R package version 1.38.0).
 
 ```{r, eval = FALSE}
+if (!requireNamespace("bladderbatch", quietly = TRUE))
+    BiocManager::install("bladderbatch")
 se_object <- BatchQC::bladder_data_upload()
 ```
 

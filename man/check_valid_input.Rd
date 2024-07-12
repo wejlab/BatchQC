@@ -2,7 +2,7 @@
 % Please edit documentation in R/explained_variation.R
 \name{check_valid_input}
 \alias{check_valid_input}
-\title{Helper function to check for valid input}
+\title{Helper function to save variables as factors if not already factors}
 \usage{
 check_valid_input(se, batch, condition)
 }
@@ -14,8 +14,9 @@ check_valid_input(se, batch, condition)
 \item{condition}{condition}
 }
 \value{
-True/False boolean; True if all input is valid, False if invalid
+se se object
 }
 \description{
-Helper function to check for valid input
+Helper function to save variables as factors if not already factors
 }
+\keyword{Internal}

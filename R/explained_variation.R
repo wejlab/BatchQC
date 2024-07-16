@@ -28,10 +28,7 @@
 
 batchqc_explained_variation <- function(se, batch, condition = NULL,
     assay_name) {
-    valid_input <- check_valid_input(se, batch, condition)
-    if (!valid_input) {
-        return()
-    }
+    se <- check_valid_input(se, batch, condition)
 
     sample_info <- SummarizedExperiment::colData(se)
     assay_dat <- t(assay(se, assay_name))
@@ -85,27 +82,26 @@ get.res <- function(y, X) {
     colSums((y - X %*% solve(t(X) %*% X) %*% t(X) %*% y)^2)
 }
 
-#' Helper function to check for valid input
+#' Helper function to save variables as factors if not already factors
 #'
 #' @param se se object
 #' @param batch batch
 #' @param condition condition
-#' @return True/False boolean; True if all input is valid, False if invalid
+#' @return se se object
+#' @keywords Internal
 
 check_valid_input <- function(se, batch, condition) {
     if (!is.factor(se[[batch]])) {
-        #"The batch variable contained in your se object must be a factor."
-        return(FALSE)
+        se[[batch]] <- as.factor(se[[batch]])
     }else if (!is.null(condition)) {
         for (variable in condition){
             if (!is.factor(se[[variable]])) {
-                #"All condition variables in your se object must be a factor."
-                return(FALSE)
+                se[[variable]] <- as.factor(se[[variable]])
             }
         }
     }
 
-    return(TRUE)
+    return(se)
 }
 
 #' This function allows you to plot explained variation

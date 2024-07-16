@@ -41,9 +41,9 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
         # Check if the assay contains counts (e.g. non negative integer data),
         for (item in data){
             if (round(item) != item) {
-                return() #"Error: data contains non-integers"; throw in shiny
+                stop("Data contains non-integers")
             }else if (item < 0) {
-                return() #"Error: data contains negative integers"; throw shiny
+                stop("Data: data contains negative integers")
             }
         }
         colnames(data) <- rownames(analysis_design)
@@ -77,7 +77,7 @@ DE_analyze <- function(se, method, batch, conditions, assay_to_analyze) {
             res[[colnames(eBayes_res$coefficients)[[i]]]] <- results
         }
     } else {
-        return() #"Error: Please select a method 'DESeq2' or 'limma'"
+        stop("Please select a method 'DESeq2' or 'limma'")
     }
     return(res)
 }

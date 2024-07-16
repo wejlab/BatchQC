@@ -62,6 +62,7 @@ Imports:
     stats,
     SummarizedExperiment,
     sva,
+    S4Vectors,
     tibble,
     tidyr,
     tidyverse,

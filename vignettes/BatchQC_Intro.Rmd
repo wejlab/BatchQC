@@ -59,7 +59,7 @@ To begin, install [Bioconductor](http://www.bioconductor.org/) and then install
 BatchQC:
 
 ```{R, eval = FALSE}
-if (!requireNamespace("BiocManager", quietly=TRUE))
+if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("BatchQC")
 ```

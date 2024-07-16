@@ -18,6 +18,25 @@ setupSelections <- function() {
         options = list(placeholder = "Please select an option below",
             onInitialize = I('function() { this.setValue(""); }')))
 
+    # Negative Binomial Check
+    updateSelectizeInput(session = session, inputId = "counts_matrix",
+        choices = assayNames((reactivevalue$se)),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
+
+    updateSelectizeInput(session = session, inputId = "nb_batch",
+        choices = names(colData(reactivevalue$se)),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
+
+    updateSelectizeInput(session = session, inputId = "condition_of_interest",
+        choices = names(colData(reactivevalue$se)),
+        selected = NULL,
+        options = list(placeholder = "Please select an option below",
+            onInitialize = I('function() { this.setValue(""); }')))
+
     # Batch Correction
     updateSelectizeInput(session = session,
         inputId = "correction_batch",
@@ -243,6 +262,20 @@ observe({
             input$normalization_method, sep = '_'))
 })
 
+## Complete NB Check
+observeEvent(input$nb_check, {
+    req(input$nb_test, input$counts_matrix, input$nb_batch,
+        input$condition_of_interest)
+    withBusyIndicatorServer("nb_check", {
+        pvals <- goodness_of_fit_DESeq2(reactivevalue$se,
+            input$counts_matrix,
+            input$condition_of_interest,
+            input$nb_batch)
+        output$recommendation <- renderText(nb_proportion(pvals, 0.01, 0.42))
+        output$nb_histogram <- renderPlot(nb_histogram(pvals))
+        output$nb_pvals <- renderDataTable(datatable(pvals))
+    })
+})
 ## Normalize a selected assay
 observeEvent(input$normalize, {
     req(input$normalization_method, input$normalization_assay,

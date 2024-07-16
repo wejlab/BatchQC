@@ -27,7 +27,7 @@ tabPanel("Differential Expression Analysis",
                  selected = NULL,
                  options = list(placeholder = 'Please select an option below',
                      onInitialize = I('function() { this.setValue(""); }'))),
-            actionButton('DE_analyze', label = 'Here we go!')),
+            withBusyIndicatorUI(actionButton('DE_analyze', label = 'Here we go!'))),
            mainPanel(
              tabsetPanel(
                tabPanel("Results Table",

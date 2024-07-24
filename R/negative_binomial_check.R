@@ -145,8 +145,8 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42) {
     }
 
     commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
-        round(proportion_below_value, 2),
-        "% of your features are below the cutoff.",
+        (round(proportion_below_value, 2) * 100),
+        "% of your features are below the cutoff. ",
         "Thus based on a threshold of ",
         threshold, ", you ", recommendation)
     return(commentary)

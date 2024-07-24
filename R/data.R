@@ -80,6 +80,10 @@ globalVariables(c("protein_sample_info", "protein_data", "batch_indicator",
 #'
 #' @export
 bladder_data_upload <- function() {
+    if (!requireNamespace("bladderbatch")) {
+        stop("You need to install the 'bladderbatch' package to use this
+            data set.")
+    }
     data(bladderdata, package = "bladderbatch", envir = environment())
     bladderEset <- bladderEset
     pheno <- pData(bladderEset) %>% select(-sample)

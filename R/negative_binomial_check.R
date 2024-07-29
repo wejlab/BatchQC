@@ -34,7 +34,7 @@ counts2pvalue <- function(counts, size, mu) {
 #' @examples
 #' # example code
 #' library(scran)
-#' se <- mockSCE()
+#' se <- mockSCE(ncells = 20)
 #' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
 #'   condition = "Treatment", batch = "Mutation_Status")
 #' nb_results
@@ -45,44 +45,50 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch) {
     condition <- SummarizedExperiment::colData(se)[[condition]]
     batch <- SummarizedExperiment::colData(se)[[batch]]
 
-    # Use DESeq2 to fit the NB model
-    if (length(unique(batch)) == 1) {
-        dds <- DESeqDataSetFromMatrix(count_matrix,
-            S4Vectors::DataFrame(condition, batch), ~ condition)
+    if (dim(count_matrix)[2] > 20) {
+        stop("This goodness of fit test should only be used for data sets with
+            20 or fewer samples.")
     }else {
-        dds <- DESeqDataSetFromMatrix(count_matrix,
-            S4Vectors::DataFrame(condition, batch), ~ condition + batch)
-    }
-    dds <- DESeq(dds)
+        # Use DESeq2 to fit the NB model
+        if (length(unique(batch)) == 1) {
+            dds <- DESeqDataSetFromMatrix(count_matrix,
+                S4Vectors::DataFrame(condition, batch), ~ condition)
+        }else {
+            dds <- DESeqDataSetFromMatrix(count_matrix,
+                S4Vectors::DataFrame(condition, batch), ~ condition + batch)
+        }
+        dds <- DESeq(dds)
 
-    # The size parameters estimated by DESeq2 for each gene
-    size <- 1 / dispersions(dds)
+        # The size parameters estimated by DESeq2 for each gene
+        size <- 1 / dispersions(dds)
 
-    # The mu parameters estimated by DESeq2 for each count
-    mu_matrix <- assays(dds)[["mu"]]
+        # The mu parameters estimated by DESeq2 for each count
+        mu_matrix <- assays(dds)[["mu"]]
 
-    # Count the number of levels in condition
-    unique_conditions <- unique(condition)
-    num_unique_conditions <- length(unique_conditions)
+        # Count the number of levels in condition
+        unique_conditions <- unique(condition)
+        num_unique_conditions <- length(unique_conditions)
 
-    # For each condition level, get the goodness-of-fit p-values for each genes
-    all_pvalues <- sapply(seq_len(length(unique_conditions)), function(j) {
-        index_j <- which(condition == unique_conditions[j])
-        # For one condition level, calculate the goodness-of-fit p-values
-        pvalues_level <-  sapply(seq_len(length(size)), function(i) {
-            mu_gene <- mu_matrix[i, index_j]
-            count_condition <- count_matrix[i, index_j]
-            pvalue <- counts2pvalue(counts = count_condition, size = size[i],
-                mu = mu_gene)
-            return(pvalue)
+        # For each condition level, get the goodness-of-fit p-values for each genes
+        all_pvalues <- sapply(seq_len(length(unique_conditions)), function(j) {
+            index_j <- which(condition == unique_conditions[j])
+            # For one condition level, calculate the goodness-of-fit p-values
+            pvalues_level <-  sapply(seq_len(length(size)), function(i) {
+                mu_gene <- mu_matrix[i, index_j]
+                count_condition <- count_matrix[i, index_j]
+                pvalue <- counts2pvalue(counts = count_condition, size = size[i],
+                    mu = mu_gene)
+                return(pvalue)
+            })
+            return(pvalues_level)
         })
-        return(pvalues_level)
-    })
 
-    all_pvalues <- as.data.frame(all_pvalues, row.names =
-            row.names(count_matrix))
-    colnames(all_pvalues) <- unique_conditions
-    return(all_pvalues)
+        all_pvalues <- as.data.frame(all_pvalues, row.names =
+                row.names(count_matrix))
+        colnames(all_pvalues) <- unique_conditions
+        return(all_pvalues)
+    }
+
 }
 
 #' This function creates a histogram from the negative binomial goodness-of-fit
@@ -96,7 +102,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch) {
 #' @examples
 #' # example code
 #' library(scran)
-#' se <- mockSCE()
+#' se <- mockSCE(ncells = 20)
 #' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
 #'   condition = "Treatment", batch = "Mutation_Status")
 #' nb_histogram(nb_results)
@@ -129,7 +135,7 @@ nb_histogram <- function(p_val_table) {
 #' @examples
 #' # example code
 #' library(scran)
-#' se <- mockSCE()
+#' se <- mockSCE(ncells = 20)
 #' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
 #'   condition = "Treatment", batch = "Mutation_Status")
 #' nb_proportion(nb_results, low_pval = 0.01, threshold = 0.42)

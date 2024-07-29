@@ -27,7 +27,7 @@ how the NB model by DESeq2 fit the data
 \examples{
 # example code
 library(scran)
-se <- mockSCE()
+se <- mockSCE(ncells = 20)
 nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
   condition = "Treatment", batch = "Mutation_Status")
 nb_results

@@ -6,7 +6,7 @@
 and compares to the previously determined threshold of 0.42 for extreme low
 values.}
 \usage{
-nb_proportion(p_val_table, low_pval = 0.01, threshold = 0.42)
+nb_proportion(p_val_table, low_pval = 0.01, threshold = 0.42, num_samples)
 }
 \arguments{
 \item{p_val_table}{table of p-values from the nb test}
@@ -14,6 +14,8 @@ nb_proportion(p_val_table, low_pval = 0.01, threshold = 0.42)
 \item{low_pval}{value of the p-value cut off to use in proportion}
 
 \item{threshold}{the value to compare the p-values to}
+
+\item{num_samples}{the number of samples in the analysis}
 }
 \value{
 a statement about whether DESeq2 is appropriate to use for analysis

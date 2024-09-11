@@ -172,7 +172,7 @@ tabPanel("Upload Data",
                         label = 'Check Distribution')),
                     textOutput('recommendation'),
                     plotOutput('nb_histogram'),
-                    DTOutput('nb_pvals'),
+                    textOutput('reference'),
                     br()
                 ),
                 tabPanel('Batch Effect Correction',

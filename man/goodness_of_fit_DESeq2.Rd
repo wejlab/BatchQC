@@ -5,7 +5,7 @@
 \title{This function calculates goodness-of-fit pvalues for all genes by looking at
 how the NB model by DESeq2 fit the data}
 \usage{
-goodness_of_fit_DESeq2(se, count_matrix, condition, batch)
+goodness_of_fit_DESeq2(se, count_matrix, condition, batch, num_genes = 500)
 }
 \arguments{
 \item{se}{the se object where all the data is contained}
@@ -15,6 +15,8 @@ goodness_of_fit_DESeq2(se, count_matrix, condition, batch)
 \item{condition}{name of the se colData with the condition status}
 
 \item{batch}{name of the se colData containing batch information}
+
+\item{num_genes}{downsample value, default is 500 (or all genes if less)}
 }
 \value{
 a matrix of pvalues where each row is a gene and each column is a

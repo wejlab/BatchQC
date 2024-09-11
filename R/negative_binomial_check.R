@@ -28,6 +28,7 @@ counts2pvalue <- function(counts, size, mu) {
 #' @param count_matrix name of the assay with gene expression matrix (in counts)
 #' @param condition name of the se colData with the condition status
 #' @param batch name of the se colData containing batch information
+#' @param num_genes downsample value, default is 500 (or all genes if less)
 #' @return a matrix of pvalues where each row is a gene and each column is a
 #'   level within the condition of interest
 #' @export
@@ -39,16 +40,29 @@ counts2pvalue <- function(counts, size, mu) {
 #'   condition = "Treatment", batch = "Mutation_Status")
 #' nb_results
 
-goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch) {
+goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch, num_genes = 500) {
     # Obtain needed data from se object
     count_matrix <- SummarizedExperiment::assays(se)[[count_matrix]]
     condition <- SummarizedExperiment::colData(se)[[condition]]
     batch <- SummarizedExperiment::colData(se)[[batch]]
 
-    if (dim(count_matrix)[2] > 20) {
-        stop("This goodness of fit test should only be used for data sets with
-            20 or fewer samples.")
-    }else {
+    num_samples <- dim(count_matrix)[2]
+
+    # Ensure the number of genes is greater than the desired number for sampling
+    if(dim(count_matrix)[1] < num_genes){
+        num_genes <- dim(count_matrix)[1]
+    }
+
+    # Down sample
+    if(dim(count_matrix)[1] > num_genes){
+        sampled <- sample(row.names(count_matrix),num_genes)
+        col_names_prior <- colnames(count_matrix)
+        count_matrix <- count_matrix[sampled,]
+        #rownames(count_matrix) <- sampled
+        #colnames(count_matrix) <- col_names_prior
+    }
+
+    if (num_samples < 20) {
         # Use DESeq2 to fit the NB model
         if (length(unique(batch)) == 1) {
             dds <- DESeqDataSetFromMatrix(count_matrix,
@@ -86,9 +100,31 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch) {
         all_pvalues <- as.data.frame(all_pvalues, row.names =
                 row.names(count_matrix))
         colnames(all_pvalues) <- unique_conditions
-        return(all_pvalues)
-    }
+        recommendation <- nb_proportion(all_pvalues, 0.01, 0.42, num_samples)
+        res_histogram <- nb_histogram(all_pvalues)
+        reference <- "Adapted for small sample sizes from: Li, Y., Ge, X., Peng, F. et al. Exaggerated false positives by popular differential expression methods when analyzing human population samples. Genome Biol 23, 79 (2022). https://doi.org/10.1186/s13059-022-02648-4"
+    }else {
+        conditions_perm <- sample(condition)
+        # Do DE analysis on permuted data
+        if (length(unique(batch)) == 1){
+            dds <- DESeqDataSetFromMatrix(count_matrix , DataFrame(conditions_perm, batch), ~ conditions_perm)
+        }else{
+            dds <- DESeqDataSetFromMatrix(count_matrix , DataFrame(conditions_perm, batch), ~  batch + conditions_perm)
+        }
+        dds <- DESeq(dds)
+        res <- results(dds)
+        # count the number of DEGs
+        num_DEGs <- sum(res$padj<=0.05)
+        all_pvalues <- as.data.frame(results(dds)$padj, row.names = sampled)
+        colnames(all_pvalues) <- "padj"
 
+        threshold <- 0.05*num_genes
+        recommendation <- nb_proportion(all_pvalues, 0.05, threshold, num_samples)
+        res_histogram <- nb_histogram(all_pvalues)
+        reference <- "Paper Reference: Li, Y., Ge, X., Peng, F. et al. Exaggerated false positives by popular differential expression methods when analyzing human population samples. Genome Biol 23, 79 (2022). https://doi.org/10.1186/s13059-022-02648-4"
+    }
+    return(list(recommendation = recommendation, res_histogram = res_histogram,
+        reference = reference))
 }
 
 #' This function creates a histogram from the negative binomial goodness-of-fit
@@ -130,6 +166,7 @@ nb_histogram <- function(p_val_table) {
 #' @param p_val_table table of p-values from the nb test
 #' @param low_pval value of the p-value cut off to use in proportion
 #' @param threshold the value to compare the p-values to
+#' @param num_samples the number of samples in the analysis
 #' @return a statement about whether DESeq2 is appropriate to use for analysis
 #' @export
 #' @examples
@@ -140,20 +177,38 @@ nb_histogram <- function(p_val_table) {
 #'   condition = "Treatment", batch = "Mutation_Status")
 #' nb_proportion(nb_results, low_pval = 0.01, threshold = 0.42)
 
-nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42) {
-    proportion_below_value <- mean(p_val_table < low_pval, na.rm = TRUE)
-    nb_fit <- proportion_below_value < threshold
+nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_samples) {
+    if(num_samples < 20){
+        proportion_below_value <- mean(p_val_table < low_pval, na.rm = TRUE)
+        nb_fit <- proportion_below_value < threshold
 
-    if (nb_fit) {
-        recommendation <- "can use DESeq2 for your analysis."
-    }else {
-        recommendation <- "should not use DESeq2 for your analysis."
+        if (nb_fit) {
+            recommendation <- "may use DESeq2 for your analysis."
+        }else {
+            recommendation <- "should not use DESeq2 for your analysis."
+        }
+
+        commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
+            (round(proportion_below_value, 2) * 100),
+            "% of your features are below the cutoff. ",
+            "Thus based on a threshold of ",
+            threshold, ", you ", recommendation)
+    }else{
+        count_below_value <- length(which(p_val_table < low_pval))
+        nb_fit <- count_below_value < threshold
+
+        if (nb_fit) {
+            recommendation <- "may use DESeq2 for your analysis."
+        }else {
+            recommendation <- "should not use DESeq2 for your analysis."
+        }
+
+        commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
+            count_below_value,
+            " of your features are below the cutoff. ",
+            "If DESeq's assumptions are met, we would expect no more than ",
+            threshold, " features to be significant. Thus you ", recommendation)
     }
 
-    commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
-        (round(proportion_below_value, 2) * 100),
-        "% of your features are below the cutoff. ",
-        "Thus based on a threshold of ",
-        threshold, ", you ", recommendation)
     return(commentary)
 }

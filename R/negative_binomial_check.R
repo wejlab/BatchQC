@@ -115,11 +115,17 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch, num_genes
         res <- results(dds)
         # count the number of DEGs
         num_DEGs <- sum(res$padj<=0.05)
-        all_pvalues <- as.data.frame(results(dds)$padj, row.names = sampled)
-        colnames(all_pvalues) <- "padj"
+
+        all_pvalues <- NULL
+        for(i in 2:length(resultsNames(dds))){
+            pvalues <- as.data.frame(results(dds, name = resultsNames(dds)[i])$padj, row.names = sampled)
+            all_pvalues <- as.data.frame(c(all_pvalues, pvalues))
+        }
+
+        colnames(all_pvalues) <- resultsNames(dds)[2:length(resultsNames(dds))]
 
         threshold <- 0.05*num_genes
-        recommendation <- nb_proportion(all_pvalues, 0.05, threshold, num_samples)
+        recommendation <- nb_proportion(all_pvalues[,(length(levels(batch))):length(colnames(all_pvalues))], 0.05, threshold, num_samples)
         res_histogram <- nb_histogram(all_pvalues)
         reference <- "Paper Reference: Li, Y., Ge, X., Peng, F. et al. Exaggerated false positives by popular differential expression methods when analyzing human population samples. Genome Biol 23, 79 (2022). https://doi.org/10.1186/s13059-022-02648-4"
     }
@@ -194,7 +200,13 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_sa
             "Thus based on a threshold of ",
             threshold, ", you ", recommendation)
     }else{
-        count_below_value <- length(which(p_val_table < low_pval))
+        count_below_value <- 0
+        for(i in 1:length(nrow(p_val_table))){
+            if(min(p_val_table[i,]) < low_pval){
+                count_below_value <- count_below_value + 1
+            }
+        }
+
         nb_fit <- count_below_value < threshold
 
         if (nb_fit) {
@@ -205,7 +217,7 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_sa
 
         commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
             count_below_value,
-            " of your features are below the cutoff. ",
+            " of your condition variable features are below the cutoff. ",
             "If DESeq's assumptions are met, we would expect no more than ",
             threshold, " features to be significant. Thus you ", recommendation)
     }

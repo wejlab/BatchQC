@@ -17,11 +17,3 @@ a histogram of the number of genes within a p-value range
 This function creates a histogram from the negative binomial goodness-of-fit
 pvalues.
 }
-\examples{
-# example code
-library(scran)
-se <- mockSCE(ncells = 20)
-nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
-  condition = "Treatment", batch = "Mutation_Status")
-nb_histogram(nb_results)
-}

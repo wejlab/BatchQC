@@ -25,11 +25,3 @@ This function determines the proportion of p-values below a specific value
 and compares to the previously determined threshold of 0.42 for extreme low
 values.
 }
-\examples{
-# example code
-library(scran)
-se <- mockSCE(ncells = 20)
-nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
-  condition = "Treatment", batch = "Mutation_Status")
-nb_proportion(nb_results, low_pval = 0.01, threshold = 0.42)
-}

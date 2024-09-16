@@ -168,6 +168,10 @@ tabPanel("Upload Data",
                             onInitialize = I(
                                 'function() { this.setValue(""); }'
                             ))),
+                    numericInput('num_genes',
+                        'Number of genes to analyze (downsampling)',
+                        value = 500,
+                        min = 2),
                     withBusyIndicatorUI(actionButton(inputId = 'nb_check',
                         label = 'Check Distribution')),
                     textOutput('recommendation'),

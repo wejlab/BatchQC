@@ -32,5 +32,7 @@ library(scran)
 se <- mockSCE(ncells = 20)
 nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
   condition = "Treatment", batch = "Mutation_Status")
-nb_results
+nb_results[1]
+nb_results[2]
+nb_results[3]
 }

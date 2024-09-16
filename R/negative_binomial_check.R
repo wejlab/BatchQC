@@ -24,6 +24,7 @@ counts2pvalue <- function(counts, size, mu) {
 #' @import DESeq2
 #' @import SummarizedExperiment
 #' @importFrom S4Vectors DataFrame
+#' @importFrom stats na.omit
 #' @param se the se object where all the data is contained
 #' @param count_matrix name of the assay with gene expression matrix (in counts)
 #' @param condition name of the se colData with the condition status
@@ -38,7 +39,10 @@ counts2pvalue <- function(counts, size, mu) {
 #' se <- mockSCE(ncells = 20)
 #' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
 #'   condition = "Treatment", batch = "Mutation_Status")
-#' nb_results
+#' nb_results[1]
+#' nb_results[2]
+#' nb_results[3]
+
 
 goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch, num_genes = 500) {
     # Obtain needed data from se object
@@ -49,15 +53,15 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch, num_genes
     num_samples <- dim(count_matrix)[2]
 
     # Ensure the number of genes is greater than the desired number for sampling
-    if(dim(count_matrix)[1] < num_genes){
+    if (dim(count_matrix)[1] < num_genes) {
         num_genes <- dim(count_matrix)[1]
     }
 
     # Down sample
-    if(dim(count_matrix)[1] > num_genes){
-        sampled <- sample(row.names(count_matrix),num_genes)
+    if (dim(count_matrix)[1] > num_genes) {
+        sampled <- sample(row.names(count_matrix), num_genes)
         col_names_prior <- colnames(count_matrix)
-        count_matrix <- count_matrix[sampled,]
+        count_matrix <- count_matrix[sampled, ]
         #rownames(count_matrix) <- sampled
         #colnames(count_matrix) <- col_names_prior
     }
@@ -106,26 +110,31 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch, num_genes
     }else {
         conditions_perm <- sample(condition)
         # Do DE analysis on permuted data
-        if (length(unique(batch)) == 1){
-            dds <- DESeqDataSetFromMatrix(count_matrix , DataFrame(conditions_perm, batch), ~ conditions_perm)
-        }else{
-            dds <- DESeqDataSetFromMatrix(count_matrix , DataFrame(conditions_perm, batch), ~  batch + conditions_perm)
+        if (length(unique(batch)) == 1) {
+            dds <- DESeqDataSetFromMatrix(count_matrix, DataFrame(conditions_perm, batch), ~ conditions_perm)
+        }else {
+            dds <- DESeqDataSetFromMatrix(count_matrix, DataFrame(conditions_perm, batch), ~  batch + conditions_perm)
         }
         dds <- DESeq(dds)
         res <- results(dds)
         # count the number of DEGs
-        num_DEGs <- sum(res$padj<=0.05)
+        num_DEGs <- sum(res$padj <= 0.05)
 
         all_pvalues <- NULL
-        for(i in 2:length(resultsNames(dds))){
+        for (i in 2:length(resultsNames(dds))){
             pvalues <- as.data.frame(results(dds, name = resultsNames(dds)[i])$padj, row.names = sampled)
             all_pvalues <- as.data.frame(c(all_pvalues, pvalues))
         }
+        all_pvalues <- stats::na.omit(all_pvalues)
+        num_genes <- dim(count_matrix)[1]
 
         colnames(all_pvalues) <- resultsNames(dds)[2:length(resultsNames(dds))]
 
-        threshold <- 0.05*num_genes
-        recommendation <- nb_proportion(all_pvalues[,(length(levels(batch))):length(colnames(all_pvalues))], 0.05, threshold, num_samples)
+        pvals_condition <- as.data.frame(all_pvalues[, (length(levels(batch))):length(colnames(all_pvalues))])
+        colnames(pvals_condition) <- resultsNames(dds)[length(levels(batch)):length(colnames(all_pvalues))]
+
+        threshold <- 0.05 * num_genes
+        recommendation <- nb_proportion(pvals_condition, 0.05, threshold, num_samples)
         res_histogram <- nb_histogram(all_pvalues)
         reference <- "Paper Reference: Li, Y., Ge, X., Peng, F. et al. Exaggerated false positives by popular differential expression methods when analyzing human population samples. Genome Biol 23, 79 (2022). https://doi.org/10.1186/s13059-022-02648-4"
     }
@@ -140,14 +149,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch, num_genes
 #' @import ggplot2
 #' @param p_val_table table of p-values from the nb test
 #' @return a histogram of the number of genes within a p-value range
-#' @export
-#' @examples
-#' # example code
-#' library(scran)
-#' se <- mockSCE(ncells = 20)
-#' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
-#'   condition = "Treatment", batch = "Mutation_Status")
-#' nb_histogram(nb_results)
+
 nb_histogram <- function(p_val_table) {
     # tidy the data so there is a gene, condition and pval column
     p_val_table <- tibble::rownames_to_column(p_val_table, "features")
@@ -174,17 +176,9 @@ nb_histogram <- function(p_val_table) {
 #' @param threshold the value to compare the p-values to
 #' @param num_samples the number of samples in the analysis
 #' @return a statement about whether DESeq2 is appropriate to use for analysis
-#' @export
-#' @examples
-#' # example code
-#' library(scran)
-#' se <- mockSCE(ncells = 20)
-#' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
-#'   condition = "Treatment", batch = "Mutation_Status")
-#' nb_proportion(nb_results, low_pval = 0.01, threshold = 0.42)
 
 nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_samples) {
-    if(num_samples < 20){
+    if (num_samples < 20) {
         proportion_below_value <- mean(p_val_table < low_pval, na.rm = TRUE)
         nb_fit <- proportion_below_value < threshold
 
@@ -199,10 +193,10 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_sa
             "% of your features are below the cutoff. ",
             "Thus based on a threshold of ",
             threshold, ", you ", recommendation)
-    }else{
+    }else {
         count_below_value <- 0
-        for(i in 1:length(nrow(p_val_table))){
-            if(min(p_val_table[i,]) < low_pval){
+        for (i in 1:nrow(p_val_table)){
+            if (min(p_val_table[i, ]) < low_pval) {
                 count_below_value <- count_below_value + 1
             }
         }

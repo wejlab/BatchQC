@@ -270,7 +270,8 @@ observeEvent(input$nb_check, {
         check_res <- goodness_of_fit_DESeq2(reactivevalue$se,
             input$counts_matrix,
             input$condition_of_interest,
-            input$nb_batch)
+            input$nb_batch,
+            input$num_genes)
         output$recommendation <- renderText(check_res$recommendation)
         output$nb_histogram <- renderPlot(check_res$res_histogram)
         output$reference <- renderText(check_res$reference)

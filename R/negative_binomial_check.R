@@ -133,7 +133,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, batch, num_genes
         pvals_condition <- as.data.frame(all_pvalues[, (length(levels(batch))):length(colnames(all_pvalues))])
         colnames(pvals_condition) <- resultsNames(dds)[length(levels(batch)):length(colnames(all_pvalues))]
 
-        threshold <- 0.05 * num_genes
+        threshold <- floor(0.001 * num_genes)
         recommendation <- nb_proportion(pvals_condition, 0.05, threshold, num_samples)
         res_histogram <- nb_histogram(all_pvalues)
         reference <- "Paper Reference: Li, Y., Ge, X., Peng, F. et al. Exaggerated false positives by popular differential expression methods when analyzing human population samples. Genome Biol 23, 79 (2022). https://doi.org/10.1186/s13059-022-02648-4"
@@ -173,7 +173,8 @@ nb_histogram <- function(p_val_table) {
 #' @import ggplot2
 #' @param p_val_table table of p-values from the nb test
 #' @param low_pval value of the p-value cut off to use in proportion
-#' @param threshold the value to compare the p-values to
+#' @param threshold the value to compare the proportion of p-values to for data
+#'   sets less than 20, default is 0.42
 #' @param num_samples the number of samples in the analysis
 #' @return a statement about whether DESeq2 is appropriate to use for analysis
 
@@ -188,12 +189,15 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_sa
             recommendation <- "should not use DESeq2 for your analysis."
         }
 
-        commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
+        commentary <- paste0("With an adjusted FDR cut off of ", low_pval, ", ",
             (round(proportion_below_value, 2) * 100),
             "% of your features are below the cutoff. ",
             "Thus based on a threshold of ",
             threshold, ", you ", recommendation)
     }else {
+        ngenes <- nrow(p_val_table)
+        threshold <- ngenes * 1/1000
+
         count_below_value <- 0
         for (i in 1:nrow(p_val_table)){
             if (min(p_val_table[i, ]) < low_pval) {
@@ -204,16 +208,22 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_sa
         nb_fit <- count_below_value < threshold
 
         if (nb_fit) {
-            recommendation <- "may use DESeq2 for your analysis."
+            if(count_below_value == 0) {
+                recommendation <- "may use DESeq2 for your analysis."
+            }else {
+                recommendation <- "should be cautious about using DESeq2 for
+                your analysis. You are at risk of receiving false results."
+            }
         }else {
             recommendation <- "should not use DESeq2 for your analysis."
         }
 
-        commentary <- paste0("With a p-value cut off of ", low_pval, ", ",
+        commentary <- paste0("With an adjusted FDR cut off of ", low_pval, ", ",
             count_below_value,
             " of your condition variable features are below the cutoff. ",
-            "If DESeq's assumptions are met, we would expect no more than ",
-            threshold, " features to be significant. Thus you ", recommendation)
+            "If DESeq's assumptions are met, we would not expect to find any
+            significant features. Since ",
+            count_below_value, " features are significant, you ", recommendation)
     }
 
     return(commentary)

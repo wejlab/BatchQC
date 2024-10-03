@@ -6,7 +6,7 @@
 and compares to the previously determined threshold of 0.42 for extreme low
 values.}
 \usage{
-nb_proportion(p_val_table, low_pval = 0.01, threshold = 0.42)
+nb_proportion(p_val_table, low_pval = 0.01, threshold = 0.42, num_samples)
 }
 \arguments{
 \item{p_val_table}{table of p-values from the nb test}
@@ -14,6 +14,8 @@ nb_proportion(p_val_table, low_pval = 0.01, threshold = 0.42)
 \item{low_pval}{value of the p-value cut off to use in proportion}
 
 \item{threshold}{the value to compare the p-values to}
+
+\item{num_samples}{the number of samples in the analysis}
 }
 \value{
 a statement about whether DESeq2 is appropriate to use for analysis
@@ -22,12 +24,4 @@ a statement about whether DESeq2 is appropriate to use for analysis
 This function determines the proportion of p-values below a specific value
 and compares to the previously determined threshold of 0.42 for extreme low
 values.
-}
-\examples{
-# example code
-library(scran)
-se <- mockSCE(ncells = 20)
-nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
-  condition = "Treatment", batch = "Mutation_Status")
-nb_proportion(nb_results, low_pval = 0.01, threshold = 0.42)
 }

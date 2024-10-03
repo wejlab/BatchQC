@@ -267,13 +267,14 @@ observeEvent(input$nb_check, {
     req(input$nb_test, input$counts_matrix, input$nb_batch,
         input$condition_of_interest)
     withBusyIndicatorServer("nb_check", {
-        pvals <- goodness_of_fit_DESeq2(reactivevalue$se,
+        check_res <- goodness_of_fit_DESeq2(reactivevalue$se,
             input$counts_matrix,
             input$condition_of_interest,
-            input$nb_batch)
-        output$recommendation <- renderText(nb_proportion(pvals, 0.01, 0.42))
-        output$nb_histogram <- renderPlot(nb_histogram(pvals))
-        output$nb_pvals <- renderDataTable(datatable(pvals))
+            input$nb_batch,
+            input$num_genes)
+        output$recommendation <- renderText(check_res$recommendation)
+        output$nb_histogram <- renderPlot(check_res$res_histogram)
+        output$reference <- renderText(check_res$reference)
     })
 })
 ## Normalize a selected assay

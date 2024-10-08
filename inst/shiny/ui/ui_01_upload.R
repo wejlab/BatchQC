@@ -149,21 +149,21 @@ tabPanel("Upload Data",
                             onInitialize = I(
                                 'function() { this.setValue(""); }'
                             ))),
-                    selectizeInput('nb_batch',
-                        'Select the variable representing batch',
-                        multiple = FALSE,
-                        choices = c(''),
-                        selected = NULL,
-                        options = list(placeholder =
-                                'Please select an option below',
-                            onInitialize = I(
-                                'function() { this.setValue(""); }'
-                            ))),
                     selectizeInput('condition_of_interest',
                         'Select the variable you are interested in analyzing',
                         multiple = FALSE,
                         choices = c(''),
                         selected = NULL, options = list(placeholder =
+                                'Please select an option below',
+                            onInitialize = I(
+                                'function() { this.setValue(""); }'
+                            ))),
+                    selectizeInput('nb_variables',
+                        'Select other variables you would like to include in your analysis',
+                        multiple = TRUE,
+                        choices = c(''),
+                        selected = NULL,
+                        options = list(placeholder =
                                 'Please select an option below',
                             onInitialize = I(
                                 'function() { this.setValue(""); }'

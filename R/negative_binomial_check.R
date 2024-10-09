@@ -70,7 +70,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, other_variables 
     if(!is.null(other_variables)){
         for (i in 1:length(other_variables)) {
             conditions_df <- DataFrame(c(conditions_df, SummarizedExperiment::colData(se)[[other_variables[i]]]))
-            formula_for_DeSeq <- paste0(formula_for_DeSeq, " + ", other_variables[1])
+            formula_for_DeSeq <- paste0(formula_for_DeSeq, " + ", other_variables[i])
         }
     }
 

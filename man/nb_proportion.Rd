@@ -13,7 +13,8 @@ nb_proportion(p_val_table, low_pval = 0.01, threshold = 0.42, num_samples)
 
 \item{low_pval}{value of the p-value cut off to use in proportion}
 
-\item{threshold}{the value to compare the p-values to}
+\item{threshold}{the value to compare the proportion of p-values to for data
+sets less than 20, default is 0.42}
 
 \item{num_samples}{the number of samples in the analysis}
 }

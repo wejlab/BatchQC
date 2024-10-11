@@ -25,13 +25,13 @@ setupSelections <- function() {
         options = list(placeholder = "Please select an option below",
             onInitialize = I('function() { this.setValue(""); }')))
 
-    updateSelectizeInput(session = session, inputId = "nb_batch",
+    updateSelectizeInput(session = session, inputId = "condition_of_interest",
         choices = names(colData(reactivevalue$se)),
         selected = NULL,
         options = list(placeholder = "Please select an option below",
             onInitialize = I('function() { this.setValue(""); }')))
 
-    updateSelectizeInput(session = session, inputId = "condition_of_interest",
+    updateSelectizeInput(session = session, inputId = "nb_variables",
         choices = names(colData(reactivevalue$se)),
         selected = NULL,
         options = list(placeholder = "Please select an option below",
@@ -264,13 +264,13 @@ observe({
 
 ## Complete NB Check
 observeEvent(input$nb_check, {
-    req(input$nb_test, input$counts_matrix, input$nb_batch,
+    req(input$nb_test, input$counts_matrix,
         input$condition_of_interest)
     withBusyIndicatorServer("nb_check", {
         check_res <- goodness_of_fit_DESeq2(reactivevalue$se,
             input$counts_matrix,
             input$condition_of_interest,
-            input$nb_batch,
+            input$nb_variables,
             input$num_genes)
         output$recommendation <- renderText(check_res$recommendation)
         output$nb_histogram <- renderPlot(check_res$res_histogram)

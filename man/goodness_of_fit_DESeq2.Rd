@@ -5,7 +5,13 @@
 \title{This function calculates goodness-of-fit pvalues for all genes by looking at
 how the NB model by DESeq2 fit the data}
 \usage{
-goodness_of_fit_DESeq2(se, count_matrix, condition, batch, num_genes = 500)
+goodness_of_fit_DESeq2(
+  se,
+  count_matrix,
+  condition,
+  other_variables = NULL,
+  num_genes = 500
+)
 }
 \arguments{
 \item{se}{the se object where all the data is contained}
@@ -14,7 +20,8 @@ goodness_of_fit_DESeq2(se, count_matrix, condition, batch, num_genes = 500)
 
 \item{condition}{name of the se colData with the condition status}
 
-\item{batch}{name of the se colData containing batch information}
+\item{other_variables}{name of the se colData containing other variables of
+interest that should be considered in the DESeq2 model}
 
 \item{num_genes}{downsample value, default is 500 (or all genes if less)}
 }
@@ -30,8 +37,10 @@ how the NB model by DESeq2 fit the data
 # example code
 library(scran)
 se <- mockSCE(ncells = 20)
+se$Treatment <- as.factor(se$Treatment)
+se$Mutation_Status <- as.factor(se$Mutation_Status)
 nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
-  condition = "Treatment", batch = "Mutation_Status")
+  condition = "Treatment", other_variables = "Mutation_Status")
 nb_results[1]
 nb_results[2]
 nb_results[3]

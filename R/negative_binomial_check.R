@@ -37,6 +37,8 @@ counts2pvalue <- function(counts, size, mu) {
 #' # example code
 #' library(scran)
 #' se <- mockSCE(ncells = 20)
+#' se$Treatment <- as.factor(se$Treatment)
+#' se$Mutation_Status <- as.factor(se$Mutation_Status)
 #' nb_results <- goodness_of_fit_DESeq2(se = se, count_matrix = "counts",
 #'   condition = "Treatment", other_variables = "Mutation_Status")
 #' nb_results[1]
@@ -67,7 +69,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, other_variables 
     conditions_df <- NULL
     formula_for_DeSeq <- ""
 
-    if(!is.null(other_variables)){
+    if (!is.null(other_variables)) {
         for (i in 1:length(other_variables)) {
             conditions_df <- DataFrame(c(conditions_df, SummarizedExperiment::colData(se)[[other_variables[i]]]))
             formula_for_DeSeq <- paste0(formula_for_DeSeq, " + ", other_variables[i])
@@ -77,7 +79,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, other_variables 
     colnames(conditions_df) <- other_variables
 
     for (i in 1:length(colnames(conditions_df))){
-        conditions_df[,i] <- as.factor(conditions_df[,i])
+        conditions_df[, i] <- as.factor(conditions_df[, i])
     }
 
     if (num_samples < 20) {
@@ -151,11 +153,15 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, other_variables 
         colnames(all_pvalues) <- resultsNames(dds)[2:length(resultsNames(dds))]
         levels_of_condition <- length(levels(condition))
 
-        pvals_condition <- as.data.frame(all_pvalues[, 1:(levels_of_condition-1)])
+        pvals_condition <- as.data.frame(
+            all_pvalues[, 1:(levels_of_condition - 1)])
         colnames(pvals_condition) <- resultsNames(dds)[2:levels_of_condition]
     rownames(pvals_condition) <- rownames(all_pvalues)
         threshold <- floor(0.001 * num_genes)
-        recommendation <- nb_proportion(pvals_condition, 0.05, threshold, num_samples)
+        recommendation <- nb_proportion(pvals_condition,
+            0.05,
+            threshold,
+            num_samples)
         res_histogram <- nb_histogram(all_pvalues)
         reference <- "Paper Reference: Li, Y., Ge, X., Peng, F. et al. Exaggerated false positives by popular differential expression methods when analyzing human population samples. Genome Biol 23, 79 (2022). https://doi.org/10.1186/s13059-022-02648-4"
     }
@@ -218,7 +224,7 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_sa
             threshold, ", you ", recommendation)
     }else {
         ngenes <- nrow(p_val_table)
-        threshold <- ngenes * 1/1000
+        threshold <- ngenes * 1 / 1000
 
         count_below_value <- 0
         for (i in 1:nrow(p_val_table)){
@@ -230,7 +236,7 @@ nb_proportion <- function(p_val_table, low_pval = 0.01, threshold = 0.42, num_sa
         nb_fit <- count_below_value < threshold
 
         if (nb_fit) {
-            if(count_below_value == 0) {
+            if (count_below_value == 0) {
                 recommendation <- "may use DESeq2 for your analysis."
             }else {
                 recommendation <- paste0("should be cautious about using DESeq2",

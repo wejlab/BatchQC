@@ -271,7 +271,8 @@ observeEvent(input$nb_check, {
             input$counts_matrix,
             input$condition_of_interest,
             input$nb_variables,
-            input$num_genes)
+            input$num_genes,
+            input$set_seed)
         output$recommendation <- renderText(check_res$recommendation)
         output$nb_histogram <- renderPlot(check_res$res_histogram)
         output$reference <- renderText(check_res$reference)

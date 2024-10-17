@@ -30,6 +30,7 @@ counts2pvalue <- function(counts, size, mu) {
 #' @param other_variables name of the se colData containing other variables of
 #'   interest that should be considered in the DESeq2 model
 #' @param num_genes downsample value, default is 500 (or all genes if less)
+#' @param seeding integer to set the seed to for reproducibility; default is 13
 #' @return a matrix of pvalues where each row is a gene and each column is a
 #'   level within the condition of interest
 #' @export
@@ -46,7 +47,10 @@ counts2pvalue <- function(counts, size, mu) {
 #' nb_results[3]
 
 
-goodness_of_fit_DESeq2 <- function(se, count_matrix, condition, other_variables = NULL, num_genes = 500) {
+goodness_of_fit_DESeq2 <- function(se, count_matrix, condition,
+    other_variables = NULL, num_genes = 500, seeding = 13) {
+    # set seed
+    set.seed(seeding)
     # Obtain needed data from se object
     count_matrix <- SummarizedExperiment::assays(se)[[count_matrix]]
     condition <- SummarizedExperiment::colData(se)[[condition]]

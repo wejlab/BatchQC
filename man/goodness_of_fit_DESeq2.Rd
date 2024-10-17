@@ -10,7 +10,8 @@ goodness_of_fit_DESeq2(
   count_matrix,
   condition,
   other_variables = NULL,
-  num_genes = 500
+  num_genes = 500,
+  seeding = 13
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ goodness_of_fit_DESeq2(
 interest that should be considered in the DESeq2 model}
 
 \item{num_genes}{downsample value, default is 500 (or all genes if less)}
+
+\item{seeding}{integer to set the seed to for reproducibility; default is 13}
 }
 \value{
 a matrix of pvalues where each row is a gene and each column is a

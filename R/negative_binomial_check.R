@@ -9,6 +9,7 @@
 #' @keywords internal
 
 counts2pvalue <- function(counts, size, mu) {
+    counts <- as.numeric(counts)
     if (max(counts) <= 3) {
         p.fit <- NA
     }else {
@@ -54,6 +55,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition,
     # Obtain needed data from se object
     count_matrix <- SummarizedExperiment::assays(se)[[count_matrix]]
     condition <- SummarizedExperiment::colData(se)[[condition]]
+    condition <- as.factor(condition)
 
     num_samples <- dim(count_matrix)[2]
 
@@ -86,7 +88,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition,
         conditions_df[, i] <- as.factor(conditions_df[, i])
     }
 
-    if (num_samples < 20) {
+    if (num_samples <= 20) {
         # Use DESeq2 to fit the NB model
         if (is.null(other_variables)) {
             dds <- DESeqDataSetFromMatrix(count_matrix,

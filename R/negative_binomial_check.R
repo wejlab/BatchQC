@@ -88,7 +88,7 @@ goodness_of_fit_DESeq2 <- function(se, count_matrix, condition,
         conditions_df[, i] <- as.factor(conditions_df[, i])
     }
 
-    if (num_samples <= 20) {
+    if (num_samples < 20) {
         # Use DESeq2 to fit the NB model
         if (is.null(other_variables)) {
             dds <- DESeqDataSetFromMatrix(count_matrix,

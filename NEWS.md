@@ -1,3 +1,7 @@
+# Version 2.1.5
+## Major Changes
+* Added negative binomial check for DESeq2
+
 # Version 2.1.2
 ## Major Changes
 * Added Variation Ratio Statistic to the explained variation tab

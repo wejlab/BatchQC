@@ -1,6 +1,18 @@
-# Version 2.1.5
+# Version 2.1.6
+## Bug Fixes
+* Corrected code for proper division of less than or 20+ samples
+
+#Version 2.1.5
+## bug Fixes
+* Coerce variable of interest to a factor
+
+# Version 2.1.4
 ## Major Changes
-* Added negative binomial check for DESeq2
+* Added negative binomial check for 20+ samples to DESeq2
+
+# Version 2.1.3
+## Major Changes
+* Added negative binomial check for less than 20 samples to DESeq2
 
 # Version 2.1.2
 ## Major Changes

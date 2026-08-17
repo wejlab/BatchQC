@@ -32,7 +32,7 @@ This functions determines if an experimental design is balanced, then
 calculates the lambda statistic for balanced designs and provides a
 recommendation on if batch correction should be utilized. In general,
 unbalanced designs always benefit from batch correction, while balanced
-designs with a lambda greater than -2 benefit from batch correction.
+designs with a lambda greater than -7 benefit from batch correction.
 }
 \examples{
 

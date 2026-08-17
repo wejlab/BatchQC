@@ -5,3 +5,5 @@
 ^.git
 ^README\.Rmd$
 
+^\.positai$
+^\.claude$

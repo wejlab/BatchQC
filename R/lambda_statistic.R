@@ -90,7 +90,7 @@ is_design_balanced <- function(se, batch, covariate) {
 #' calculates the lambda statistic for balanced designs and provides a
 #' recommendation on if batch correction should be utilized. In general,
 #' unbalanced designs always benefit from batch correction, while balanced
-#' designs with a lambda greater than -2 benefit from batch correction.
+#' designs with a lambda greater than -7 benefit from batch correction.
 #'
 #' @param se summarized experiment object
 #' @param assay string, the assay to analyze

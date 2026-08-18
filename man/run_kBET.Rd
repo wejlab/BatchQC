@@ -5,21 +5,20 @@
 \title{kBET rejection rate}
 \usage{
 run_kBET(
-  se,
-  assay_to_normalize,
-  batch,
-  k0 = NULL,
-  knn = NULL,
-  testSize = NULL,
-  do.pca = TRUE,
-  dim.pca = 50,
-  heuristic = TRUE,
-  n_repeat = 100,
-  alpha = 0.05,
-  addTest = FALSE,
-  verbose = FALSE,
-  adapt = TRUE
-)
+    se,
+    assay_to_normalize,
+    batch,
+    k0 = NULL,
+    knn = NULL,
+    testSize = NULL,
+    do.pca = TRUE,
+    dim.pca = 50,
+    heuristic = TRUE,
+    n_repeat = 100,
+    alpha = 0.05,
+    addTest = FALSE,
+    verbose = FALSE,
+    adapt = TRUE)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}
@@ -88,9 +87,9 @@ This function runs the k-nearest neighbor batch effect test
 library(scran)
 se <- mockSCE()
 kBET_result <- BatchQC::run_kBET(
-  se=se,
-  assay_to_normalize="counts",
-  batch="Treatment"
+    se = se,
+    assay_to_normalize = "counts",
+    batch = "Treatment"
 )
 
 BatchQC::plot_kBET(kBET_result)

@@ -2,17 +2,16 @@
 % Please edit documentation in R/negative_binomial_check.R
 \name{nb_proportion}
 \alias{nb_proportion}
-\title{This function determines the proportion of p-values below a specific value
-and compares to the previously determined threshold}
+\title{This function determines the proportion of p-values below a specific
+value and compares to the previously determined threshold}
 \usage{
 nb_proportion(
-  p_val_table,
-  low_pval,
-  threshold,
-  num_samples,
-  small_sample_cutoff,
-  method
-)
+    p_val_table,
+    low_pval,
+    threshold,
+    num_samples,
+    small_sample_cutoff,
+    method)
 }
 \arguments{
 \item{p_val_table}{table of p-values from the nb test}
@@ -35,6 +34,6 @@ test; either "DESeq2" or "edgeR"}
 a statement about whether DESeq2 is appropriate to use for analysis
 }
 \description{
-This function determines the proportion of p-values below a specific value
-and compares to the previously determined threshold
+This function determines the proportion of p-values below a specific
+value and compares to the previously determined threshold
 }

@@ -2,19 +2,19 @@
 % Please edit documentation in R/umap.R
 \name{umap}
 \alias{umap}
-\title{Create a umap plot; wrapper function for umap package plus custom plotting}
+\title{Create a umap plot; wrapper function for umap package plus custom
+plotting}
 \usage{
 umap(
-  se_object,
-  assay_of_interest,
-  batch,
-  covar,
-  neighbors = 15,
-  min_distance = 0.1,
-  spread = 1,
-  exploratory = FALSE,
-  log_option = FALSE
-)
+    se_object,
+    assay_of_interest,
+    batch,
+    covar,
+    neighbors = 15,
+    min_distance = 0.1,
+    spread = 1,
+    exploratory = FALSE,
+    log_option = FALSE)
 }
 \arguments{
 \item{se_object}{se_object; containing data of interest}
@@ -46,7 +46,8 @@ count data}
 umap plot
 }
 \description{
-Create a umap plot; wrapper function for umap package plus custom plotting
+Create a umap plot; wrapper function for umap package plus custom
+plotting
 }
 \examples{
 library(scran)

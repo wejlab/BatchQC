@@ -6,15 +6,14 @@
 sizes (intended for more than 150 samples).}
 \usage{
 edgeR_large_analysis(
-  count_matrix,
-  condition,
-  other_variables,
-  conditions_df,
-  model_formula,
-  num_samples,
-  sampled,
-  small_sample_cutoff
-)
+    count_matrix,
+    condition,
+    other_variables,
+    conditions_df,
+    model_formula,
+    num_samples,
+    sampled,
+    small_sample_cutoff)
 }
 \arguments{
 \item{count_matrix}{matrix containing the data to be analyzed}

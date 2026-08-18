@@ -2,8 +2,8 @@
 % Please edit documentation in R/umap.R
 \name{possible_k_neighbors}
 \alias{possible_k_neighbors}
-\title{Create a vector of possible nearest neighbor values from 5, 15, 25, 50, and
-100}
+\title{Create a vector of possible nearest neighbor values from 5, 15, 25, 50,
+and 100}
 \usage{
 possible_k_neighbors(data_size)
 }
@@ -14,6 +14,6 @@ possible_k_neighbors(data_size)
 k nearest neighbor list
 }
 \description{
-Create a vector of possible nearest neighbor values from 5, 15, 25, 50, and
-100
+Create a vector of possible nearest neighbor values from 5, 15, 25, 50,
+and 100
 }

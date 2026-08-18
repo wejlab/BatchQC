@@ -1,4 +1,5 @@
-#' Create a umap plot; wrapper function for umap package plus custom plotting
+#' Create a umap plot; wrapper function for umap package plus custom
+#' plotting
 #' @param se_object se_object; containing data of interest
 #' @param assay_of_interest string; the assay in the se_object to plot
 #' @param batch string; representing batch
@@ -17,6 +18,16 @@
 #'   count data
 #' @import umap
 #' @return umap plot
+#' @usage umap(
+#'     se_object,
+#'     assay_of_interest,
+#'     batch,
+#'     covar,
+#'     neighbors = 15,
+#'     min_distance = 0.1,
+#'     spread = 1,
+#'     exploratory = FALSE,
+#'     log_option = FALSE)
 #' @examples
 #' library(scran)
 #' se <- mockSCE()
@@ -79,8 +90,8 @@ umap <- function(se_object, assay_of_interest, batch, covar, neighbors = 15,
     return(plot)
 }
 
-#' Create a vector of possible nearest neighbor values from 5, 15, 25, 50, and
-#' 100
+#' Create a vector of possible nearest neighbor values from 5, 15, 25, 50,
+#' and 100
 #' @param data_size size of the data set used to create umaps
 #' @return k nearest neighbor list
 
@@ -96,8 +107,8 @@ possible_k_neighbors <- function(data_size) {
     }
 }
 
-#' Create potential min_distance values for exploratory analysis based on the
-#' value of spread
+#' Create potential min_distance values for exploratory analysis based on
+#' the value of spread
 #' @param spread numeric; the value of spread used in the exploratory analysis
 #' @return vector of min_distance values to use in exploratory analysis
 

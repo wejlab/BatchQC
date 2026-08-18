@@ -38,11 +38,12 @@ designs with a lambda greater than -7 benefit from batch correction.
 
 library(scran)
 se <- mockSCE()
-lambda_calculation <- run_lambda(se,
-                                 assay = "counts",
-                                 batch = "Mutation_Status",
-                                 condition = "Treatment")
- print(lambda_calculation$correction_recommendation)
- print(lambda_calculation$lambda_stat)
+lambda_calculation <- run_lambda(
+                            se,
+                            assay = "counts",
+                            batch = "Mutation_Status",
+                            condition = "Treatment")
+print(lambda_calculation$correction_recommendation)
+print(lambda_calculation$lambda_stat)
 
 }

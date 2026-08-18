@@ -65,6 +65,7 @@ neighbourhoods
 neighbours
 nondiscrete
 normalizations
+num
 onject
 overcorrection
 padj
@@ -75,11 +76,13 @@ psva
 pval
 pvalue
 pvalues
+roxygen
 sTCC
 sapply
 se
 shinyjs
 subjectID
+sv
 sva
 svaseq
 tabularised

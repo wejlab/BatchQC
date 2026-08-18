@@ -7,13 +7,12 @@ This function applies sva correction to a summarized experiment object
 with count based RNA-seq data}
 \usage{
 svaseq_correction(
-  se,
-  assay_to_normalize,
-  var_of_interest,
-  covar,
-  output_assay_name,
-  num_sv = FALSE
-)
+    se,
+    assay_to_normalize,
+    var_of_interest,
+    covar,
+    output_assay_name,
+    num_sv = FALSE)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}

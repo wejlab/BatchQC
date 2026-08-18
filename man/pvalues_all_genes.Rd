@@ -2,8 +2,8 @@
 % Please edit documentation in R/negative_binomial_check.R
 \name{pvalues_all_genes}
 \alias{pvalues_all_genes}
-\title{This function calculates goodness-of-fit p-values for each condition level
-for each gene size, and estimated NB mean}
+\title{This function calculates goodness-of-fit p-values for each condition
+level for each gene size, and estimated NB mean}
 \usage{
 pvalues_all_genes(condition, size, mu_matrix, count_matrix)
 }
@@ -24,7 +24,7 @@ a data frame of p-values for each gene under each biological
 condition
 }
 \description{
-This function calculates goodness-of-fit p-values for each condition level
-for each gene size, and estimated NB mean
+This function calculates goodness-of-fit p-values for each condition
+level for each gene size, and estimated NB mean
 }
 \keyword{internal}

@@ -1,6 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # BatchQC
 
 ## Introduction
@@ -72,3 +70,8 @@ install_github("wejlab/BatchQC")
 ### Load BatchQC and Launch Shiny App
 
 You should now be able to load BatchQC and launch the shiny app.
+
+``` r
+library(BatchQC)
+BatchQC()
+```

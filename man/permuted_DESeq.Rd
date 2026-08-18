@@ -5,12 +5,11 @@
 \title{This function performs DESeq on the permuted dataset.}
 \usage{
 permuted_DESeq(
-  count_matrix,
-  condition,
-  other_variables,
-  conditions_df,
-  model_formula
-)
+    count_matrix,
+    condition,
+    other_variables,
+    conditions_df,
+    model_formula)
 }
 \arguments{
 \item{count_matrix}{matrix containing the data to be analyzed}

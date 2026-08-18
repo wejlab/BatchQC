@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -74,7 +72,7 @@ install_github("wejlab/BatchQC")
 ### Load BatchQC and Launch Shiny App
 You should now be able to load BatchQC and launch the shiny app.
 
-```{R, echo = FALSE}
+```{R, eval = FALSE}
 library(BatchQC)
-#BatchQC()
+BatchQC()
 ```

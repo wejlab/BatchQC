@@ -36,8 +36,8 @@ index based on these three proportions.
 library(scran)
 se <- mockSCE()
 res <- BatchQC::compute_lambda(assays(se)[["counts"]],
-  colData(se)$Mutation_Status,
-  colData(se)$Treatment)
+    colData(se)$Mutation_Status,
+    colData(se)$Treatment)
 print(res)
 
 }

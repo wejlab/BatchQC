@@ -32,7 +32,7 @@ boundaries until a maximum is found or the interval becomes too small
 }
 \examples{
 get_maximum <- bisect(function(x) {
-  -(x - 2)^2
+    -(x - 2)^2
 }, c(-5, 50))
 
 }

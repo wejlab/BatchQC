@@ -5,21 +5,20 @@
 \title{kBET - k-nearest neighbour batch effect test}
 \usage{
 kBET(
-  df,
-  batch,
-  k0 = NULL,
-  knn = NULL,
-  testSize = NULL,
-  do.pca = TRUE,
-  dim.pca = 50,
-  heuristic = TRUE,
-  n_repeat = 100,
-  alpha = 0.05,
-  addTest = FALSE,
-  verbose = FALSE,
-  plot = TRUE,
-  adapt = TRUE
-)
+    df,
+    batch,
+    k0 = NULL,
+    knn = NULL,
+    testSize = NULL,
+    do.pca = TRUE,
+    dim.pca = 50,
+    heuristic = TRUE,
+    n_repeat = 100,
+    alpha = 0.05,
+    addTest = FALSE,
+    verbose = FALSE,
+    plot = TRUE,
+    adapt = TRUE)
 }
 \arguments{
 \item{df}{dataset (rows: cells, columns: features)}

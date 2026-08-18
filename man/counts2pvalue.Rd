@@ -2,8 +2,8 @@
 % Please edit documentation in R/negative_binomial_check.R
 \name{counts2pvalue}
 \alias{counts2pvalue}
-\title{This function calculates p-values for each gene given counts, estimated NB
-size, and estimated NB mean}
+\title{This function calculates p-values for each gene given counts, estimated
+NB size, and estimated NB mean}
 \usage{
 counts2pvalue(counts, size, mu)
 }
@@ -19,7 +19,7 @@ different samples of the gene}
 a p-value based on estimated NB size and mean
 }
 \description{
-This function calculates p-values for each gene given counts, estimated NB
-size, and estimated NB mean
+This function calculates p-values for each gene given counts, estimated
+NB size, and estimated NB mean
 }
 \keyword{internal}

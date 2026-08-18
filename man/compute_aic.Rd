@@ -2,17 +2,16 @@
 % Please edit documentation in R/compute_aic.R
 \name{compute_aic}
 \alias{compute_aic}
-\title{Compute the AIC for lognormal (ComBat) model, negative binomial (ComBat-seq)
-model and the Voom model}
+\title{Compute the AIC for lognormal (ComBat) model, negative binomial
+(ComBat-seq) model and the Voom model}
 \usage{
 compute_aic(
-  se,
-  assay_of_interest,
-  batchind,
-  groupind,
-  maxit = 25,
-  zero_filt_percent = 100
-)
+    se,
+    assay_of_interest,
+    batchind,
+    groupind,
+    maxit = 25,
+    zero_filt_percent = 100)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}

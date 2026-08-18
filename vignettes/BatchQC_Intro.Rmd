@@ -60,7 +60,7 @@ interface has the following features:
 To begin, install [Bioconductor](http://www.bioconductor.org/) and then install
 BatchQC:
 
-```{R, eval = FALSE}
+```{R Installation, eval = FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("BatchQC")
@@ -70,7 +70,7 @@ BiocManager::install("BatchQC")
 To install the most up-to-date version of BatchQC, please install directly from
 GitHub. You will need the devtools package. You can install both of these with
 the following commands:
-```{R, eval = FALSE}
+```{R GitHub Install Instructions, eval = FALSE}
 if (!require("devtools", quietly = TRUE)) {
     install.packages("devtools")   
 }
@@ -262,7 +262,7 @@ normalized data. We will utilize log_CPM normalized data for ComBat. However,
 examples are provided below on how you would complete many different
 normalization methods if needed via the command line:
 
-```{r}
+```{R Normalization}
 # CPM Normalization
 se_object <- BatchQC::normalize_SE(se = se_object, method = "CPM",
     log_bool = FALSE, assay_to_normalize = assay_of_interest,
@@ -331,7 +331,7 @@ distribution, so ComBat is likely an appropriate batch correction tool. We will
 use the log-CPM assay since ComBat requires normalized data. Therefore, to run 
 from the command line use the following:
 
-```{r}
+```{R ComBat Correction}
 # ComBat correction
 se_object <- BatchQC::batch_correct(se = se_object, method = "ComBat",
     assay_to_normalize = "CPM_log_normalized_counts", batch = batch,
@@ -352,7 +352,7 @@ columns).
 
 To recreate this table, run the following code, which will produce a tibble
 as output:
-```{R}
+```{R Experimental Design}
 batch_design_tibble <- BatchQC::batch_design(se = se_object, batch = batch, 
     covariate = covar)
 batch_design_tibble
@@ -363,7 +363,7 @@ This tab displays the Pearson correlation coefficient and Cramer's V estimation
 based on the selected batch and condition.
 
 This table can be recreated with the following code:
-```{R}
+```{R Confounding Statistics}
 confound_table <- BatchQC::confound_metrics(se = se_object, batch = batch)
 confound_table
 ```
@@ -375,7 +375,7 @@ relationship between your batch and condition variables. It can range from -1 to
 closer the value is to -1 or 1, the more likely there is a batch effect.
 
 To calculate only the pearson correlation coefficient, run the following:
-```{R}
+```{R Pearson Correlation}
 pearson_cor_result <- BatchQC::std_pearson_corr_coef(batch_design_tibble)
 pearson_cor_result
 ```
@@ -386,7 +386,7 @@ closer the value is to 0, the lower the batch effect. The closer the value is to
 1, the greater the batch effect
 
 To calculate only Cramer's V, run the following:
-```{R}
+```{R Cramers V}
 cramers_v_result <- BatchQC::cramers_v(batch_design_tibble)
 cramers_v_result
 ```
@@ -440,7 +440,7 @@ lambda_calculation$lambda_stat
 
 To recreate the variation analysis plot for the TB counts assay, use the
 following code for individual variation:
-```{r}
+```{R Variation Analysis}
 ex_variation <- batchqc_explained_variation(se = se_object,
     batch = batch, condition = covar, assay_name = assay_of_interest)
 EV_boxplot <- BatchQC::EV_plotter(batchqc_ev = ex_variation[[1]])
@@ -450,14 +450,14 @@ BatchQC::summary_stats_EV_table(ex_variation[[1]])
 
 To recreate the residual variation analysis table for the TB counts assay, use 
 the following code:
-```{r}
+```{R Variation Table}
 EV_boxplot_type_2 <- BatchQC::EV_plotter(batchqc_ev = ex_variation[[2]])
 EV_boxplot_type_2
 BatchQC::summary_stats_EV_table(ex_variation[[2]])
 ```
 
 We can then compare our batch corrected assay, using the following code:
-```{r}
+```{R Compare Raw and Batch Corrected Data}
 ex_variation <- batchqc_explained_variation(se = se_object,
     batch = batch, condition = covar, assay_name = "ComBat_corrected")
 EV_boxplot <- BatchQC::EV_plotter(batchqc_ev = ex_variation[[1]])
@@ -515,7 +515,7 @@ Using the TB dataset, we initially see clustering based on batch, but
 after apply ComBat, our adjusted data set clusters more based on condition.
 
 Use the following code to recreate the sample correlation heatmap:
-```{r}
+```{R Sample Correlation Heatmap}
 heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = assay_of_interest,
     nfeature = 38, annotation_column = c(batch, covar),
     log_option = "FALSE")
@@ -533,7 +533,7 @@ clustering together on your raw data, you should perform a batch effect
 correction to adjust your data.
 
 Use the following code to recreate the heatmap:
-```{r}
+```{R Heatmap}
 heatmaps <- BatchQC::heatmap_plotter(se = se_object, assay = assay_of_interest,
     nfeature = 38, annotation_column = c(batch, covar),
     log_option = FALSE)
@@ -555,7 +555,7 @@ Euclidian distance metric. Labels will include the batch variable and one
 covariate of interest.
 
 Use the following code to recreate the dendrogram for the TB data set: 
-```{r}
+```{R Dendrogram}
 dendrogram_plot <- BatchQC::dendrogram_plotter(se = se_object,
     assay = assay_of_interest,
     batch_var = batch,
@@ -569,7 +569,7 @@ branches on the dendrogram without the appearance of great distance of the
 samples at the top and the bottom of the chart.
 
 Use the following code to recreate the circular dendrogram: 
-```{r}
+```{R Circular Dendogram}
 circular_dendrogram_plot <- BatchQC::dendrogram_plotter(
     se = se_object, assay = assay_of_interest, batch_var = batch,
     category_var = covar)
@@ -589,7 +589,7 @@ Use the following code to recreate the PCA plot and associated table that lists
 the explained variation of each PC for our TB data set. Please note that count
 data should be log-normalized prior to PCA plotting, so we use the
 log_normalized assay:
-```{r}
+```{R PCA}
 pca_plot <- BatchQC::PCA_plotter(se = se_object, nfeature = 20, color = batch,
     shape = covar, batch = batch,
     assays = c("log_normalized_counts", "ComBat_corrected"),
@@ -651,7 +651,7 @@ be helpful if you are interested in a specific feature or p-value threshold).
 To run the limma differential expression analysis from the command line, run the
 following code (which can be modified to run DESeq2 when appropriate by changing
 the method argument to "DESeq2"):
-```{r}
+```{R Differential Expression}
 differential_expression <- BatchQC::DE_analyze(se = se_object,
     method = "limma", batch = batch, conditions = c(covar),
     assay_to_analyze = assay_of_interest, padj_method = "BH")
@@ -660,20 +660,20 @@ differential_expression <- BatchQC::DE_analyze(se = se_object,
 After running the differential expression analysis, you can see all the
 completed analysis by running this code: 
 
-```{r}
+```{r Differential Analysis Results}
 names(differential_expression)
 ```
 
 You can then view the log2 fold change, p-value and adjusted p-value table for a
 specific analysis of interest, by running the following:
-```{r}
+```{r Differential Analysis Specific Analysis Results}
 head(differential_expression[["TBStatusPTB"]])
 ```
 
 After running a differential expression analysis, you may replicate the p-value
 box plot and table from the command line by running the following code:
 
-```{r}
+```{R Differential Analysis p-val Results}
 pval_plotter(differential_expression)
 head(pval_summary(differential_expression))
 ```
@@ -702,7 +702,7 @@ To recreate the volcano plot for the "TBStatusPTB" assay (which you may change
 by using any of the named results assays) differential expression result from 
 our uncorrected TB data , run the following code:
 
-```{r}
+```{R Volcano Plot}
 value <- round((max(abs(
     differential_expression[[length(differential_expression)]][, 1]))
     + min(
@@ -729,7 +729,7 @@ If you run code from the command line according to the above instructions, all
 assays will be saved to your original SE object and available for your use in
 other applications. You may save it as an SE object by running the following:
 
-```{r, eval = FALSE, echo = TRUE}
+```{R Export Data, eval = FALSE, echo = TRUE}
 file_location <- "location/to/save/object"
 
 saveRDS(object = se_object, file = file_location)

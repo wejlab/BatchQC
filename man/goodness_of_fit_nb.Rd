@@ -2,18 +2,17 @@
 % Please edit documentation in R/negative_binomial_check.R
 \name{goodness_of_fit_nb}
 \alias{goodness_of_fit_nb}
-\title{This function calculates goodness-of-fit pvalues for all genes by looking at
-how the NB model by edgeR or DESeq2 fit the data}
+\title{This function calculates goodness-of-fit pvalues for all genes by looking
+at how the NB model by edgeR or DESeq2 fit the data}
 \usage{
 goodness_of_fit_nb(
-  se,
-  count_matrix,
-  condition,
-  other_variables = NULL,
-  method = "edgeR",
-  num_genes = 500,
-  small_sample_cutoff = 21
-)
+    se,
+    count_matrix,
+    condition,
+    other_variables = NULL,
+    method = "edgeR",
+    num_genes = 500,
+    small_sample_cutoff = 21)
 }
 \arguments{
 \item{se}{the se object; se object where all the data is contained}
@@ -40,8 +39,8 @@ a matrix of p-values where each row is a gene and each column is a
 level within the condition of interest
 }
 \description{
-This function calculates goodness-of-fit pvalues for all genes by looking at
-how the NB model by edgeR or DESeq2 fit the data
+This function calculates goodness-of-fit pvalues for all genes by looking
+at how the NB model by edgeR or DESeq2 fit the data
 }
 \examples{
 # example code for small sample
@@ -50,8 +49,8 @@ se <- mockSCE(ncells = 20)
 se$Treatment <- as.factor(se$Treatment)
 se$Mutation_Status <- as.factor(se$Mutation_Status)
 nb_results <- goodness_of_fit_nb(se = se, count_matrix = "counts",
-  condition = "Treatment", other_variables = "Mutation_Status",
-  method = "edgeR")
+    condition = "Treatment", other_variables = "Mutation_Status",
+    method = "edgeR")
 nb_results[1]
 nb_results[2]
 nb_results[3]
@@ -62,8 +61,8 @@ se <- mockSCE(ncells = 150)
 se$Treatment <- as.factor(se$Treatment)
 se$Mutation_Status <- as.factor(se$Mutation_Status)
 nb_results <- goodness_of_fit_nb(se = se, count_matrix = "counts",
-  condition = "Treatment", other_variables = "Mutation_Status",
-  method = "edgeR")
+    condition = "Treatment", other_variables = "Mutation_Status",
+    method = "edgeR")
 nb_results[1]
 nb_results[2]
 nb_results[3]

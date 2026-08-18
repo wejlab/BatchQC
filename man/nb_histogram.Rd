@@ -2,8 +2,8 @@
 % Please edit documentation in R/negative_binomial_check.R
 \name{nb_histogram}
 \alias{nb_histogram}
-\title{This function creates a histogram from the negative binomial goodness-of-fit
-adjusted pvalues.}
+\title{This function creates a histogram from the negative binomial
+goodness-of-fit adjusted pvalues.}
 \usage{
 nb_histogram(p_val_table)
 }
@@ -14,6 +14,6 @@ nb_histogram(p_val_table)
 a histogram of the number of genes within a p-value range
 }
 \description{
-This function creates a histogram from the negative binomial goodness-of-fit
-adjusted pvalues.
+This function creates a histogram from the negative binomial
+goodness-of-fit adjusted pvalues.
 }

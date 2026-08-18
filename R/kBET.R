@@ -48,13 +48,28 @@
 #' @import SummarizedExperiment
 #' @import ggplot2
 #'
+#' @usage run_kBET(
+#'     se,
+#'     assay_to_normalize,
+#'     batch,
+#'     k0 = NULL,
+#'     knn = NULL,
+#'     testSize = NULL,
+#'     do.pca = TRUE,
+#'     dim.pca = 50,
+#'     heuristic = TRUE,
+#'     n_repeat = 100,
+#'     alpha = 0.05,
+#'     addTest = FALSE,
+#'     verbose = FALSE,
+#'     adapt = TRUE)
 #' @examples
 #' library(scran)
 #' se <- mockSCE()
 #' kBET_result <- BatchQC::run_kBET(
-#'   se=se,
-#'   assay_to_normalize="counts",
-#'   batch="Treatment"
+#'     se = se,
+#'     assay_to_normalize = "counts",
+#'     batch = "Treatment"
 #' )
 #'
 #' BatchQC::plot_kBET(kBET_result)
@@ -85,7 +100,15 @@ run_kBET <- function(
 #' @description adapted from kBET package (https://github.com/theislab/kBET).
 #' \code{kBET} runs a chi square test to evaluate
 #' the probability of a batch effect.
-#'
+#' @importFrom FNN get.knn
+#' @import ggplot2
+#' @import tidyverse
+#' @importFrom stats quantile pchisq
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom utils data
+#' @importFrom methods is
+#' @include kBET-utils.R
+#' @name kBET
 #' @param df dataset (rows: cells, columns: features)
 #' @param batch batch id for each cell or a data frame with
 #' both condition and replicates
@@ -111,6 +134,21 @@ run_kBET <- function(
 #' @param plot if stats > 10, then a boxplot of the resulting
 #' rejection rates is created
 #' @param verbose displays stages of current computation (defaults to FALSE)
+#' @usage kBET(
+#'     df,
+#'     batch,
+#'     k0 = NULL,
+#'     knn = NULL,
+#'     testSize = NULL,
+#'     do.pca = TRUE,
+#'     dim.pca = 50,
+#'     heuristic = TRUE,
+#'     n_repeat = 100,
+#'     alpha = 0.05,
+#'     addTest = FALSE,
+#'     verbose = FALSE,
+#'     plot = TRUE,
+#'     adapt = TRUE)
 #' @return list object
 #'    \enumerate{
 #'    \item \code{summary} - a rejection rate for the data,
@@ -142,15 +180,6 @@ run_kBET <- function(
 #'
 #' batch.estimate <- kBET(df, batch)
 #'
-#' @importFrom FNN get.knn
-#' @import ggplot2
-#' @import tidyverse
-#' @importFrom stats quantile pchisq
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom utils data
-#' @importFrom methods is
-#' @include kBET-utils.R
-#' @name kBET
 #' @export
 kBET <- function(
     df, batch, k0 = NULL, knn = NULL, testSize = NULL, do.pca = TRUE,
@@ -221,7 +250,7 @@ kBET <- function(
 #'
 #' @examples
 #' get_maximum <- bisect(function(x) {
-#'   -(x - 2)^2
+#'     -(x - 2)^2
 #' }, c(-5, 50))
 #'
 #' @export

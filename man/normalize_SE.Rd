@@ -5,14 +5,13 @@
 \title{This function allows you to add normalized count matrix to the SE object}
 \usage{
 normalize_SE(
-  se,
-  method,
-  log_bool,
-  assay_to_normalize,
-  output_assay_name,
-  condition = NULL,
-  batch = NULL
-)
+    se,
+    method,
+    log_bool,
+    assay_to_normalize,
+    output_assay_name,
+    condition = NULL,
+    batch = NULL)
 }
 \arguments{
 \item{se}{SummarizedExperiment Object}

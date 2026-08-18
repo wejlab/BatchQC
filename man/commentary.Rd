@@ -2,8 +2,8 @@
 % Please edit documentation in R/negative_binomial_check.R
 \name{commentary}
 \alias{commentary}
-\title{This function creates the commentary recommendation when there are more than
-20 samples.}
+\title{This function creates the commentary recommendation when there are more
+than 20 samples.}
 \usage{
 commentary(nb_fit_pval, count_below_value_pval, proportion, low_pval, method)
 }
@@ -23,6 +23,6 @@ test; either "DESeq2" or "edgeR"}
 a commentary string statement
 }
 \description{
-This function creates the commentary recommendation when there are more than
-20 samples.
+This function creates the commentary recommendation when there are more
+than 20 samples.
 }

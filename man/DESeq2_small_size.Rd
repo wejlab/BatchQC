@@ -2,18 +2,17 @@
 % Please edit documentation in R/negative_binomial_check.R
 \name{DESeq2_small_size}
 \alias{DESeq2_small_size}
-\title{This function calculated the goodness of fit of DESeq2 for small sample sizes
-(intended for less than 20 samples).}
+\title{This function calculated the goodness of fit of DESeq2 for small sample
+sizes (intended for less than 20 samples).}
 \usage{
 DESeq2_small_size(
-  count_matrix,
-  condition,
-  other_variables,
-  conditions_df,
-  model_formula,
-  num_samples,
-  small_sample_cutoff
-)
+    count_matrix,
+    condition,
+    other_variables,
+    conditions_df,
+    model_formula,
+    num_samples,
+    small_sample_cutoff)
 }
 \arguments{
 \item{count_matrix}{matrix containing the data to be analyzed}
@@ -39,6 +38,6 @@ a list containing the string recommendation, the histogram and a
 reference for the original source of the test
 }
 \description{
-This function calculated the goodness of fit of DESeq2 for small sample sizes
-(intended for less than 20 samples).
+This function calculated the goodness of fit of DESeq2 for small sample
+sizes (intended for less than 20 samples).
 }

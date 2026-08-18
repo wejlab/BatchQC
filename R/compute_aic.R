@@ -1,6 +1,6 @@
 globalVariables(c(glm.nb, AIC, glm, gaussian, glm.control))
-#' Compute the AIC for lognormal (ComBat) model, negative binomial (ComBat-seq)
-#' model and the Voom model
+#' Compute the AIC for lognormal (ComBat) model, negative binomial
+#' (ComBat-seq) model and the Voom model
 #'
 #' This function calculates the AIC based on lognormal distribution,
 #' negative binomial distribution as well as the voom transformation.
@@ -23,6 +23,13 @@ globalVariables(c(glm.nb, AIC, glm, gaussian, glm.control))
 #'   with more than this percentage of zeros will be filtered out. Default is
 #'   100.
 #'
+#' @usage compute_aic(
+#'     se,
+#'     assay_of_interest,
+#'     batchind,
+#'     groupind,
+#'     maxit = 25,
+#'     zero_filt_percent = 100)
 #' @description
 #'   \describe{
 #'     \item{nb_result}{A vector contains the AIC based on negative binomial

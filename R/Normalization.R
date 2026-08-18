@@ -9,6 +9,14 @@
 #' @param condition string; the biological variable of interest, required for
 #'   voom, default 'NULL'
 #' @param batch string; the batch variable, required for voom, default 'NULL'
+#' @usage normalize_SE(
+#'     se,
+#'     method,
+#'     log_bool,
+#'     assay_to_normalize,
+#'     output_assay_name,
+#'     condition = NULL,
+#'     batch = NULL)
 #' @return the original SE object with normalized assay appended
 #' @import SummarizedExperiment
 #' @import EBSeq

@@ -1,8 +1,8 @@
 Type: Package
 Package: BatchQC
 Title: Batch Effects Quality Control Software
-Version: 2.8.0
-Date: 2026-02-10
+Version: 2.8.1
+Date: 2026-08-18
 Authors@R: c(
     person("Jessica", "Anderson", , "anderson.jessica@rutgers.edu", 
     role = c("aut"), comment = c(ORCID = "0000-0002-0542-9872")),
@@ -44,7 +44,7 @@ License: MIT + file LICENSE
 URL: https://github.com/wejlab/BatchQC
 BugReports: https://github.com/wejlab/BatchQC/issues
 Depends:
-    R (>= 4.5.0)
+    R (>= 4.6.0)
 Imports:
     data.table,
     DESeq2,

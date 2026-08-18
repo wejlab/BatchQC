@@ -7,13 +7,12 @@ This function applies sva correction to a summarized experiment object
 (implementation adapted from sva::psva)}
 \usage{
 sva_correction(
-  se,
-  assay_to_normalize,
-  var_of_interest,
-  covar,
-  output_assay_name,
-  psva = FALSE
-)
+    se,
+    assay_to_normalize,
+    var_of_interest,
+    covar,
+    output_assay_name,
+    psva = FALSE)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}

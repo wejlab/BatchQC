@@ -252,6 +252,13 @@ limma_correction <- function(se, assay_to_normalize, batch, covar,
 #' @param psva boolean; default: FALSE. If set to TRUE and no covariate input,
 #' psva function from the sva package will be used to remove batch effect.
 #' @return SE object with an added sva corrected array
+#' @usage sva_correction(
+#'     se,
+#'     assay_to_normalize,
+#'     var_of_interest,
+#'     covar,
+#'     output_assay_name,
+#'     psva = FALSE)
 #' @import SummarizedExperiment
 #' @import sva
 
@@ -315,6 +322,13 @@ sva_correction <- function(se, assay_to_normalize, var_of_interest,
 #' factor is set to 1 for a small number of samples. If set to TRUE, svaseq
 #' function will estimate the number of latent factors for you.
 #' @return SE object with an added sva corrected array
+#' @usage svaseq_correction(
+#'     se,
+#'     assay_to_normalize,
+#'     var_of_interest,
+#'     covar,
+#'     output_assay_name,
+#'     num_sv = FALSE)
 #' @import SummarizedExperiment
 #' @import sva
 
@@ -366,6 +380,14 @@ svaseq_correction <- function(se, assay_to_normalize, var_of_interest,
 #' @param numrepeats integer; default: 100000L the number of repeats in which
 #' to run the simulated batch mean distribution estimator using the random
 #' selection algorithm.
+#' @usage Harman_correction(
+#'     se,
+#'     assay_to_normalize,
+#'     batch,
+#'     covar,
+#'     output_assay_name,
+#'     limit = 0.95,
+#'     numrepeats = 100000L)
 #' @return SE object with an added Harman corrected reconstructed data
 #' @import SummarizedExperiment
 #' @import Harman

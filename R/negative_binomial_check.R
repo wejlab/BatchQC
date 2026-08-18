@@ -1,5 +1,5 @@
-#' This function calculates p-values for each gene given counts, estimated NB
-#' size, and estimated NB mean
+#' This function calculates p-values for each gene given counts, estimated
+#' NB size, and estimated NB mean
 #' @param counts a vector of gene expression values (in counts)
 #' @param size an estimated size parameter of the NB distributions for the gene
 #' @param mu a vector of estimated mu parameter of the NB distributions for
@@ -19,8 +19,8 @@ counts2pvalue <- function(counts, size, mu) {
     return(p.fit)
 }
 
-#' This function calculates goodness-of-fit p-values for each condition level
-#' for each gene size, and estimated NB mean
+#' This function calculates goodness-of-fit p-values for each condition
+#' level for each gene size, and estimated NB mean
 #' @param condition string; name of the se colData with the condition status
 #' @param size numeric; an estimated size parameter of the NB distributions for
 #'   the gene
@@ -84,8 +84,8 @@ nb_down_sample <- function(count_matrix, num_genes) {
     return(list(sampled = sampled, count_matrix = count_matrix))
 }
 
-#' This function calculates goodness-of-fit pvalues for all genes by looking at
-#' how the NB model by edgeR or DESeq2 fit the data
+#' This function calculates goodness-of-fit pvalues for all genes by looking
+#' at how the NB model by edgeR or DESeq2 fit the data
 #' @import DESeq2
 #' @import edgeR
 #' @import SummarizedExperiment
@@ -102,6 +102,14 @@ nb_down_sample <- function(count_matrix, num_genes) {
 #' @param small_sample_cutoff value at which non-parametric test will be used
 #'   (considered "large sample size") vs parametric will be used (considered
 #'   "small sample size); default is 21
+#' @usage goodness_of_fit_nb(
+#'     se,
+#'     count_matrix,
+#'     condition,
+#'     other_variables = NULL,
+#'     method = "edgeR",
+#'     num_genes = 500,
+#'     small_sample_cutoff = 21)
 #' @return a matrix of p-values where each row is a gene and each column is a
 #'   level within the condition of interest
 #' @export
@@ -112,8 +120,8 @@ nb_down_sample <- function(count_matrix, num_genes) {
 #' se$Treatment <- as.factor(se$Treatment)
 #' se$Mutation_Status <- as.factor(se$Mutation_Status)
 #' nb_results <- goodness_of_fit_nb(se = se, count_matrix = "counts",
-#'   condition = "Treatment", other_variables = "Mutation_Status",
-#'   method = "edgeR")
+#'     condition = "Treatment", other_variables = "Mutation_Status",
+#'     method = "edgeR")
 #' nb_results[1]
 #' nb_results[2]
 #' nb_results[3]
@@ -124,8 +132,8 @@ nb_down_sample <- function(count_matrix, num_genes) {
 #' se$Treatment <- as.factor(se$Treatment)
 #' se$Mutation_Status <- as.factor(se$Mutation_Status)
 #' nb_results <- goodness_of_fit_nb(se = se, count_matrix = "counts",
-#'   condition = "Treatment", other_variables = "Mutation_Status",
-#'   method = "edgeR")
+#'     condition = "Treatment", other_variables = "Mutation_Status",
+#'     method = "edgeR")
 #' nb_results[1]
 #' nb_results[2]
 #' nb_results[3]
@@ -181,8 +189,8 @@ goodness_of_fit_nb <- function(se, count_matrix, condition,
     return(result)
 }
 
-#' This function calculated the goodness of fit of DESeq2 for small sample sizes
-#' (intended for less than 20 samples).
+#' This function calculated the goodness of fit of DESeq2 for small sample
+#' sizes (intended for less than 20 samples).
 #' @import DESeq2
 #' @import SummarizedExperiment
 #' @importFrom S4Vectors DataFrame
@@ -197,6 +205,14 @@ goodness_of_fit_nb <- function(se, count_matrix, condition,
 #' @param small_sample_cutoff value at which non-parametric test was used
 #'   (considered "large sample size") vs parametric was used (considered
 #'   "small sample size")
+#' @usage DESeq2_small_size(
+#'     count_matrix,
+#'     condition,
+#'     other_variables,
+#'     conditions_df,
+#'     model_formula,
+#'     num_samples,
+#'     small_sample_cutoff)
 #' @return a list containing the string recommendation, the histogram and a
 #'   reference for the original source of the test
 DESeq2_small_size <- function(count_matrix, condition, other_variables,
@@ -267,6 +283,15 @@ DESeq2_small_size <- function(count_matrix, condition, other_variables,
 #' @param small_sample_cutoff value at which non-parametric test was used
 #'   (considered "large sample size") vs parametric was used (considered
 #'   "small sample size")
+#' @usage DESeq_large_analysis(
+#'     count_matrix,
+#'     condition,
+#'     other_variables,
+#'     conditions_df,
+#'     model_formula,
+#'     num_samples,
+#'     sampled,
+#'     small_sample_cutoff)
 #' @return a list containing the string recommendation
 
 DESeq_large_analysis <- function(count_matrix, condition, other_variables,
@@ -319,8 +344,8 @@ DESeq_large_analysis <- function(count_matrix, condition, other_variables,
         res_histogram = res_histogram, reference = reference))
 }
 
-#' This function calculated the goodness of fit of edgeR for small sample sizes
-#' (intended for less than or equal to 20 samples).
+#' This function calculated the goodness of fit of edgeR for small sample
+#' sizes (intended for less than or equal to 20 samples).
 #' @import edgeR
 #' @import SummarizedExperiment
 #' @importFrom S4Vectors DataFrame
@@ -335,6 +360,14 @@ DESeq_large_analysis <- function(count_matrix, condition, other_variables,
 #' @param small_sample_cutoff value at which non-parametric test was used
 #'   (considered "large sample size") vs parametric was used (considered
 #'   "small sample size")
+#' @usage edgeR_small_size(
+#'     count_matrix,
+#'     condition,
+#'     other_variables,
+#'     conditions_df,
+#'     model_formula,
+#'     num_samples,
+#'     small_sample_cutoff)
 #' @return a list containing the string recommendation, the histogram and a
 #'   reference for the original source of the test
 edgeR_small_size <- function(count_matrix, condition, other_variables,
@@ -394,6 +427,15 @@ edgeR_small_size <- function(count_matrix, condition, other_variables,
 #' @param small_sample_cutoff value at which non-parametric test was used
 #'   (considered "large sample size") vs parametric was used (considered
 #'   "small sample size")
+#' @usage edgeR_large_analysis(
+#'     count_matrix,
+#'     condition,
+#'     other_variables,
+#'     conditions_df,
+#'     model_formula,
+#'     num_samples,
+#'     sampled,
+#'     small_sample_cutoff)
 #' @return a list containing the string recommendation
 
 edgeR_large_analysis <- function(count_matrix, condition, other_variables,
@@ -457,6 +499,12 @@ edgeR_large_analysis <- function(count_matrix, condition, other_variables,
 #' @param conditions_df data frame containing information for the other
 #'   variables of interest (columns in order of the other_variables vector)
 #' @param model_formula the stat formula to be used in the DESeq analysis
+#' @usage permuted_DESeq(
+#'     count_matrix,
+#'     condition,
+#'     other_variables,
+#'     conditions_df,
+#'     model_formula)
 #' @return a DESeq2 object
 
 permuted_DESeq <- function(count_matrix, condition, other_variables,
@@ -488,6 +536,12 @@ permuted_DESeq <- function(count_matrix, condition, other_variables,
 #' @param conditions_df data frame containing information for the other
 #'   variables of interest (columns in order of the other_variables vector)
 #' @param model_formula the stat formula to be used in the DESeq analysis
+#' @usage permuted_edgeR(
+#'     count_matrix,
+#'     condition,
+#'     other_variables,
+#'     conditions_df,
+#'     model_formula)
 #' @return edgeR fit
 
 permuted_edgeR <- function(count_matrix, condition, other_variables,
@@ -513,8 +567,8 @@ permuted_edgeR <- function(count_matrix, condition, other_variables,
     return(fit)
 }
 
-#' This function creates a histogram from the negative binomial goodness-of-fit
-#' adjusted pvalues.
+#' This function creates a histogram from the negative binomial
+#' goodness-of-fit adjusted pvalues.
 #' @import tibble
 #' @import tidyr
 #' @import ggplot2
@@ -537,8 +591,8 @@ nb_histogram <- function(p_val_table) {
     return(nb_histogram)
 }
 
-#' This function determines the proportion of p-values below a specific value
-#' and compares to the previously determined threshold
+#' This function determines the proportion of p-values below a specific
+#' value and compares to the previously determined threshold
 #' @import tibble
 #' @import tidyr
 #' @import ggplot2
@@ -552,6 +606,13 @@ nb_histogram <- function(p_val_table) {
 #'   "small sample size); default is 20
 #' @param method string; method utilized for the parametric or non-parametric
 #'   test; either "DESeq2" or "edgeR"
+#' @usage nb_proportion(
+#'     p_val_table,
+#'     low_pval,
+#'     threshold,
+#'     num_samples,
+#'     small_sample_cutoff,
+#'     method)
 #' @return a statement about whether DESeq2 is appropriate to use for analysis
 
 nb_proportion <- function(p_val_table, low_pval, threshold, num_samples,
@@ -605,8 +666,8 @@ nb_proportion <- function(p_val_table, low_pval, threshold, num_samples,
 }
 
 
-#' This function creates the commentary recommendation when there are more than
-#' 20 samples.
+#' This function creates the commentary recommendation when there are more
+#' than 20 samples.
 #' @param nb_fit_pval Boolean representing if the p-val count is below threshold
 #' @param count_below_value_pval number of features below p-val threshold
 #' @param proportion numeric; proportion of genes below the p-value

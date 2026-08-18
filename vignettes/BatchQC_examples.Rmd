@@ -26,7 +26,7 @@ vignette: |
 This data set is from protein expression data captured for 39 proteins.
 It has two batches and two conditions corresponding to case and control.
 
-```{r}
+```{r Protein Sample Data}
 library(BatchQC)
 data(protein_data)
 data(protein_sample_info)
@@ -39,7 +39,7 @@ pathway genes in human mammary epithelial cells (GEO accession: GSE73628).
 This data consists of three batches and ten different conditions corresponding 
 to control and nine different pathways
 
-```{r}
+```{r Signature Sample Data}
 data(signature_data)
 data(batch_indicator)
 se_object <- BatchQC::summarized_experiment(signature_data, batch_indicator)
@@ -54,7 +54,7 @@ bladderbatch package which must be installed to use this data example set (Leek
 JT (2023). bladderbatch: Bladder gene expression data illustrating batch 
 effects. R package version 1.38.0).
 
-```{r, eval = FALSE}
+```{r Bladderbatch Sample Data, eval = FALSE}
 if (!requireNamespace("bladderbatch", quietly = TRUE))
     BiocManager::install("bladderbatch")
 se_object <- BatchQC::bladder_data_upload()
@@ -71,7 +71,7 @@ risk signatures in recently exposed household contacts of pulmonary
 tuberculosis. Front Immunol. 2022 Sep 28;13:1011166.
 doi: 10.3389/fimmu.2022.1011166")
 
-```{r, eval = FALSE}
+```{r TB Sample Data, eval = FALSE}
 if (!requireNamespace("curatedTBData", quietly = TRUE))
     BiocManager::install("curatedTBData")
 se_object <- BatchQC::tb_data_upload()

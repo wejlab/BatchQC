@@ -24,8 +24,8 @@
 #' library(scran)
 #' se <- mockSCE()
 #' res <- BatchQC::compute_lambda(assays(se)[["counts"]],
-#'   colData(se)$Mutation_Status,
-#'   colData(se)$Treatment)
+#'     colData(se)$Mutation_Status,
+#'     colData(se)$Treatment)
 #' print(res)
 #'
 #' @export
@@ -90,7 +90,7 @@ is_design_balanced <- function(se, batch, covariate) {
 #' calculates the lambda statistic for balanced designs and provides a
 #' recommendation on if batch correction should be utilized. In general,
 #' unbalanced designs always benefit from batch correction, while balanced
-#' designs with a lambda greater than -2 benefit from batch correction.
+#' designs with a lambda greater than -7 benefit from batch correction.
 #'
 #' @param se summarized experiment object
 #' @param assay string, the assay to analyze
@@ -105,12 +105,13 @@ is_design_balanced <- function(se, batch, covariate) {
 #'
 #' library(scran)
 #' se <- mockSCE()
-#' lambda_calculation <- run_lambda(se,
-#'                                  assay = "counts",
-#'                                  batch = "Mutation_Status",
-#'                                  condition = "Treatment")
-#'  print(lambda_calculation$correction_recommendation)
-#'  print(lambda_calculation$lambda_stat)
+#' lambda_calculation <- run_lambda(
+#'                             se,
+#'                             assay = "counts",
+#'                             batch = "Mutation_Status",
+#'                             condition = "Treatment")
+#' print(lambda_calculation$correction_recommendation)
+#' print(lambda_calculation$lambda_stat)
 #'
 #' @return a list with 2 parameters, 'lambda_stat' which contains the adj lambda
 #'   value from lambda_compute (ln(lambda)) and 'correction_recommendation'

@@ -7,14 +7,13 @@ This function applies Harman correction to a summarized experiment object
 with and reconstructs the data back into the original feature space}
 \usage{
 Harman_correction(
-  se,
-  assay_to_normalize,
-  batch,
-  covar,
-  output_assay_name,
-  limit = 0.95,
-  numrepeats = 100000L
-)
+    se,
+    assay_to_normalize,
+    batch,
+    covar,
+    output_assay_name,
+    limit = 0.95,
+    numrepeats = 100000L)
 }
 \arguments{
 \item{se}{SummarizedExperiment object}

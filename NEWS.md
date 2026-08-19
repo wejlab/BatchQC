@@ -1,4 +1,4 @@
-# Version 2.8.1
+# Version 2.9.1
 ## Minor Changes
 * Updated discrepancy in roxygen comment for lambda stat
 * Added headers for all vignette code chunks

@@ -21,8 +21,13 @@ NULL}
 List of explained variation by batch and condition
 }
 \description{
-Returns a list of explained variation by batch and condition
-combinations
+For “Individual Variation Variable/Batch Ratio” and “Residual Variation
+Variable/Batch Ratio,” a ratio greater than 1 indicates that the batch has a
+stronger effect than the variable of interest. When a batch effect is being
+properly corrected, the variation explained by the batch variable should
+decrease in the batch-corrected assay, indicating that the variation in the
+data is now more likely to be associated with the condition of interest
+rather than the batch. The ratio statistics should also be less than 1.
 }
 \examples{
 library(scran)

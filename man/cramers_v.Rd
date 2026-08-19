@@ -13,7 +13,11 @@ cramers_v(bd)
 Cramer's V
 }
 \description{
-This function allows you to calculate Cramer's V
+The Cramer’s V is an additional metric, similar to the Pearson Correlation,
+for batch effect and will be between 0 and 1. Values closer to 0 indicate a
+more balanced design and a lower likelihood of a batch effect, and values
+closer to 1 are associated with an imbalanced design and a greater likelihood
+of a batch effect.
 }
 \examples{
 library(scran)

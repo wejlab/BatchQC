@@ -2,7 +2,7 @@
 % Please edit documentation in R/pca.R
 \name{PCA_plotter}
 \alias{PCA_plotter}
-\title{This function allows you to plot PCA}
+\title{PCA Plot}
 \usage{
 PCA_plotter(se, nfeature, color, shape, batch, assays, xaxisPC,
 yaxisPC, log_option = FALSE)
@@ -32,7 +32,10 @@ data is already logged); FALSE by default}
 List containing PCA info, PCA variance and PCA plot
 }
 \description{
-This function allows you to plot PCA
+A PCA plot allows you to compare how tightly clustered the batch variable is
+in comparison to the biological variable of interest. When the batch variable
+clusters more distinctly than the biological variable, there is likely a
+batch effect present that should be corrected.
 }
 \examples{
 library(scran)

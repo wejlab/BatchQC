@@ -370,9 +370,18 @@ confound_table
 
 #### Pearson Correlation Coefficient
 Pearson correlation coefficient indicates the strength of the linear 
-relationship between your batch and condition variables. It can range from -1 to
-1. The closer the value is to 0, the less likely there is a batch effect. The 
-closer the value is to -1 or 1, the more likely there is a batch effect.
+relationship between your batch and condition variables. Note that this is the
+correlation between two categorical variables, so rather than measuring the 
+correlation between the two variables (as with two continuous variables), it 
+directly measures the dependence/independence of the batch and condition in the
+experimental design—i.e., the potential for confounding, but not confounding 
+itself. 
+
+Values for this metric can range from -1 to 1, with a value close to 0 
+indicating batch/condition independence or a “balanced design”, which should be
+associated with a lower risk of observing a batch effect. A value closer to -1 
+or 1 indicates greater imbalance in the design and a higher likelihood of a 
+batch effect.
 
 To calculate only the pearson correlation coefficient, run the following:
 ```{R Pearson Correlation}
@@ -381,9 +390,11 @@ pearson_cor_result
 ```
 
 #### Cramer's V
-This is an additional metric for batch effect and will be between 0 and 1. The 
-closer the value is to 0, the lower the batch effect. The closer the value is to
-1, the greater the batch effect
+The Cramer’s V is an additional metric, similar to the Pearson Correlation, for
+batch effect and will be between 0 and 1. Values closer to 0 indicate a more 
+balanced design and a lower likelihood of a batch effect, and values closer to 1
+are associated with an imbalanced design and a greater likelihood of a batch
+effect.
 
 To calculate only Cramer's V, run the following:
 ```{R Cramers V}
@@ -478,6 +489,8 @@ a method that quantifies batch effects through a chi-square test. kBET works by
 comparing the batch label distribution in each sample's local neighborhood to 
 the global batch label distribution across the entire dataset. If these 
 distributions differ significantly, it indicates the presence of batch effects.
+A lower rejection rate indicates well-mixed replicates, which in turn indicate a
+lower likelihood of a batch effect being present.
 
 Below is how we would run the kBET analysis on the TB data set.
 
@@ -503,7 +516,7 @@ and the batch and condition(s) of interest. We recommend viewing no more than
 500 elements at a time (or the max number in your data set). 
 
 #### Sample Correlations
-This heat map shows how similar each sample is to each other sample in your
+This heatmap shows how similar each sample is to each other sample in your
 data (samples are plotted on both the x and y axis, so are identical to 
 their self). The samples are clustered together based on similarity. Ideally, 
 you would expect your samples to cluster and be more similar to samples from

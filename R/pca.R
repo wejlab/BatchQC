@@ -1,4 +1,10 @@
-#' This function allows you to plot PCA
+#' PCA Plot
+#'
+#' A PCA plot allows you to compare how tightly clustered the batch variable is
+#' in comparison to the biological variable of interest. When the batch variable
+#' clusters more distinctly than the biological variable, there is likely a
+#' batch effect present that should be corrected.
+#'
 #' @param se SummarizedExperiment object
 #' @param nfeature number of features
 #' @param color choose a color

@@ -23,22 +23,22 @@ editor_options:
 ---
 
 # Introduction
-Sequencing and microarray samples are often collected or processed in multiple 
-batches or at different times. This often produces technical biases that can 
-lead to incorrect results in the downstream analysis. BatchQC is a software tool
-that streamlines batch preprocessing and evaluation by providing shiny app
-interactive diagnostics, visualizations, and statistical analyses to explore
-the extent to which batch variation impacts the data. This is contained in a
-full R package which allows reproducibility of all shiny evaluations and
-analyses.  BatchQC diagnostics help determine whether batch adjustment needs to
-be done, and how correction should be applied before proceeding with a
-downstream analysis. Moreover, BatchQC interactively applies multiple common
-batch effect approaches to the data, and the user can quickly see the benefits
-of each method. BatchQC is developed as a Shiny App, but is reproducible at the
-command line through the functions contained in the R package. The output of the
-shiny app is organized into multiple tabs, and each tab features an important 
-part of the batch effect analysis and visualization of the data. The BatchQC 
-interface has the following features:
+Samples are often collected or processed in multiple batches or at different
+times. This often produces technical biases that can lead to incorrect results
+in the downstream analysis. BatchQC is a software tool that streamlines batch
+preprocessing and evaluation by providing shiny app interactive diagnostics,
+visualizations, and statistical analyses to explore the extent to which batch
+variation impacts the data. This is contained in a full R package which allows
+reproducibility of all shiny evaluations and analyses.  BatchQC diagnostics
+help determine whether batch adjustment needs to be done, and how correction
+should be applied before proceeding with a downstream analysis. Moreover,
+BatchQC interactively applies multiple common batch effect approaches to the
+data, and the user can quickly see the benefits of each method. BatchQC is
+developed as a Shiny App, but is reproducible at the command line through the
+functions contained in the R package. The output of the shiny app is organized
+into multiple tabs, and each tab features an important part of the batch effect
+analysis and visualization of the data. The BatchQC  interface has the following
+features:
 
 1. Upload Data
 2. Batch Correction/Normalization (can also check data distribution)
@@ -54,6 +54,29 @@ interface has the following features:
 8. Data Download to export any corrections or normalizations as an SE object
 
 `BatchQC()` is the function that launches the Shiny App in interactive mode.
+
+BatchQC was originally created with sequencing and micro-array samples in mind,
+however it has been designed in a way that any feature data (including, but not
+limited to, RNA-seq bulk or single cell, imaging data features, proteomics,
+methylation, microbiome, and genome sequencing coverage) can be uploaded and
+stored in a Summarized Experiment table. Please note that each batch correction
+method and analysis method has specific assumptions that must be met for a data
+set in order to be statistically valid. Please confirm that your data set meets
+these assumptions when choosing to use specific methods contained in BatchQC.
+Details about each can be found in the function descriptions.
+
+We would like to remind users that batch correction analysis may lead to 
+contradictory results. When this occurs, users should use their best judgement
+when determining the best batch correction method while considering the
+required assumptions for a method, the degree to which analysis indicate batch
+correction has been successful, the degree to which biological structure of the
+data has been maintained, and which methods have traditionally been best
+practice for your data type. This vignette, as well as the function
+descriptions, provides guidance on how to interpret results of each
+individual analysis which may be useful when making judgement calls. You may
+want to consider which metric disagrees, the degree to which this metric
+disagrees, and how widely adopted and tested that metric is among other
+considerations.
 
 # Installation
 ## Bioconductor Version
@@ -370,9 +393,18 @@ confound_table
 
 #### Pearson Correlation Coefficient
 Pearson correlation coefficient indicates the strength of the linear 
-relationship between your batch and condition variables. It can range from -1 to
-1. The closer the value is to 0, the less likely there is a batch effect. The 
-closer the value is to -1 or 1, the more likely there is a batch effect.
+relationship between your batch and condition variables. Note that this is the
+correlation between two categorical variables, so rather than measuring the 
+correlation between the two variables (as with two continuous variables), it 
+directly measures the dependence/independence of the batch and condition in the
+experimental design—i.e., the potential for confounding, but not confounding 
+itself. 
+
+Values for this metric can range from -1 to 1, with a value close to 0 
+indicating batch/condition independence or a “balanced design”, which should be
+associated with a lower risk of observing a batch effect. A value closer to -1 
+or 1 indicates greater imbalance in the design and a higher likelihood of a 
+batch effect.
 
 To calculate only the pearson correlation coefficient, run the following:
 ```{R Pearson Correlation}
@@ -381,9 +413,11 @@ pearson_cor_result
 ```
 
 #### Cramer's V
-This is an additional metric for batch effect and will be between 0 and 1. The 
-closer the value is to 0, the lower the batch effect. The closer the value is to
-1, the greater the batch effect
+The Cramer’s V is an additional metric, similar to the Pearson Correlation, for
+batch effect and will be between 0 and 1. Values closer to 0 indicate a more 
+balanced design and a lower likelihood of a batch effect, and values closer to 1
+are associated with an imbalanced design and a greater likelihood of a batch
+effect.
 
 To calculate only Cramer's V, run the following:
 ```{R Cramers V}
@@ -478,6 +512,8 @@ a method that quantifies batch effects through a chi-square test. kBET works by
 comparing the batch label distribution in each sample's local neighborhood to 
 the global batch label distribution across the entire dataset. If these 
 distributions differ significantly, it indicates the presence of batch effects.
+A lower rejection rate indicates well-mixed replicates, which in turn indicate a
+lower likelihood of a batch effect being present.
 
 Below is how we would run the kBET analysis on the TB data set.
 
@@ -503,7 +539,7 @@ and the batch and condition(s) of interest. We recommend viewing no more than
 500 elements at a time (or the max number in your data set). 
 
 #### Sample Correlations
-This heat map shows how similar each sample is to each other sample in your
+This heatmap shows how similar each sample is to each other sample in your
 data (samples are plotted on both the x and y axis, so are identical to 
 their self). The samples are clustered together based on similarity. Ideally, 
 you would expect your samples to cluster and be more similar to samples from

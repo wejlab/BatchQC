@@ -23,7 +23,15 @@ data is already logged)}
 heatmap plot
 }
 \description{
-This function allows you to plot a heatmap
+This function allows you to plot a sample correlation heatmap
+(result$correlation_heatmap) or a gene-level heatmap (result$topn_heatmap).
+The sample correlation heatmap shows how similar each sample is to each other
+sample in the data and the samples are clustered together based on
+similarity. The gene-level heatmap displays patterns of gene expression
+across the samples based on the se-lected variables of interest. If batch
+variables cluster together in your raw data, you likely should apply a batch
+correction to increase clustering based on biological variable and decrease
+clustering based on batch.
 }
 \examples{
 library(scran)

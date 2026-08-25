@@ -29,9 +29,15 @@ pvalue and adjusted pvalue (padj) for each analysis returned by DESeq2,
 limma, edgeR, ANOVA, or Kruskal-Wallis.
 }
 \description{
-This function runs DE analysis on a count matrix (DESeq), a normalized log or
-log-CPM matrix (limma), an edgeR TMM-normalized matrix (edgeR) or perform
-ANOVA or Kruskal-Wallis test on the data contained in the se object.
+This function runs a user selected differential expression analysis on a
+given matrix. Users shoudl ensure that the matrix meets the requirements of
+the selected method. DE_Seq2 should be used for count data (non-negative,
+integer values) with a negative binomial distribution, edgeR can be used for
+edgeR-normalized data, ANOVA can be used for normal-distributed data,
+Kruskal-Wallis test can be used as a nonparametric equivalent of one-way
+ANOVA, and limma can be used for all other data (inlcuding normalized log or
+log-CPM matrix. edgeR implemented in BatchQC uses glm quasi-likelihood
+F-tests to test for differential expression.
 }
 \examples{
 library(scran)

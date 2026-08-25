@@ -2,8 +2,7 @@
 % Please edit documentation in R/umap.R
 \name{umap}
 \alias{umap}
-\title{Create a umap plot; wrapper function for umap package plus custom
-plotting}
+\title{UMAP plot}
 \usage{
 umap(
     se_object,
@@ -46,8 +45,11 @@ count data}
 umap plot
 }
 \description{
-Create a umap plot; wrapper function for umap package plus custom
-plotting
+This is a wrapper function for umap package plus custom plotting. A UMAP
+allows you to compare how tightly clustered the batch variable is in
+comparison to the biological variable of interest. When the batch variable
+clusters more distinctly than the biological variable, there is likely a
+batch effect present that should be corrected.
 }
 \examples{
 library(scran)

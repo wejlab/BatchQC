@@ -23,22 +23,22 @@ editor_options:
 ---
 
 # Introduction
-Sequencing and microarray samples are often collected or processed in multiple 
-batches or at different times. This often produces technical biases that can 
-lead to incorrect results in the downstream analysis. BatchQC is a software tool
-that streamlines batch preprocessing and evaluation by providing shiny app
-interactive diagnostics, visualizations, and statistical analyses to explore
-the extent to which batch variation impacts the data. This is contained in a
-full R package which allows reproducibility of all shiny evaluations and
-analyses.  BatchQC diagnostics help determine whether batch adjustment needs to
-be done, and how correction should be applied before proceeding with a
-downstream analysis. Moreover, BatchQC interactively applies multiple common
-batch effect approaches to the data, and the user can quickly see the benefits
-of each method. BatchQC is developed as a Shiny App, but is reproducible at the
-command line through the functions contained in the R package. The output of the
-shiny app is organized into multiple tabs, and each tab features an important 
-part of the batch effect analysis and visualization of the data. The BatchQC 
-interface has the following features:
+Samples are often collected or processed in multiple batches or at different
+times. This often produces technical biases that can lead to incorrect results
+in the downstream analysis. BatchQC is a software tool that streamlines batch
+preprocessing and evaluation by providing shiny app interactive diagnostics,
+visualizations, and statistical analyses to explore the extent to which batch
+variation impacts the data. This is contained in a full R package which allows
+reproducibility of all shiny evaluations and analyses.  BatchQC diagnostics
+help determine whether batch adjustment needs to be done, and how correction
+should be applied before proceeding with a downstream analysis. Moreover,
+BatchQC interactively applies multiple common batch effect approaches to the
+data, and the user can quickly see the benefits of each method. BatchQC is
+developed as a Shiny App, but is reproducible at the command line through the
+functions contained in the R package. The output of the shiny app is organized
+into multiple tabs, and each tab features an important part of the batch effect
+analysis and visualization of the data. The BatchQC  interface has the following
+features:
 
 1. Upload Data
 2. Batch Correction/Normalization (can also check data distribution)
@@ -54,6 +54,29 @@ interface has the following features:
 8. Data Download to export any corrections or normalizations as an SE object
 
 `BatchQC()` is the function that launches the Shiny App in interactive mode.
+
+BatchQC was originally created with sequencing and micro-array samples in mind,
+however it has been designed in a way that any feature data (including, but not
+limited to, RNA-seq bulk or single cell, imaging data features, proteomics,
+methylation, microbiome, and genome sequencing coverage) can be uploaded and
+stored in a Summarized Experiment table. Please note that each batch correction
+method and analysis method has specific assumptions that must be met for a data
+set in order to be statistically valid. Please confirm that your data set meets
+these assumptions when choosing to use specific methods contained in BatchQC.
+Details about each can be found in the function descriptions.
+
+We would like to remind users that batch correction analysis may lead to 
+contradictory results. When this occurs, users should use their best judgement
+when determining the best batch correction method while considering the
+required assumptions for a method, the degree to which analysis indicate batch
+correction has been successful, the degree to which biological structure of the
+data has been maintained, and which methods have traditionally been best
+practice for your data type. This vignette, as well as the function
+descriptions, provides guidance on how to interpret results of each
+individual analysis which may be useful when making judgement calls. You may
+want to consider which metric disagrees, the degree to which this metric
+disagrees, and how widely adopted and tested that metric is among other
+considerations.
 
 # Installation
 ## Bioconductor Version

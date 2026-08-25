@@ -23,7 +23,7 @@ Authors@R: c(
     person("Howard", "Fan", , "hf268@njms.rutgers.edu", role = "ctb"),
     person("Sean", "Lu", , "sl1729@njms.rutgers.edu", role = "ctb")
   )
-Description: Sequencing and microarray samples often are collected or
+Description: Samples (-omics, imaging, single cell, etc) often are collected or
     processed in multiple batches or at different times. This often
     produces technical biases that can lead to incorrect results in the
     downstream analysis. BatchQC is a software tool that streamlines batch
@@ -93,9 +93,10 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
-biocViews: BatchEffect, GeneExpression, GraphAndNetwork, Microarray,
-    Normalization, PrincipalComponent, Sequencing, Software, Visualization,
-    QualityControl, RNASeq, Preprocessing, DifferentialExpression, ImmunoOncology
+biocViews: BatchEffect, DifferentialExpression, GeneExpression, GraphAndNetwork,
+    ImmunoOncology, Microarray, Normalization, Preprocessing,
+    PrincipalComponent, QualityControl, RNASeq, Sequencing, ShinyApps,
+    Software, Visualization
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US

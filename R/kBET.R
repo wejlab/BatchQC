@@ -1,6 +1,10 @@
 #' kBET rejection rate
 #' @description This function runs the k-nearest neighbor batch effect test
-#' (kBET) to evaluate whether the data has detectable batch effect.
+#' (kBET) to evaluate whether the data has detectable batch effect. kBET
+#' calculates an overall rejection rate by averaging a set of χ2-based binary
+#' tests to determine whether neighborhoods are well mixed; a lower rejection
+#' rate indicates well-mixed replicates, which in turn indicate a lower
+#' likelihood of a batch effect being present.
 #'
 #' @param se SummarizedExperiment object
 #' @param assay_to_normalize string; assay from se object to do normalization

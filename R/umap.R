@@ -1,5 +1,11 @@
-#' Create a umap plot; wrapper function for umap package plus custom
-#' plotting
+#' UMAP plot
+#'
+#' This is a wrapper function for umap package plus custom plotting. A UMAP
+#' allows you to compare how tightly clustered the batch variable is in
+#' comparison to the biological variable of interest. When the batch variable
+#' clusters more distinctly than the biological variable, there is likely a
+#' batch effect present that should be corrected.
+#'
 #' @param se_object se_object; containing data of interest
 #' @param assay_of_interest string; the assay in the se_object to plot
 #' @param batch string; representing batch

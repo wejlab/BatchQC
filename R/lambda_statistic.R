@@ -2,7 +2,9 @@
 #'
 #' This function calculates the proportions of variation explained by batch,
 #' group, and residual for each gene using two-way ANOVA and computes the lambda
-#' index based on these three proportions.
+#' index based on these three proportions. It was evaluated on Guassian type
+#' modelling and its performance on sparse sequencing data and computational
+#' data needs further assessment
 #'
 #' @param dat Numeric matrix of dimension (genes x samples) where each row
 #'   represents one gene's expression across samples.

@@ -60,6 +60,19 @@ cor_props <- function(bd) {
 
 
 #' Calculate a standardized Pearson correlation coefficient
+#'
+#' Pearson correlation coefficient indicates the strength of the linear
+#' relationship between your batch and condition variables. Note that this is
+#' the correlation between two categorical variables, so rather than measuring
+#' the correlation between the two variables (as with two continuous variables),
+#' it directly measures the dependence/independence of the batch and condition
+#' in the experimental design—i.e., the potential for confounding, but not
+#' confounding itself. Values for this metric can range from -1 to 1, with a
+#' value close to 0 indicating batch/condition independence or a “balanced
+#' design”, which should be associated with a lower risk of observing a batch
+#' effect. A value closer to -1 or 1 indicates greater imbalance in the design
+#' and a higher likelihood of a batch effect.
+#'
 #' @param bd batch design
 #' @return standardized Pearson correlation coefficient
 #' @examples
@@ -79,6 +92,13 @@ std_pearson_corr_coef <- function(bd) {
 }
 
 #' This function allows you to calculate Cramer's V
+#'
+#' The Cramer’s V is an additional metric, similar to the Pearson Correlation,
+#' for batch effect and will be between 0 and 1. Values closer to 0 indicate a
+#' more balanced design and a lower likelihood of a batch effect, and values
+#' closer to 1 are associated with an imbalanced design and a greater likelihood
+#' of a batch effect.
+#'
 #' @param bd batch design
 #' @return Cramer's V
 #' @examples

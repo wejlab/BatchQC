@@ -1,5 +1,11 @@
 # Version 2.8.2
 ## Minor Changes
+- Updated discrepancy in roxygen comment for lambda stat
+- Added headers for all vignette code chunks
+- Corrected spacing and line indent issues for a number of man files
+
+# Version 2.8.1
+## Minor Changes
 * Updated discrepancy in roxygen comment for lambda stat
 * Added headers for all vignette code chunks
 * Corrected spacing and line indent issues for a number of man files

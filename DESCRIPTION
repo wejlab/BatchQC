@@ -1,8 +1,8 @@
 Type: Package
 Package: BatchQC
 Title: Batch Effects Quality Control Software
-Version: 2.9.1
-Date: 2026-08-18
+Version: 2.9.2
+Date: 2026-08-28
 Authors@R: c(
     person("Jessica", "Anderson", , "anderson.jessica@rutgers.edu", 
     role = c("aut"), comment = c(ORCID = "0000-0002-0542-9872")),

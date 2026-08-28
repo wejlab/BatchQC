@@ -1,3 +1,8 @@
+# Version 2.9.2
+## Minor Changes
+* Updated some descriptions to support manuscript and provide info.
+* Added additioanl details to method functionality in the vignette. 
+
 # Version 2.9.1
 ## Minor Changes
 * Updated discrepancy in roxygen comment for lambda stat

@@ -67,41 +67,47 @@ importFrom(FNN,get.knn)
 importFrom(MASS,glm.nb)
 importFrom(RColorBrewer,brewer.pal)
 importFrom(S4Vectors,DataFrame)
-importFrom(data.table,":=")
-importFrom(data.table,as.data.table)
-importFrom(data.table,data.table)
-importFrom(data.table,rbindlist)
-importFrom(limma,contrasts.fit)
-importFrom(limma,eBayes)
-importFrom(limma,lmFit)
-importFrom(limma,makeContrasts)
-importFrom(limma,removeBatchEffect)
-importFrom(limma,topTable)
-importFrom(limma,voom)
+importFrom(data.table,
+  ":=",
+  as.data.table,
+  data.table,
+  rbindlist
+)
+importFrom(limma,
+  contrasts.fit,
+  eBayes,
+  lmFit,
+  makeContrasts,
+  removeBatchEffect,
+  topTable,
+  voom
+)
 importFrom(methods,is)
-importFrom(stats,AIC)
-importFrom(stats,anova)
-importFrom(stats,aov)
-importFrom(stats,as.formula)
-importFrom(stats,coef)
-importFrom(stats,dist)
-importFrom(stats,dmultinom)
-importFrom(stats,formula)
-importFrom(stats,gaussian)
-importFrom(stats,glm)
-importFrom(stats,glm.control)
-importFrom(stats,kruskal.test)
-importFrom(stats,ks.test)
-importFrom(stats,lm)
-importFrom(stats,median)
-importFrom(stats,model.matrix)
-importFrom(stats,na.omit)
-importFrom(stats,p.adjust)
-importFrom(stats,pchisq)
-importFrom(stats,pnbinom)
-importFrom(stats,pnorm)
-importFrom(stats,quantile)
-importFrom(stats,t.test)
-importFrom(stats,var)
+importFrom(stats,
+  AIC,
+  anova,
+  aov,
+  as.formula,
+  coef,
+  dist,
+  dmultinom,
+  formula,
+  gaussian,
+  glm,
+  glm.control,
+  kruskal.test,
+  ks.test,
+  lm,
+  median,
+  model.matrix,
+  na.omit,
+  p.adjust,
+  pchisq,
+  pnbinom,
+  pnorm,
+  quantile,
+  t.test,
+  var
+)
 importFrom(tidyr,pivot_longer)
 importFrom(utils,data)

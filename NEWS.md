@@ -1,7 +1,11 @@
+# Version 2.9.3
+## Minor Changes
+* Fixed a Unicode character in run_kBET documentation that broke checks
+
 # Version 2.9.2
 ## Minor Changes
 * Updated some descriptions to support manuscript and provide info.
-* Added additioanl details to method functionality in the vignette. 
+* Added additional details to method functionality in the vignette. 
 
 # Version 2.9.1
 ## Minor Changes

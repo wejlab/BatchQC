@@ -1,7 +1,7 @@
 #' kBET rejection rate
 #' @description This function runs the k-nearest neighbor batch effect test
 #' (kBET) to evaluate whether the data has detectable batch effect. kBET
-#' calculates an overall rejection rate by averaging a set of χ2-based binary
+#' calculates an overall rejection rate by averaging a set of \eqn{\chi^2}{chi-squared}-based binary
 #' tests to determine whether neighborhoods are well mixed; a lower rejection
 #' rate indicates well-mixed replicates, which in turn indicate a lower
 #' likelihood of a batch effect being present.
@@ -80,20 +80,37 @@
 #'
 #' @export
 run_kBET <- function(
-    se, assay_to_normalize, batch, k0 = NULL, knn = NULL,
-    testSize = NULL, do.pca = TRUE, dim.pca = 50, heuristic = TRUE,
-    n_repeat = 100, alpha = 0.05, addTest = FALSE, verbose = FALSE,
-    adapt = TRUE) {
+    se,
+    assay_to_normalize,
+    batch,
+    k0 = NULL,
+    knn = NULL,
+    testSize = NULL,
+    do.pca = TRUE,
+    dim.pca = 50,
+    heuristic = TRUE,
+    n_repeat = 100,
+    alpha = 0.05,
+    addTest = FALSE,
+    verbose = FALSE,
+    adapt = TRUE
+) {
     # run kBET
     batch.estimate <- kBET(
         df = as.matrix(assays(se)[[assay_to_normalize]]),
         batch = data.frame(colData(se))[, batch],
-        k0 = k0, knn = knn,
-        testSize = testSize, do.pca = do.pca,
-        dim.pca = dim.pca, heuristic = heuristic,
-        n_repeat = n_repeat, alpha = alpha,
-        addTest = addTest, verbose = verbose,
-        plot = FALSE, adapt = adapt
+        k0 = k0,
+        knn = knn,
+        testSize = testSize,
+        do.pca = do.pca,
+        dim.pca = dim.pca,
+        heuristic = heuristic,
+        n_repeat = n_repeat,
+        alpha = alpha,
+        addTest = addTest,
+        verbose = verbose,
+        plot = FALSE,
+        adapt = adapt
     )
 
     return(batch.estimate)
@@ -186,42 +203,92 @@ run_kBET <- function(
 #'
 #' @export
 kBET <- function(
-    df, batch, k0 = NULL, knn = NULL, testSize = NULL, do.pca = TRUE,
-    dim.pca = 50, heuristic = TRUE, n_repeat = 100, alpha = 0.05,
-    addTest = FALSE, verbose = FALSE, plot = TRUE, adapt = TRUE) {
+    df,
+    batch,
+    k0 = NULL,
+    knn = NULL,
+    testSize = NULL,
+    do.pca = TRUE,
+    dim.pca = 50,
+    heuristic = TRUE,
+    n_repeat = 100,
+    alpha = 0.05,
+    addTest = FALSE,
+    verbose = FALSE,
+    plot = TRUE,
+    adapt = TRUE
+) {
     # preliminaries:
     initialize.kbet.res <- initialize.kbet(
-        df, batch, k0, knn, testSize, do.pca, dim.pca, heuristic, n_repeat,
-        alpha, addTest, verbose, adapt
+        df,
+        batch,
+        k0,
+        knn,
+        testSize,
+        do.pca,
+        dim.pca,
+        heuristic,
+        n_repeat,
+        alpha,
+        addTest,
+        verbose,
+        adapt
     )
     if (addTest) {
         kbet.res <- run.kbet.addTest(
-            initialize.kbet.res, adapt, alpha, n_repeat
+            initialize.kbet.res,
+            adapt,
+            alpha,
+            n_repeat
         )
         if (n_repeat > 1 & plot) {
             plot_kbet_helper(
-                kbet.res$kBET.observed, kbet.res$kBET.expected,
-                kbet.res$lrt.observed, kbet.res$lrt.expected,
-                kbet.res$exact.observed, kbet.res$exact.expected, n_repeat)
+                kbet.res$kBET.observed,
+                kbet.res$kBET.expected,
+                kbet.res$lrt.observed,
+                kbet.res$lrt.expected,
+                kbet.res$exact.observed,
+                kbet.res$exact.expected,
+                n_repeat
+            )
         }
-    } else { # kBET only
+    } else {
+        # kBET only
         kbet.res <- run.kbet.only(initialize.kbet.res, adapt, alpha, n_repeat)
         if (n_repeat > 1 & plot) {
             plot_kbet_helper(
-                kbet.res$kBET.observed, kbet.res$kBET.expected,
-                n_repeat = n_repeat)
+                kbet.res$kBET.observed,
+                kbet.res$kBET.expected,
+                n_repeat = n_repeat
+            )
         }
     }
     rejection <- summarize_kbet_results(
-        kbet.res$rejection, kbet.res$kBET.expected, kbet.res$kBET.observed,
-        kbet.res$kBET.signif, kbet.res$lrt.expected, kbet.res$lrt.observed,
-        kbet.res$lrt.signif, kbet.res$exact.observed, kbet.res$exact.expected,
-        kbet.res$exact.signif, n_repeat, addTest)
+        kbet.res$rejection,
+        kbet.res$kBET.expected,
+        kbet.res$kBET.observed,
+        kbet.res$kBET.signif,
+        kbet.res$lrt.expected,
+        kbet.res$lrt.observed,
+        kbet.res$lrt.signif,
+        kbet.res$exact.observed,
+        kbet.res$exact.expected,
+        kbet.res$exact.signif,
+        n_repeat,
+        addTest
+    )
     # collect parameters
     rejection$params <- list(
-        k0 = k0, testSize = testSize, do.pca = do.pca, dim.pca = dim.pca,
-        heuristic = heuristic, n_repeat = n_repeat, alpha = alpha,
-        addTest = addTest, verbose = verbose, plot = plot
+        k0 = k0,
+        testSize = testSize,
+        do.pca = do.pca,
+        dim.pca = dim.pca,
+        heuristic = heuristic,
+        n_repeat = n_repeat,
+        alpha = alpha,
+        addTest = addTest,
+        verbose = verbose,
+        plot = plot
     )
     # add outsiders
     if (adapt) {
@@ -271,13 +338,21 @@ bisect <- function(foo, bounds, known = NULL, ..., tolx = 5, toly = 0.01) {
             bisect(foo, bounds, known, ..., tolx = tolx, toly = toly)
         } else if (dist(unlist(evalFoo)) < toly) {
             center <- vapply(
-                round(sum(bounds) / 2, 0), foo, ..., FUN.VALUE = numeric(1)
+                round(sum(bounds) / 2, 0),
+                foo,
+                ...,
+                FUN.VALUE = numeric(1)
             )
             dist_center <- vapply(
-                unlist(evalFoo), function(x, y) {
-                    dist(c(x, y))}, center, FUN.VALUE = numeric(1))
+                unlist(evalFoo),
+                function(x, y) {
+                    dist(c(x, y))
+                },
+                center,
+                FUN.VALUE = numeric(1)
+            )
             if (max(abs(dist_center)) < toly || dist(bounds) < tolx) {
-                bounds  # return interval and stop recursion
+                bounds # return interval and stop recursion
             } else if (dist_center[1] > toly) {
                 bounds[2] <- round(sum(bounds) / 2, 0)
                 known <- c(unlist(evalFoo)[1], 0)
@@ -304,7 +379,7 @@ bisect <- function(foo, bounds, known = NULL, ..., tolx = 5, toly = 0.01) {
             known <- c(0, unlist(evalFoo)[1])
             bisect(foo, bounds, known, ..., tolx = tolx, toly = toly)
         } else if (dist(result) < toly || dist(bounds) < tolx) {
-            bounds  # return interval and stop recursion
+            bounds # return interval and stop recursion
         }
     }
 }
@@ -330,7 +405,8 @@ bisect <- function(foo, bounds, known = NULL, ..., tolx = 5, toly = 0.01) {
 plot_kBET <- function(kBET_res) {
     # create ggplot object for plotting kBET's rejection rate
     plot.data <- data.frame(
-        class = rep(c("observed", "expected"),
+        class = rep(
+            c("observed", "expected"),
             each = length(kBET_res$stats$kBET.observed)
         ),
         data = c(
